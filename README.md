@@ -8,6 +8,10 @@
      ```
    - If Python 3.11 is not installed, you will need to install it first.
 
+   ```bash
+   brew install python@3.11
+   ```
+
 2. **Navigate to your project directory** (where you want the virtual environment to be created).
 
 3. **Create the virtual environment**:
