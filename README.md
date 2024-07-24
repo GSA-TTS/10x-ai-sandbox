@@ -1,7 +1,11 @@
 # Quickstart
 
-Run this from the root of the repo:
-`npm install && npm run build && ./backend/start.sh`
+Run this from the root of the repo (don't forget the .env file):
+
+```bash
+pip install -r ./backend/requirements.txt
+npm install && npm run build && ./backend/start.sh
+```
 
 It should kick off two servers from /backend and /backend/pipelines at 8080 and 9099, respectively.
 
