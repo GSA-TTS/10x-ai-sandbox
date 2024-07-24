@@ -2,7 +2,7 @@
 
 `npm install && npm run build && ./backend/start.sh`
 
-# Open WebUI (Formerly Ollama WebUI) 👋
+## Open WebUI (Formerly Ollama WebUI) 👋
 
 ![GitHub stars](https://img.shields.io/github/stars/open-webui/open-webui?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/open-webui/open-webui?style=social)
