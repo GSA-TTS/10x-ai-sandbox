@@ -1,6 +1,9 @@
 # Quickstart
 
+Run this from the root of the repo:
 `npm install && npm run build && ./backend/start.sh`
+
+It should kick off two servers from /backend and /backend/pipelines at 8080 and 9099, respectively.
 
 ## Open WebUI (Formerly Ollama WebUI) 👋
 
