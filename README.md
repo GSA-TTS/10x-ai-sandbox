@@ -1,13 +1,39 @@
 # Quickstart
 
-Run this from the root of the repo (don't forget the .env file):
+1. **Ensure Python 3.11 is installed**:
 
-```bash
-pip install -r ./backend/requirements.txt
-npm install && npm run build && ./backend/start.sh
-```
+   - You can check your Python version by running:
+     ```bash
+     python3.11 --version
+     ```
+   - If Python 3.11 is not installed, you will need to install it first.
 
-It should kick off two servers from /backend and /backend/pipelines at 8080 and 9099, respectively.
+2. **Navigate to your project directory** (where you want the virtual environment to be created).
+
+3. **Create the virtual environment**:
+
+   - Run:
+     ```bash
+     python3.11 -m venv .env
+     ```
+
+4. **Activate the virtual environment**:
+
+   - Run:
+     ```bash
+     source .env/bin/activate
+     ```
+
+5. **Install deps, build and run**:
+
+   - Run:
+
+   ```bash
+   pip install -r ./backend/requirements.txt
+   npm install && npm run build && ./backend/start.sh
+   ```
+
+   - It should kick off two servers from /backend and /backend/pipelines at 8080 and 9099, respectively.
 
 ## Open WebUI (Formerly Ollama WebUI) 👋
 
