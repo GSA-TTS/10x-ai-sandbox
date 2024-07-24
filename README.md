@@ -1,3 +1,7 @@
+# Quickstart
+
+`npm install && npm run build && ./backend/start.sh`
+
 # Open WebUI (Formerly Ollama WebUI) 👋
 
 ![GitHub stars](https://img.shields.io/github/stars/open-webui/open-webui?style=social)
