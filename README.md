@@ -1,34 +1,36 @@
-# Quickstart
+# GSA Quickstart
 
 1. **Ensure Python 3.11 is installed**:
 
    - You can check your Python version by running:
-     ```bash
-     python3.11 --version
-     ```
+
+   ```bash
+   python3.11 --version
+   ```
+
    - If Python 3.11 is not installed, you will need to install it first.
 
    ```bash
    brew install python@3.11
    ```
 
-2. **Navigate to your project directory** (where you want the virtual environment to be created).
-
-3. **Create the virtual environment**:
+2. **Navigate to your project directory and Create the virtual environment**:
 
    - Run:
-     ```bash
-     python3.11 -m venv .env
-     ```
 
-4. **Activate the virtual environment**:
+   ```bash
+   python3.11 -m venv .env
+   ```
+
+3. **Activate the virtual environment**:
 
    - Run:
-     ```bash
-     source .env/bin/activate
-     ```
 
-5. **Install deps, build and run**:
+   ```bash
+   source .env/bin/activate
+   ```
+
+4. **Install deps, build and run**:
 
    - Run:
 
@@ -37,7 +39,13 @@
    npm install && npm run build && ./backend/start.sh
    ```
 
-   - It should kick off two servers from /backend and /backend/pipelines at 8080 and 9099, respectively.
+   - This should kick off two servers from /backend and /backend/pipelines at 8080 and 9099, respectively.
+
+5. **Set up pipelines to access models via API**:
+
+- Login to Open WebUI. In Open WebUI: Navigate to the Admin Panel > Settings > Connections > OpenAI API section. Set the API URL to http://localhost:9099 and the API key to 0p3n-w3bu!. You should now be connected to the pipelines server.
+- Load some pipelines. In Open WebUI Navigate to the Admin Panel > Settings > Connections > Pipelines section. Hit upload and select a .py file from the repo /backend/open-webui-pipelines/examples/pipelines/providers. The .env file contains keys for the `azure_openai...` and `bedrock_claude...` pipelines. Hit the little upload button next to the filename display (doesn't do it automatically...). Go to "Pipelines Valves" and see that the vars are correctly detected from your venv env vars.
+- After completing these steps, the model specified in the pipeline should be available in the drop down at the upper left when you create a new conversation.
 
 ## Open WebUI (Formerly Ollama WebUI) 👋
 
