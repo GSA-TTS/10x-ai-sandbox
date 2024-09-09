@@ -68,6 +68,11 @@ class SigninForm(BaseModel):
     password: str
 
 
+class SigninFormOauth(BaseModel):
+    state: str
+    code: str
+
+
 class ProfileImageUrlForm(BaseModel):
     profile_image_url: str
 

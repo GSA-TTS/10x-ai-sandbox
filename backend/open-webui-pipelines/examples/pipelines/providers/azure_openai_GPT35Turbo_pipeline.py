@@ -32,10 +32,12 @@ class Pipeline:
                     "AZURE_OPENAI_API_KEY", "your-azure-openai-api-key-here"
                 ),
                 "AZURE_OPENAI_ENDPOINT": os.getenv(
-                    "AZURE_OPENAI_ENDPOINT", "your-azure-openai-endpoint-here"
+                    "AZURE_OPENAI_ENDPOINT",
+                    "your-azure-openai-endpoint-here",
                 ),
                 "AZURE_OPENAI_DEPLOYMENT_NAME": os.getenv(
-                    "AZURE_OPENAI_DEPLOYMENT_NAME", "your-deployment-name-here"
+                    "AZURE_OPENAI_GPT35TURBO_DEPLOYMENT_NAME",
+                    "your-deployment-name-here",
                 ),
                 "AZURE_OPENAI_API_VERSION": os.getenv(
                     "AZURE_OPENAI_API_VERSION", "2024-02-01"
