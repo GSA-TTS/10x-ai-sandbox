@@ -28,8 +28,7 @@ applications:
       AZURE_OPENAI_ENDPOINT: ((AZURE_OPENAI_ENDPOINT))
       AZURE_OPENAI_GPT35TURBO_DEPLOYMENT_NAME: ((AZURE_OPENAI_GPT35TURBO_DEPLOYMENT_NAME))
       AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME: ((AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME))
-      NODE_VERBOSE=false
-      NPM_CONFIG_LOGLEVEL=error
-
+      NODE_VERBOSE: false
+      NPM_CONFIG_LOGLEVEL: "debug"
 
     command: npm i @sveltejs/adapter-static && npm list @sveltejs/adapter-static && npm run build --verbose && ./backend/start.sh
