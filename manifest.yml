@@ -1,6 +1,6 @@
 ---
 applications:
-  - name: open-webui-all-in-one-((env))
+  - name: gsa-ai-sandbox
     buildpacks:
       - python_buildpack
       - nodejs_buildpack
