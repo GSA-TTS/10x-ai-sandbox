@@ -14,4 +14,4 @@ applications:
       WEBUI_SECRET_KEY: ((WEBUI_SECRET_KEY))
       ADMIN_USER_EMAIL: ((ADMIN_USER_EMAIL))
       ADMIN_USER_PASSWORD: ((ADMIN_USER_PASSWORD))
-    command: npm run build && ./backend/start.sh
+    command: npm i @sveltejs/adapter-static && npm list @sveltejs/adapter-static && npm run build && ./backend/start.sh
