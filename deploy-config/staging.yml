@@ -1,5 +1,5 @@
 env: staging
 app_name: 10x-atj-doc-automation
 web_instances: 1
-web_memory: 1G
-worker_memory: 1G
+web_memory: 2G
+worker_memory: 2G
