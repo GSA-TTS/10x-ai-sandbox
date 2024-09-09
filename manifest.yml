@@ -14,5 +14,4 @@ applications:
       WEBUI_SECRET_KEY: ((WEBUI_SECRET_KEY))
       ADMIN_USER_EMAIL: ((ADMIN_USER_EMAIL))
       ADMIN_USER_PASSWORD: ((ADMIN_USER_PASSWORD))
-      PORT: 8080
     command: bash npm run build && ./backend/start.sh
