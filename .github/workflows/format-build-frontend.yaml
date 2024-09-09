@@ -22,6 +22,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.15.1' # Or specify any other version you want to use
+      
+      - name: Install NPM
+        run: npm install -g npm@10.8.3
 
       - name: Install Dependencies
         run: npm install
@@ -49,6 +52,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.15.1'
+      
+      - name: Install NPM
+        run: npm install -g npm@10.8.3
 
       - name: Install Dependencies
         run: npm ci
