@@ -1,17 +1,23 @@
 import logging
 
-from fastapi import Request, UploadFile, File
+from fastapi import Request  # , UploadFile, File
 from fastapi import Depends, HTTPException, status
+
+import requests
 
 from fastapi import APIRouter
 from pydantic import BaseModel
 import re
 import uuid
-import csv
+
+# import csv
+import sys
+import os
 
 
 from apps.webui.models.auths import (
     SigninForm,
+    SigninFormOauth,
     SignupForm,
     AddUserForm,
     UpdateProfileForm,
@@ -40,6 +46,10 @@ from config import (
 )
 
 router = APIRouter()
+
+logging.basicConfig(stream=sys.stdout, level="INFO")
+log = logging.getLogger(__name__)
+# log.setLevel(SRC_LOG_LEVELS["MAIN"])
 
 ############################
 # GetSessionUser
@@ -106,10 +116,178 @@ async def update_password(
 # SignIn
 ############################
 
+# TODO: move to utils
+OAUTH2_PROVIDERS = {
+    # Example provider configuration
+    "github": {
+        "client_id": os.environ.get(
+            "GITHUBLOCAL_CLIENT_ID", "you_forgot_to_set_GITHUBLOCAL_CLIENT_ID"
+        ),
+        "client_secret": os.environ.get(
+            "GITHUBLOCAL_CLIENT_SECRET", "you_forgot_to_set_GITHUBLOCAL_CLIENT_SECRET"
+        ),
+        "authorize_url": "https://github.com/login/oauth/authorize",
+        "token_url": "https://github.com/login/oauth/access_token",
+        "logout_url": "http://localhost:5000",  # probably substitute vcap primary route?
+        "userinfo": {
+            "url": "https://api.github.com/user/emails",
+            "email": lambda json: json[0]["email"],
+            "all_emails": lambda json: [item["email"] for item in json],
+        },
+        "scopes": ["user:email"],
+    },
+}
 
-@router.post("/signin", response_model=SigninResponse)
+
+@router.post("/signin_oauth", response_model=SigninResponse, name="oauth-signin")
+async def signin_oauth(request: Request, form_data: SigninFormOauth):
+    provider = "github"
+
+    name = None
+
+    provider_data = OAUTH2_PROVIDERS.get(provider)
+
+    if provider_data is None:
+        raise HTTPException(status_code=404)
+
+    if form_data.state != request.session.get("oauth2_state"):
+        # Handle state mismatch error
+        raise HTTPException(
+            status_code=401, detail=f"oauth2_state does not match expectation"
+        )
+
+    if not form_data.code:
+        # Handle missing code error
+        raise HTTPException(status_code=401, detail=f"code is missing")
+
+    # Exchange the authorization code for an access token
+    token_response = requests.post(
+        provider_data["token_url"],
+        data={
+            "client_id": provider_data["client_id"],
+            "client_secret": provider_data["client_secret"],
+            "code": form_data.code,
+            "grant_type": "authorization_code",
+            "redirect_uri": request.url_for("oauth2_callback"),
+        },
+        headers={"Accept": "application/json"},
+    )
+
+    if token_response.status_code != 200:
+        # Handle token exchange error
+        raise HTTPException(
+            status_code=401, detail=f"token_response: {token_response.json()}"
+        )
+
+    oauth2_token = token_response.json().get("access_token")
+
+    if not oauth2_token:
+        # Handle missing access token error
+        raise HTTPException(
+            status_code=401, detail=f"oauth2_token is missing or invalid"
+        )
+
+    try:
+        response = requests.get(
+            provider_data["userinfo"]["url"],
+            headers={
+                "Authorization": "Bearer " + oauth2_token,
+                "Accept": "application/json",
+            },
+            timeout=4,
+        )
+        if response.status_code != 200:
+            err = (
+                f"OAUTH userinfo response request status not 200."
+                + f"Status: {response.status_code}, Response: {response.json()}"
+            )
+            log.error(err)
+            raise HTTPException(status_code=401, detail=err)
+        email = provider_data["userinfo"]["email"](response.json())
+        all_emails = provider_data["userinfo"]["all_emails"](response.json())
+    except Exception as e:
+        # Handle email retrieval error
+        err = f"Error: {e} for {provider} provider with token {oauth2_token} and code {form_data.code} from {response.json()}"
+        log.error(err)
+        raise HTTPException(status_code=401, detail=err)
+
+    user_email_domains = []
+    user_has_permitted_domain = False
+
+    for this_email in all_emails:
+        domain = this_email.split("@")[1]
+        user_email_domains.append(domain)
+        if domain in ["gsa.gov"]:
+            email = this_email
+            user_has_permitted_domain = True
+            break
+
+    if not user_has_permitted_domain or not email:
+        # Handle unauthorized domain error
+        raise HTTPException(
+            status_code=401, detail=f"Missing email or unauthorized email domain"
+        )
+
+    log.error(f"bananas: email is: {email}")
+
+    if not name:
+        name = email
+
+    if not Users.get_user_by_email(email.lower()):
+        await signup(
+            request,
+            SignupForm(email=email, password=str(uuid.uuid4()), name=name),
+        )
+
+    user = Auths.authenticate_user_by_trusted_header(email)
+    log.error(f"bananas user is: {user}")
+
+    if user:
+        token = create_token(
+            data={"id": user.id},
+            expires_delta=parse_duration(request.app.state.config.JWT_EXPIRES_IN),
+        )
+
+        log.error(f"bananas finally user is: {user}")
+
+        return {
+            "token": token,
+            "token_type": "Bearer",
+            "id": user.id,
+            "email": user.email,
+            "name": user.name,
+            "role": user.role,
+            "profile_image_url": user.profile_image_url,
+        }
+    else:
+        raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_CRED)
+
+
+@router.post("/signin", response_model=SigninResponse, name="auths-signin")
 async def signin(request: Request, form_data: SigninForm):
-    if WEBUI_AUTH_TRUSTED_EMAIL_HEADER:
+
+    log.error(f"bananas: header: {request.headers}")
+
+    if request.client.host in ["127.0.0.1", "::1"]:
+        log.error("Request is coming from the local server")
+
+    if "X-Forwarded-Email" in request.headers:
+        trusted_email = request.headers["X-Forwarded-Email"].lower()
+        trusted_name = trusted_email
+        if WEBUI_AUTH_TRUSTED_NAME_HEADER:
+            trusted_name = request.headers.get(
+                WEBUI_AUTH_TRUSTED_NAME_HEADER, trusted_email
+            )
+        if not Users.get_user_by_email(trusted_email.lower()):
+            await signup(
+                request,
+                SignupForm(
+                    email=trusted_email, password=str(uuid.uuid4()), name=trusted_name
+                ),
+            )
+        user = Auths.authenticate_user_by_trusted_header(trusted_email)
+        log.error(f"bananas user is: {user}")
+    elif WEBUI_AUTH_TRUSTED_EMAIL_HEADER:
         if WEBUI_AUTH_TRUSTED_EMAIL_HEADER not in request.headers:
             raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_TRUSTED_HEADER)
 
@@ -127,7 +305,8 @@ async def signin(request: Request, form_data: SigninForm):
                 ),
             )
         user = Auths.authenticate_user_by_trusted_header(trusted_email)
-    elif WEBUI_AUTH == False:
+        print(f"bananas user is: {user}")
+    elif WEBUI_AUTH is False:
         admin_email = "admin@localhost"
         admin_password = "admin"
 
@@ -151,6 +330,8 @@ async def signin(request: Request, form_data: SigninForm):
             data={"id": user.id},
             expires_delta=parse_duration(request.app.state.config.JWT_EXPIRES_IN),
         )
+
+        log.error(f"bananas finally user is: {user}")
 
         return {
             "token": token,

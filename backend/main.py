@@ -1,7 +1,9 @@
 from contextlib import asynccontextmanager
-from bs4 import BeautifulSoup
+
+# from bs4 import BeautifulSoup
 import json
-import markdown
+
+# import markdown
 import time
 import os
 import sys
@@ -10,9 +12,9 @@ import aiohttp
 import requests
 import mimetypes
 import shutil
-import os
 import inspect
-import asyncio
+
+# import asyncio
 from urllib.parse import urlencode
 import secrets
 
@@ -20,7 +22,8 @@ from fastapi import FastAPI, Request, Depends, status, UploadFile, File, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi import HTTPException
-from fastapi.middleware.wsgi import WSGIMiddleware
+
+# from fastapi.middleware.wsgi import WSGIMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -50,7 +53,7 @@ from apps.webui.main import app as webui_app
 from pydantic import BaseModel
 from typing import List, Optional
 
-from apps.webui.models.models import Models, ModelModel
+from apps.webui.models.models import Models  # , ModelModel
 from apps.webui.models.tools import Tools
 from apps.webui.utils import load_toolkit_module_by_id
 
@@ -168,7 +171,9 @@ app.state.config.TOOLS_FUNCTION_CALLING_PROMPT_TEMPLATE = (
 
 app.state.MODELS = {}
 
-app.add_middleware(SessionMiddleware, secret_key="your_secret_key")  # TODO: fix
+app.add_middleware(
+    SessionMiddleware, secret_key="your_secret_key", max_age=None
+)  # TODO: fix max_age
 
 origins = ["*"]
 
@@ -484,7 +489,7 @@ def filter_pipeline(payload, user):
             if r is not None:
                 try:
                     res = r.json()
-                except:
+                except:  # noqa: E722
                     pass
                 if "detail" in res:
                     raise Exception(r.status_code, res["detail"])
@@ -573,6 +578,11 @@ async def check_url(request: Request, call_next):
 
     start_time = int(time.time())
     response = await call_next(request)
+    # session = request.cookies.get("session")
+    # if session:
+    #     response.set_cookie(
+    #         key="session", value=request.cookies.get("session"), httponly=True
+    #     )
     process_time = int(time.time()) - start_time
     response.headers["X-Process-Time"] = str(process_time)
 
@@ -630,7 +640,7 @@ async def get_all_models():
     custom_models = Models.get_all_models()
 
     for custom_model in custom_models:
-        if custom_model.base_model_id == None:
+        if custom_model.base_model_id is None:
             for model in models:
                 if (
                     custom_model.id == model["id"]
@@ -694,8 +704,12 @@ async def get_models(user=Depends(get_verified_user)):
 OAUTH2_PROVIDERS = {
     # Example provider configuration
     "github": {
-        "client_id": os.environ.get("GITHUBLOCAL_CLIENT_ID"),
-        "client_secret": os.environ.get("GITHUBLOCAL_CLIENT_SECRET"),
+        "client_id": os.environ.get(
+            "GITHUBLOCAL_CLIENT_ID", "you_forgot_to_set_GITHUBLOCAL_CLIENT_ID"
+        ),
+        "client_secret": os.environ.get(
+            "GITHUBLOCAL_CLIENT_SECRET", "you_forgot_to_set_GITHUBLOCAL_CLIENT_SECRET"
+        ),
         "authorize_url": "https://github.com/login/oauth/authorize",
         "token_url": "https://github.com/login/oauth/access_token",
         "logout_url": "http://localhost:5000",  # probably substitute vcap primary route?
@@ -710,12 +724,7 @@ OAUTH2_PROVIDERS = {
 
 
 @app.get("/authorize/github")
-async def oauth2_authorize(
-    provider="github",
-    request=Request,
-    current_user=None,
-):
-
+async def oauth2_authorize(request: Request, current_user=None):
     provider = "github"
 
     if current_user is not None:
@@ -725,23 +734,24 @@ async def oauth2_authorize(
     if provider_data is None:
         raise HTTPException(status_code=404)
 
+    # Ensure the session middleware is working correctly
     # generate a random string for the state parameter
-    request.session["oauth2_state"] = secrets.token_urlsafe(
-        16
-    )  # Adjust based on your session management
+    request.session["oauth2_state"] = secrets.token_urlsafe(16)
+
+    log.error(f"bananas: Oauth state is: {request.session.get('oauth2_state', 'N/A') }")
 
     # create a query string with all the OAuth2 parameters
     qs = urlencode(
         {
             "client_id": provider_data["client_id"],
-            "redirect_uri": request.url_for(
-                "oauth2_callback", provider=provider
+            "redirect_uri": str(
+                request.url_for("oauth2_callback")
             ),  # Adjust as necessary
             "response_type": "code",
             "scope": " ".join(provider_data["scopes"]),
             "state": request.session[
                 "oauth2_state"
-            ],  # Adjust based on your session management
+            ],  # Access the session value properly
         }
     )
 
@@ -751,14 +761,12 @@ async def oauth2_authorize(
 
 @app.get("/callback/github")
 async def oauth2_callback(
-    provider: str,
     request: Request,
     state: str,
     code: str = None,
     error: str = None,
     user: str = None,
 ):
-
     provider = "github"
 
     if user:
@@ -771,7 +779,7 @@ async def oauth2_callback(
 
     if error:
         # Handle the error, e.g., by flashing a message or logging
-        return RedirectResponse(url="/index", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
 
     if state != request.session.get("oauth2_state"):
         # Handle state mismatch error
@@ -781,38 +789,17 @@ async def oauth2_callback(
         # Handle missing code error
         raise HTTPException(status_code=401)
 
-    # Exchange the authorization code for an access token
-    token_response = requests.post(
-        provider_data["token_url"],
-        data={
-            "client_id": provider_data["client_id"],
-            "client_secret": provider_data["client_secret"],
-            "code": code,
-            "grant_type": "authorization_code",
-            "redirect_uri": request.url_for(
-                "oauth2_callback", provider=provider
-            ),  # Adjust as necessary
-        },
-        headers={"Accept": "application/json"},
+    # Get the current query parameters and append them to the redirect URL
+    query_params = request.query_params
+    redirect_url = f"/auth?{query_params}" if query_params else "/auth"
+
+    # Create the redirect response
+    response = RedirectResponse(
+        url=redirect_url,
+        status_code=status.HTTP_302_FOUND,
     )
 
-    if token_response.status_code != 200:
-        # Handle token exchange error
-        raise HTTPException(status_code=401)
-
-    oauth2_token = token_response.json().get("access_token")
-    if not oauth2_token:
-        # Handle missing access token error
-        raise HTTPException(status_code=401)
-
-    # The rest of the function would follow a similar pattern to the Flask route,
-    # adapting database interactions, user session management, and redirects to FastAPI's paradigms.
-
-    # This is a placeholder for the rest of your logic
-    # You would need to adapt the logic for fetching user info, checking email domains,
-    # updating the database, and managing user sessions to FastAPI and your specific application setup.
-
-    return RedirectResponse(url="/index", status_code=status.HTTP_302_FOUND)
+    return response
 
 
 @app.get("/api/task/config")
@@ -935,7 +922,8 @@ async def generate_search_query(form_data: dict, user=Depends(get_verified_user)
     if len(form_data["prompt"]) < app.state.config.SEARCH_QUERY_PROMPT_LENGTH_THRESHOLD:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Skip search query generation for short prompts (< {app.state.config.SEARCH_QUERY_PROMPT_LENGTH_THRESHOLD} characters)",
+            detail=f"Skip search query generation for short prompts (< "
+            + f"{app.state.config.SEARCH_QUERY_PROMPT_LENGTH_THRESHOLD} characters)",
         )
 
     model_id = form_data["model"]
@@ -1024,7 +1012,7 @@ async def generate_emoji(form_data: dict, user=Depends(get_verified_user)):
 Your task is to reflect the speaker's likely facial expression through a fitting emoji. Interpret emotions from the message and reflect their facial expression using fitting, diverse emojis (e.g., 😊, 😢, 😡, 😱).
 
 Message: """{{prompt}}"""
-'''
+'''  # noqa: E501
 
     content = title_generation_template(
         template,
@@ -1182,7 +1170,7 @@ async def chat_completed(form_data: dict, user=Depends(get_verified_user)):
                             status_code=r.status_code,
                             content=res,
                         )
-                except:
+                except:  # noqa: E722
                     pass
 
             else:
@@ -1199,7 +1187,7 @@ async def get_pipelines_list(user=Depends(get_admin_user)):
     urlIdxs = [
         idx
         for idx, response in enumerate(responses)
-        if response != None and "pipelines" in response
+        if response is not None and "pipelines" in response
     ]
 
     return {
@@ -1257,7 +1245,7 @@ async def upload_pipeline(
                 res = r.json()
                 if "detail" in res:
                     detail = res["detail"]
-            except:
+            except:  # noqa: E722
                 pass
 
         raise HTTPException(
@@ -1304,7 +1292,7 @@ async def add_pipeline(form_data: AddPipelineForm, user=Depends(get_admin_user))
                 res = r.json()
                 if "detail" in res:
                     detail = res["detail"]
-            except:
+            except:  # noqa: E722
                 pass
 
         raise HTTPException(
@@ -1347,7 +1335,7 @@ async def delete_pipeline(form_data: DeletePipelineForm, user=Depends(get_admin_
                 res = r.json()
                 if "detail" in res:
                     detail = res["detail"]
-            except:
+            except:  # noqa: E722
                 pass
 
         raise HTTPException(
@@ -1382,7 +1370,7 @@ async def get_pipelines(urlIdx: Optional[int] = None, user=Depends(get_admin_use
                 res = r.json()
                 if "detail" in res:
                     detail = res["detail"]
-            except:
+            except:  # noqa: E722
                 pass
 
         raise HTTPException(
@@ -1395,7 +1383,7 @@ async def get_pipelines(urlIdx: Optional[int] = None, user=Depends(get_admin_use
 async def get_pipeline_valves(
     urlIdx: Optional[int], pipeline_id: str, user=Depends(get_admin_user)
 ):
-    models = await get_all_models()
+    # models = await get_all_models()
     r = None
     try:
 
@@ -1420,7 +1408,7 @@ async def get_pipeline_valves(
                 res = r.json()
                 if "detail" in res:
                     detail = res["detail"]
-            except:
+            except:  # noqa: E722
                 pass
 
         raise HTTPException(
@@ -1433,7 +1421,7 @@ async def get_pipeline_valves(
 async def get_pipeline_valves_spec(
     urlIdx: Optional[int], pipeline_id: str, user=Depends(get_admin_user)
 ):
-    models = await get_all_models()
+    # models = await get_all_models()
 
     r = None
     try:
@@ -1457,7 +1445,7 @@ async def get_pipeline_valves_spec(
                 res = r.json()
                 if "detail" in res:
                     detail = res["detail"]
-            except:
+            except:  # noqa: E722
                 pass
 
         raise HTTPException(
@@ -1473,7 +1461,7 @@ async def update_pipeline_valves(
     form_data: dict,
     user=Depends(get_admin_user),
 ):
-    models = await get_all_models()
+    # models = await get_all_models()
 
     r = None
     try:
@@ -1502,7 +1490,7 @@ async def update_pipeline_valves(
                 res = r.json()
                 if "detail" in res:
                     detail = res["detail"]
-            except:
+            except:  # noqa: E722
                 pass
 
         raise HTTPException(
@@ -1593,7 +1581,7 @@ async def update_webhook_url(form_data: UrlForm, user=Depends(get_admin_user)):
 
 
 @app.get("/api/version")
-async def get_app_config():
+async def get_app_version():
     return {
         "version": VERSION,
     }
@@ -1617,6 +1605,7 @@ async def get_app_latest_release_version():
 
                 return {"current": VERSION, "latest": latest_version[1:]}
     except aiohttp.ClientError as e:
+        log.error(f"Error fetching latest release version: {e}")
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
@@ -1648,7 +1637,7 @@ async def get_opensearch_xml():
     <Url type="text/html" method="get" template="{WEBUI_URL}/?q={"{searchTerms}"}"/>
     <moz:SearchForm>{WEBUI_URL}</moz:SearchForm>
     </OpenSearchDescription>
-    """
+    """  # noqa: E501
     return Response(content=xml_content, media_type="application/xml")
 
 

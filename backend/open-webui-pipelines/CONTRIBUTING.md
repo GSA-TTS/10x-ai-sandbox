@@ -13,7 +13,7 @@ We are thrilled to have you join the Pipelines community! Your contributions are
 
 Encountered a bug or have an idea for improvement? We encourage you to report it! Here's how:
 
-1. **Check Existing Issues:**  Browse the [Issues tab](https://github.com/open-webui/pipelines/issues) to see if the issue or suggestion has already been reported.
+1. **Check Existing Issues:** Browse the [Issues tab](https://github.com/open-webui/pipelines/issues) to see if the issue or suggestion has already been reported.
 2. **Open a New Issue:** If it's a new issue, feel free to open one. Follow the issue template for clear and concise reporting. Provide detailed descriptions, steps to reproduce, expected outcomes, and actual results. This helps us understand and resolve the issue efficiently.
 
 ### 🧭 Scope of Support
@@ -30,7 +30,7 @@ We encourage pull requests to improve Pipelines! Here's the process:
 
 1. **Discuss Your Idea:** If your contribution involves significant changes, discuss it in the [Issues tab](https://github.com/open-webui/pipelines/issues) first. This ensures your idea aligns with the project's vision.
 2. **Coding Standards:** Follow the project's coding standards and write clear, descriptive commit messages.
-3. **Update Documentation:**  If your contribution impacts documentation, update it accordingly.
+3. **Update Documentation:** If your contribution impacts documentation, update it accordingly.
 4. **Submit Your Pull Request:** Submit your pull request and provide a clear summary of your changes.
 
 ### 📚 Documentation
@@ -38,8 +38,8 @@ We encourage pull requests to improve Pipelines! Here's the process:
 Help make Pipelines more accessible by:
 
 - **Writing Tutorials:** Create guides for setting up, using, and customizing Pipelines.
-- **Improving Documentation:**  Enhance existing documentation for clarity, completeness, and accuracy.
-- **Adding Examples:**  Contribute pipelines examples that showcase different functionalities and use cases.
+- **Improving Documentation:** Enhance existing documentation for clarity, completeness, and accuracy.
+- **Adding Examples:** Contribute pipelines examples that showcase different functionalities and use cases.
 
 ### 🤔 Questions & Feedback
 
