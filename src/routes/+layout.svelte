@@ -31,6 +31,16 @@
 	import { WEBUI_BASE_URL, WEBUI_HOSTNAME } from '$lib/constants';
 	import i18n, { initI18n, getLanguages } from '$lib/i18n';
 
+	import { page } from '$app/stores';
+
+	console.log('Page URL:', $page.url);
+	$: queryParams = $page.url.searchParams;
+	if (queryParams) {
+		console.log('Query Params from layout:', queryParams.toString());
+	} else {
+		console.log('No Query Params from layout');
+	}
+
 	setContext('i18n', i18n);
 
 	let loaded = false;
@@ -108,10 +118,12 @@
 					} else {
 						// Redirect Invalid Session User to /auth Page
 						localStorage.removeItem('token');
-						await goto('/auth');
+						const currentParams = new URLSearchParams($page.url.search);
+						await goto(`/auth?${currentParams.toString()}`);
 					}
 				} else {
-					await goto('/auth');
+					const currentParams = new URLSearchParams($page.url.search);
+					await goto(`/auth?${currentParams.toString()}`);
 				}
 			}
 		} else {

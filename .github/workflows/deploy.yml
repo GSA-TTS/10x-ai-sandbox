@@ -1,0 +1,77 @@
+name: Deploy to staging environment
+
+on:
+  push:
+    branches:
+      - main
+
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: github.event.head_commit.message != 'Merge pull request*' # Ensure it's a merge commit
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - uses: ./.github/actions/setup-project
+      # - name: Install application dependencies
+      #   run: pip install -r requirements.txt
+      - name: Deploy to cloud.gov
+        uses: 18f/cg-deploy-action@main
+        env:
+          OLLAMA_BASE_URL: ${{ secrets.OLLAMA_BASE_URL }}
+          WEBUI_NAME: ${{ secrets.WEBUI_NAME }}
+          SCARF_NO_ANALYTICS: ${{ secrets.SCARF_NO_ANALYTICS }}
+          DO_NOT_TRACK: ${{ secrets.DO_NOT_TRACK }}
+          ANONYMIZED_TELEMETRY: ${{ secrets.ANONYMIZED_TELEMETRY }}
+          GITHUBLOCAL_CLIENT_ID: ${{ secrets.GITHUBLOCAL_CLIENT_ID }}
+          GITHUBLOCAL_CLIENT_SECRET: ${{ secrets.GITHUBLOCAL_CLIENT_SECRET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_GPT35TURBO_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_GPT35TURBO_DEPLOYMENT_NAME }}
+          AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME }}
+          WEBUI_SECRET_KEY: ${{ secrets.WEBUI_SECRET_KEY }}
+          ADMIN_USER_EMAIL: ${{ secrets.ADMIN_USER_EMAIL }}
+          ADMIN_USER_PASSWORD: ${{ secrets.ADMIN_USER_PASSWORD }}
+        with:
+          cf_username: ${{ secrets.CLOUDGOV_USERNAME }}
+          cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
+          cf_org: gsa-10x-prototyping
+          cf_space: sandbox
+          push_arguments: >-
+            --vars-file deploy-config/staging.yml
+            --var OLLAMA_BASE_URL="$OLLAMA_BASE_URL"
+            --var WEBUI_NAME="$WEBUI_NAME"
+            --var SCARF_NO_ANALYTICS="$SCARF_NO_ANALYTICS"
+            --var DO_NOT_TRACK="$DO_NOT_TRACK"
+            --var ANONYMIZED_TELEMETRY="$ANONYMIZED_TELEMETRY"
+            --var GITHUBLOCAL_CLIENT_ID="$GITHUBLOCAL_CLIENT_ID"
+            --var GITHUBLOCAL_CLIENT_SECRET="$GITHUBLOCAL_CLIENT_SECRET"
+            --var AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
+            --var AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
+            --var AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION"
+            --var AZURE_OPENAI_API_KEY="$AZURE_OPENAI_API_KEY"
+            --var AZURE_OPENAI_ENDPOINT="$AZURE_OPENAI_ENDPOINT"
+            --var AZURE_OPENAI_GPT35TURBO_DEPLOYMENT_NAME="$AZURE_OPENAI_GPT35TURBO_DEPLOYMENT_NAME"
+            --var AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME="$AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME"
+            --var WEBUI_SECRET_KEY=$WEBUI_SECRET_KEY"
+            --var ADMIN_USER_EMAIL=$ADMIN_USER_EMAIL"
+            --var ADMIN_USER_PASSWORD=$ADMIN_USER_PASSWORD"
+
+
+  bail:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: core.setFailed('Checks failed, not deploying')
