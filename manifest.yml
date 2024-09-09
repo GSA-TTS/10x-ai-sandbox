@@ -14,4 +14,4 @@ applications:
       WEBUI_SECRET_KEY: ((WEBUI_SECRET_KEY))
       ADMIN_USER_EMAIL: ((ADMIN_USER_EMAIL))
       ADMIN_USER_PASSWORD: ((ADMIN_USER_PASSWORD))
-    command: bash npm install -g npm@latest && npm install && npm run build && ./backend/start.sh
+    command: npm run build && ./backend/start.sh
