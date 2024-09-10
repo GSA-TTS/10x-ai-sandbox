@@ -10,7 +10,9 @@ if [ -n "$VCAP_APPLICATION" ]; then
     echo "PATH is set to: $PATH"
     echo "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
 
-    echo "===========//===========$(df -h)"
+    echo "===========/startup/===========$(df -h)"
+
+    rm -rf node_modules
 
     # Clean npm cache
     echo "Cleaning npm cache..."
@@ -34,11 +36,11 @@ if [ -n "$VCAP_APPLICATION" ]; then
     echo "Installing npm packages with temporary cache..."
     npm install --include=dev
 
-    echo "===========//===========$(df -h)"
+    echo "===========/installed node dev deps/===========$(df -h)"
 
     npm run build
 
-    echo "===========//===========$(df -h)"
+    echo "===========/build has run/===========$(df -h)"
 else
     echo "Not running inside a Cloud Foundry instance. Skipping path setting."
 fi
@@ -46,12 +48,12 @@ fi
 rm -rf node_modules
 npm install --only=production --prefer-online
 
-echo "===========//===========$(df -h)"
-
 # Clean npm and Yarn caches
 echo "Cleaning npm and Yarn caches..."
 npm cache clean --force
 yarn cache clean
+
+echo "===========/remove modules, install prod, clean/===========$(df -h)"
 
 # Clean output directory (dist)
 echo "Cleaning Vite output directory..."
@@ -85,11 +87,11 @@ fi
 
 echo "All caches cleaned!"
 
-echo "===========//===========$(df -h)"
+echo "===========/node vite caches clean/===========$(df -h)"
 
 pip3 install -r ./backend/requirements.txt --no-cache-dir
 
-echo "===========//===========$(df -h)"
+echo "===========/installed backend reqs/===========$(df -h)"
 
 # pip3 install -r ./backend/open-webui-pipelines/requirements.txt --no-cache-dir
 
