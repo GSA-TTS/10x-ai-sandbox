@@ -21,7 +21,9 @@ async function downloadPackages() {
 	await pyodide.loadPackage('micropip');
 	const micropip = pyodide.pyimport('micropip');
 	console.log('Downloading Pyodide packages:', packages);
-	await micropip.install(packages);
+
+	await micropip.install(packages, { keep_wheels: false });
+
 	console.log('Pyodide packages downloaded, freezing into lock file');
 	const lockFile = await micropip.freeze();
 	await writeFile('static/pyodide/pyodide-lock.json', lockFile);
