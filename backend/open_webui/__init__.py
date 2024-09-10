@@ -28,18 +28,18 @@ def serve(
         typer.echo(f"Loading WEBUI_SECRET_KEY from {KEY_FILE}")
         os.environ["WEBUI_SECRET_KEY"] = KEY_FILE.read_text()
 
-    if os.getenv("USE_CUDA_DOCKER", "false") == "true":
-        typer.echo(
-            "CUDA is enabled, appending LD_LIBRARY_PATH to include torch/cudnn & cublas libraries."
-        )
-        LD_LIBRARY_PATH = os.getenv("LD_LIBRARY_PATH", "").split(":")
-        os.environ["LD_LIBRARY_PATH"] = ":".join(
-            LD_LIBRARY_PATH
-            + [
-                "/usr/local/lib/python3.11/site-packages/torch/lib",
-                "/usr/local/lib/python3.11/site-packages/nvidia/cudnn/lib",
-            ]
-        )
+    # if os.getenv("USE_CUDA_DOCKER", "false") == "true":
+    #     typer.echo(
+    #         "CUDA is enabled, appending LD_LIBRARY_PATH to include torch/cudnn & cublas libraries."
+    #     )
+    #     LD_LIBRARY_PATH = os.getenv("LD_LIBRARY_PATH", "").split(":")
+    #     os.environ["LD_LIBRARY_PATH"] = ":".join(
+    #         LD_LIBRARY_PATH
+    #         + [
+    #             "/usr/local/lib/python3.11/site-packages/torch/lib",
+    #             "/usr/local/lib/python3.11/site-packages/nvidia/cudnn/lib",
+    #         ]
+    #     )
     import main  # we need set environment variables before importing main
 
     uvicorn.run(main.app, host=host, port=port, forwarded_allow_ips="*")
