@@ -2,8 +2,8 @@
 applications:
   - name: gsa-ai-sandbox
     buildpacks:
-      - nodejs_buildpack
       - python_buildpack
+      - nodejs_buildpack
     stack: cflinuxfs4
     instances: ((web_instances))
     memory: ((web_memory))
