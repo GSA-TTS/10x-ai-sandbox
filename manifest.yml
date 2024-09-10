@@ -11,6 +11,8 @@ applications:
     routes:
       - route: gsa-ai-sandbox.app.cloud.gov
     env:
+      PATH: "$HOME/deps/1/node/bin:$HOME/deps/0/bin:$PATH"
+      LD_LIBRARY_PATH: "$HOME/deps/0/lib:$LD_LIBRARY_PATH"
       WEBUI_SECRET_KEY: ((WEBUI_SECRET_KEY))
       ADMIN_USER_EMAIL: ((ADMIN_USER_EMAIL))
       ADMIN_USER_PASSWORD: ((ADMIN_USER_PASSWORD))
