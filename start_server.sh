@@ -3,7 +3,6 @@
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 cd "$SCRIPT_DIR" || exit
 
-# Check if the environment variable VCAP_APPLICATION exists
 if [ -n "$VCAP_APPLICATION" ]; then
     echo "Running inside a Cloud Foundry instance, setting paths"
     export PATH="$HOME/deps/1/node/bin:$HOME/deps/0/bin:$PATH"
