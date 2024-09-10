@@ -117,7 +117,7 @@
 				].filter(Boolean);
 
 				console.log(packages);
-				await micropip.install(packages);
+				await micropip.install(packages, { keep_wheels: false });
 
 				result = await pyodide.runPythonAsync(`from js import prompt
 def input(p):
