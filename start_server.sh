@@ -13,6 +13,4 @@ else
     echo "Not running inside a Cloud Foundry instance. Skipping path setting."
 fi
 
-npm run build
-
 bash $SCRIPT_DIR/backend/start.sh

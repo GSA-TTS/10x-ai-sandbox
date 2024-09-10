@@ -5,7 +5,6 @@ on:
     branches:
       - main
 
-
 permissions:
   contents: read
 
@@ -20,8 +19,22 @@ jobs:
         with:
           fetch-depth: 2
       - uses: ./.github/actions/setup-project
-      # - name: Install application dependencies
-      #   run: pip install -r requirements.txt
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.15.1'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build Svelte App
+        run: npm run build
+      - name: Commit build artifacts
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          echo 'build/' >> .gitignore # Temporarily remove build/ from .gitignore
+          git add -f build/ # Force add the build directory
+          git commit -m 'Add build artifacts for deployment' || echo "No changes to commit"
+          git push
       - name: Deploy to cloud.gov
         uses: 18f/cg-deploy-action@main
         env:
@@ -67,7 +80,6 @@ jobs:
             --var WEBUI_SECRET_KEY=$"WEBUI_SECRET_KEY"
             --var ADMIN_USER_EMAIL=$"ADMIN_USER_EMAIL"
             --var ADMIN_USER_PASSWORD=$"ADMIN_USER_PASSWORD"
-
 
   bail:
     runs-on: ubuntu-latest
