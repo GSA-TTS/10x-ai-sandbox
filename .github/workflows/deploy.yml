@@ -28,10 +28,12 @@ jobs:
       - name: Build Svelte App
         run: npm run build
       - name: Commit build artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}  # Use PAT_TOKEN secret for authentication
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          echo 'build/' >> .gitignore # Temporarily remove build/ from .gitignore
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git add -f build/ # Force add the build directory
           git commit -m 'Add build artifacts for deployment' || echo "No changes to commit"
           git push
