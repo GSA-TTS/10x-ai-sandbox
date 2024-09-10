@@ -69,6 +69,7 @@
 		"katex": "^0.16.9",
 		"marked": "^9.1.0",
 		"mermaid": "^10.9.1",
+		"npm": "^10.8.3",
 		"pyodide": "^0.26.0-alpha.4",
 		"socket.io-client": "^4.7.5",
 		"sortablejs": "^1.15.2",
@@ -76,10 +77,11 @@
 		"svelte-check": "^3.4.3",
 		"svelte-sonner": "^0.3.19",
 		"tippy.js": "^6.3.7",
-		"uuid": "^9.0.1"
+		"uuid": "^9.0.1",
+		"yarn": "^1.22.22"
 	},
 	"engines": {
 		"node": "20.15.1",
-		"npm": "10.7.0"
+		"npm": "10.8.3"
 	}
 }
