@@ -1,5 +1,5 @@
 env: staging
-app_name: 10x-atj-doc-automation
+app_name: gsa-ai-sandbox
 web_instances: 1
 web_memory: 2G
 worker_memory: 2G
