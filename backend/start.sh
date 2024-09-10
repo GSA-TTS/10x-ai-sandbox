@@ -5,6 +5,26 @@ cd "$SCRIPT_DIR" || exit
 
 bash $SCRIPT_DIR/open-webui-pipelines/start.sh &
 
+REQUIREMENTS_PATH=$SCRIPT_DIR/requirements.txt
+
+# Function to install requirements if requirements.txt is provided
+install_requirements() {
+  if [[ -f "$1" ]]; then
+    echo "requirements.txt found at $1. Installing requirements..."
+    pip3 install -r "$1"
+  else
+    echo "requirements.txt not found at $1. Skipping installation of requirements."
+  fi
+}
+
+# Check if the REQUIREMENTS_PATH environment variable is set and non-empty
+if [[ -n "$REQUIREMENTS_PATH" ]]; then
+  # Install requirements from the specified requirements.txt
+  install_requirements "$REQUIREMENTS_PATH"
+else
+  echo "REQUIREMENTS_PATH not specified. Skipping installation of requirements."
+fi
+
 KEY_FILE=.webui_secret_key
 
 PORT="${PORT:-8080}"

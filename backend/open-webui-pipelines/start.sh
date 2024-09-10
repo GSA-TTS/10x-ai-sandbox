@@ -9,6 +9,25 @@ cd "$SCRIPT_DIR" || exit
 # PIPELINES_DIR=${PIPELINES_DIR:-./pipelines}
 
 PIPELINES_REQUIREMENTS_PATH=$SCRIPT_DIR/requirements.txt
+
+# Function to install requirements if requirements.txt is provided
+install_requirements() {
+  if [[ -f "$1" ]]; then
+    echo "requirements.txt found at $1. Installing requirements..."
+    pip3 install -r "$1"
+  else
+    echo "requirements.txt not found at $1. Skipping installation of requirements."
+  fi
+}
+
+# Check if the PIPELINES_REQUIREMENTS_PATH environment variable is set and non-empty
+if [[ -n "$PIPELINES_REQUIREMENTS_PATH" ]]; then
+  # Install requirements from the specified requirements.txt
+  install_requirements "$PIPELINES_REQUIREMENTS_PATH"
+else
+  echo "PIPELINES_REQUIREMENTS_PATH not specified. Skipping installation of requirements."
+fi
+
 PIPELINES_DIR=$SCRIPT_DIR/pipelines
 
 # Function to reset pipelines
@@ -35,24 +54,6 @@ reset_pipelines_dir() {
 
 # Example usage of the function
 reset_pipelines_dir
-
-# Function to install requirements if requirements.txt is provided
-install_requirements() {
-  if [[ -f "$1" ]]; then
-    echo "requirements.txt found at $1. Installing requirements..."
-    pip install -r "$1"
-  else
-    echo "requirements.txt not found at $1. Skipping installation of requirements."
-  fi
-}
-
-# Check if the PIPELINES_REQUIREMENTS_PATH environment variable is set and non-empty
-if [[ -n "$PIPELINES_REQUIREMENTS_PATH" ]]; then
-  # Install requirements from the specified requirements.txt
-  install_requirements "$PIPELINES_REQUIREMENTS_PATH"
-else
-  echo "PIPELINES_REQUIREMENTS_PATH not specified. Skipping installation of requirements."
-fi
 
 # Function to download the pipeline files
 download_pipelines() {
@@ -102,9 +103,9 @@ install_frontmatter_requirements() {
     requirements=$(echo "$requirements" | awk -F': ' '{print $2}' | tr ',' ' ' | tr -d '\r')
 
     # Construct and echo the pip install command
-    local pip_command="pip install $requirements"
+    local pip_command="pip3 install $requirements"
     echo "$pip_command"
-    pip install $requirements
+    pip3 install $requirements
   else
     echo "No requirements found in frontmatter of $file."
   fi
