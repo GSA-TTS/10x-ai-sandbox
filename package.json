@@ -69,7 +69,6 @@
 		"katex": "^0.16.9",
 		"marked": "^9.1.0",
 		"mermaid": "^10.9.1",
-		"npm": "^10.8.3",
 		"pyodide": "^0.26.0-alpha.4",
 		"socket.io-client": "^4.7.5",
 		"sortablejs": "^1.15.2",
