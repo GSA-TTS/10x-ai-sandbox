@@ -29,4 +29,4 @@ applications:
       AZURE_OPENAI_GPT35TURBO_DEPLOYMENT_NAME: ((AZURE_OPENAI_GPT35TURBO_DEPLOYMENT_NAME))
       AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME: ((AZURE_OPENAI_GPT4OMNI_DEPLOYMENT_NAME))
 
-    command: npm i @sveltejs/adapter-static && npm list @sveltejs/adapter-static && npm run build --verbose && ./backend/start.sh
+    command: ls
