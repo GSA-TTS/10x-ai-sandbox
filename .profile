@@ -9,7 +9,7 @@ if [ -n "$VCAP_APPLICATION" ]; then
     # export LD_LIBRARY_PATH="$HOME/deps/0/lib:$LD_LIBRARY_PATH"
     echo "PATH is set to: $PATH"
     echo "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
-    echo "Pip version: $(pip --version)"
+    echo "Pip3 version: $(pip3 --version)"
     npm install --include=dev
     npm run build
 else
