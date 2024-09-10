@@ -2,12 +2,12 @@
 applications:
   - name: gsa-ai-sandbox
     buildpacks:
-      - python_buildpack
       - nodejs_buildpack
+      - python_buildpack
     stack: cflinuxfs4
     instances: ((web_instances))
     memory: ((web_memory))
-    disk_quota: 4G
+    disk_quota: 8G
     routes:
       - route: gsa-ai-sandbox.app.cloud.gov
     env:
