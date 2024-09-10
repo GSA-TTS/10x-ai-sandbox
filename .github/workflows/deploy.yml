@@ -28,8 +28,8 @@ jobs:
       - name: Build Svelte App
         run: npm run build
       - name: Commit build artifacts
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}  # Use PAT_TOKEN secret for authentication
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}  # Use PAT_TOKEN secret for authentication
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
