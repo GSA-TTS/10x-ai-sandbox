@@ -1,5 +1,3 @@
-# .profile
-
 # Add Node.js and Python paths
 export PATH="$HOME/deps/1/node/bin:$HOME/deps/0/bin:$PATH"
 
