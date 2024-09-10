@@ -7,7 +7,7 @@ applications:
     stack: cflinuxfs4
     instances: ((web_instances))
     memory: ((web_memory))
-    disk_quota: 20G
+    disk_quota: 7G
     routes:
       - route: gsa-ai-sandbox.app.cloud.gov
     env:
