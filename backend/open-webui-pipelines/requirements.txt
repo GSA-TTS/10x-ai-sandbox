@@ -33,15 +33,15 @@ langfuse
 ddtrace
 
 # ML libraries
-torch
+# torch
 numpy
 pandas
 xgboost
 scikit-learn
 
 # NLP libraries
-sentence-transformers
-transformers
+# sentence-transformers
+# transformers
 tokenizers
 nltk
 tiktoken
