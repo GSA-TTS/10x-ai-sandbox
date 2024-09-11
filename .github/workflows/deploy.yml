@@ -63,7 +63,6 @@ jobs:
           cf_org: gsa-10x-prototyping
           cf_space: sandbox
           push_arguments: >-
-            --health-check-type process
             --vars-file deploy-config/staging.yml
             --var OLLAMA_BASE_URL="$OLLAMA_BASE_URL"
             --var WEBUI_NAME="$WEBUI_NAME"
