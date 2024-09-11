@@ -116,7 +116,7 @@ df -h | sed -n '2p'
 
 echo "Installing torch"
 # pip3 install torch==2.4.1 --no-cache-dir
-pip3 install torch+cpu --index-url https://download.pytorch.org/whl/cpu --no-cache-dir
+pip3 install torch+cpu --index-url https://download.pytorch.org/whl/cpu
 # pip3 install torch==2.4.1 --extra-index-url https://download.pytorch.org/whl/cpu
 
 echo "Clearing pip cache..."
@@ -126,15 +126,15 @@ df -h | sed -n '2p'
 
 echo "pip show torch: $(pip3 show torch)"
 
-echo "Installing sentence_transformers"
-pip3 install sentence_transformers==2.7.0 --no-cache-dir
+# echo "Installing sentence_transformers"
+# pip3 install sentence_transformers==2.7.0 --no-cache-dir
 
-echo "Clearing pip cache..."
-pip3 cache purge
-echo "Disk usage after installing ST and purging pip cache:"
-df -h | sed -n '2p'
+# echo "Clearing pip cache..."
+# pip3 cache purge
+# echo "Disk usage after installing ST and purging pip cache:"
+# df -h | sed -n '2p'
 
-echo "pip show sentence_transformers: $(pip3 show sentence_transformers)"
+# echo "pip show sentence_transformers: $(pip3 show sentence_transformers)"
 
 echo "===========/install requirements.txt/===========\n$(df -h)"
 
