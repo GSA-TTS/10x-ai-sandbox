@@ -21,6 +21,7 @@ langfuse==2.48.0
 llama_index==0.11.8
 llm_guard==0.3.15
 Markdown==3.6
+openai==1.44.1
 passlib==1.7.4
 peewee==3.17.5
 peewee_migrate==1.13.0

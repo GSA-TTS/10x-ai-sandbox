@@ -3,95 +3,104 @@
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 cd "$SCRIPT_DIR" || exit
 
-# if [ -n "$VCAP_APPLICATION" ]; then
-#     # echo "Running inside a Cloud Foundry instance, setting paths"
-#     # export PATH="$HOME/deps/1/node/bin:$HOME/deps/0/bin:$PATH"
-#     # export PATH="$HOME/deps/0/python/bin:$PATH"
+if [ -n "$VCAP_APPLICATION" ]; then
+    echo "Running inside a Cloud Foundry instance, setting paths"
+    # export PATH="$HOME/deps/1/node/bin:$HOME/deps/0/bin:$PATH"
+    # export PATH="$HOME/deps/0/python/bin:$PATH"
+    # export LD_LIBRARY_PATH="$HOME/deps/0/lib:$LD_LIBRARY_PATH"
 
-#     # export LD_LIBRARY_PATH="$HOME/deps/0/lib:$LD_LIBRARY_PATH"
-#     echo "PATH is set to: $PATH"
-#     echo "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
+    echo "PATH is set to: $PATH"
+    echo "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
 
-#     alias pip='pip3'
+    NEW_PATH="/home/vcap/deps/0/python/bin"
+    echo "New path to add: $NEW_PATH"
+    # Check if the new path is already in the PATH variable
+    if [[ ":$PATH:" != *":$NEW_PATH:"* ]]; then
+        echo "Adding $NEW_PATH to PATH..."
+        export PATH="$NEW_PATH:$PATH"
+    fi
+    echo "Current PATH is now: $PATH"
 
-#     echo "pip is: $(which pip)"
+    alias pip='pip3'
 
-#     echo "===========/startup/===========\n$(df -h)\n============================"
+    echo "pip is: $(which pip)"
 
-#     rm -rf node_modules
+    echo "===========/startup/===========\n$(df -h)\n============================"
 
-#     # Clean npm cache
-#     echo "Cleaning npm cache..."
-#     npm cache clean --force
+    rm -rf node_modules
 
-#     # Clean Node.js cache if any (optional)
-#     echo "Cleaning Node.js cache..."
-#     if [ -d "$HOME/.node-gyp" ]; then
-#         rm -rf "$HOME/.node-gyp"
-#     fi
+    # Clean npm cache
+    echo "Cleaning npm cache..."
+    npm cache clean --force
 
-#     if [ -d "$HOME/.npm" ]; then
-#         rm -rf "$HOME/.npm"
-#     fi
+    # Clean Node.js cache if any (optional)
+    echo "Cleaning Node.js cache..."
+    if [ -d "$HOME/.node-gyp" ]; then
+        rm -rf "$HOME/.node-gyp"
+    fi
 
-#     if [ -d "$HOME/.cache/yarn" ]; then
-#         rm -rf "$HOME/.cache/yarn"
-#     fi
+    if [ -d "$HOME/.npm" ]; then
+        rm -rf "$HOME/.npm"
+    fi
 
-#     # Install packages with temporary cache
-#     echo "Installing npm packages with temporary cache..."
-#     npm install --include=dev
+    if [ -d "$HOME/.cache/yarn" ]; then
+        rm -rf "$HOME/.cache/yarn"
+    fi
 
-#     echo "===========/installed node dev deps/===========\n$(df -h)\n============================"
+    # Install packages with temporary cache
+    echo "Installing npm packages with temporary cache..."
+    npm install --include=dev
 
-#     npm run build
+    echo "===========/installed node dev deps/===========\n$(df -h)\n============================"
 
-#     echo "===========/build has run/===========\n$(df -h)"
-# else
-#     echo "Not running inside a Cloud Foundry instance. Skipping path setting."
-# fi
+    npm run build
 
-# rm -rf node_modules
-# npm install --only=production --prefer-online
+    echo "===========/build has run/===========\n$(df -h)"
+else
+    echo "Not running inside a Cloud Foundry instance. Skipping path setting."
+fi
 
-# # Clean npm and Yarn caches
-# echo "Cleaning npm and Yarn caches..."
-# npm cache clean --force
-# yarn cache clean
+rm -rf node_modules
+npm install --only=production --prefer-online
 
-# echo "===========/remove modules, install prod, clean/===========\n$(df -h)"
+# Clean npm and Yarn caches
+echo "Cleaning npm and Yarn caches..."
+npm cache clean --force
+yarn cache clean
 
-# # Clean output directory (dist)
-# echo "Cleaning Vite output directory..."
-# rm -rf dist
+echo "===========/remove modules, install prod, clean/===========\n$(df -h)"
 
-# # Clean ESLint and Prettier caches
-# echo "Cleaning ESLint and Prettier caches..."
-# rm -f .eslintcache
-# rm -f .prettiercache
+# Clean output directory (dist)
+echo "Cleaning Vite output directory..."
+rm -rf dist
 
-# # Clean Babel cache
-# echo "Cleaning Babel cache..."
-# rm -rf .babel_cache
+# Clean ESLint and Prettier caches
+echo "Cleaning ESLint and Prettier caches..."
+rm -f .eslintcache
+rm -f .prettiercache
 
-# # Clean TypeScript cache
-# echo "Cleaning TypeScript cache..."
-# rm -f tsconfig.tsbuildinfo
+# Clean Babel cache
+echo "Cleaning Babel cache..."
+rm -rf .babel_cache
 
-# # Clean any other potential caches related to Vite or build tools
-# echo "Cleaning .vite and other build caches..."
-# rm -rf .vite
-# rm -rf .cache
+# Clean TypeScript cache
+echo "Cleaning TypeScript cache..."
+rm -f tsconfig.tsbuildinfo
 
-# if [ -d "$HOME/.node-gyp" ]; then
-#     rm -rf "$HOME/.node-gyp"
-# fi
+# Clean any other potential caches related to Vite or build tools
+echo "Cleaning .vite and other build caches..."
+rm -rf .vite
+rm -rf .cache
 
-# if [ -d "$HOME/.cache/yarn" ]; then
-#     rm -rf "$HOME/.cache/yarn"
-# fi
+if [ -d "$HOME/.node-gyp" ]; then
+    rm -rf "$HOME/.node-gyp"
+fi
 
-# echo "All caches cleaned!"
+if [ -d "$HOME/.cache/yarn" ]; then
+    rm -rf "$HOME/.cache/yarn"
+fi
+
+echo "All caches cleaned!"
 
 echo "===========/node vite caches clean/===========\n$(df -h)"
 
@@ -105,16 +114,6 @@ export USE_DISTRIBUTED=0
 export USE_QNNPACK=0
 export BUILD_TEST=0
 
-NEW_PATH="/home/vcap/deps/0/python/bin"
-echo "Current PATH: $PATH"
-echo "New path to add: $NEW_PATH"
-# Check if the new path is already in the PATH variable
-if [[ ":$PATH:" != *":$NEW_PATH:"* ]]; then
-    echo "Adding $NEW_PATH to PATH..."
-    export PATH="$NEW_PATH:$PATH"
-fi
-echo "Current PATH is now: $PATH"
-
 echo "Installing torch"
 pip3 install torch==2.3.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 # pip3 install torch==2.4.1 --extra-index-url https://download.pytorch.org/whl/cpu
@@ -124,6 +123,8 @@ pip3 cache purge
 echo "Disk usage after installing torch:"
 df -h | sed -n '2p'
 
+echo "pip show torch: $(pip3 show torch)"
+
 echo "Installing sentence_transformers"
 pip3 install sentence_transformers==2.7.0
 
@@ -132,13 +133,7 @@ pip3 cache purge
 echo "Disk usage after installing ST and purging pip cache:"
 df -h | sed -n '2p'
 
-echo "auto removing unused ST deps"
-/home/vcap/deps/0/python/bin/pip-autoremove sentence_transformers -y
-
-echo "Clearing pip cache..."
-pip3 cache purge
-echo "Disk usage after autoremove sentence_transformers deps"
-df -h | sed -n '2p'
+echo "pip show sentence_transformers: $(pip3 show sentence_transformers)"
 
 # Read requirements.txt file line by line
 # while IFS= read -r package || [[ -n "$package" ]]; do
