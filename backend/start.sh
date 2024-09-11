@@ -5,7 +5,7 @@ cd "$SCRIPT_DIR" || exit
 
 bash $SCRIPT_DIR/open-webui-pipelines/start.sh &
 
-REQUIREMENTS_PATH=$SCRIPT_DIR/requirements.txt
+# REQUIREMENTS_PATH=$SCRIPT_DIR/requirements.txt
 
 # Function to install requirements if requirements.txt is provided
 install_requirements() {
