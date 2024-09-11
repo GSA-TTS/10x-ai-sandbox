@@ -22,7 +22,7 @@ async function downloadPackages() {
 	const micropip = pyodide.pyimport('micropip');
 	console.log('Downloading Pyodide packages:', packages);
 
-	await micropip.install(packages, { keep_wheels: false });
+	await micropip.install(packages);
 
 	console.log('Pyodide packages downloaded, freezing into lock file');
 	const lockFile = await micropip.freeze();
