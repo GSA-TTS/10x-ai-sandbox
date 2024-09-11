@@ -347,6 +347,7 @@ def get_model_path(model: str, update_model: bool = False):
         model = "sentence-transformers" + "/" + model
 
     snapshot_kwargs["repo_id"] = model
+    snapshot_kwargs["local_files_only"] = False
 
     # Attempt to query the huggingface_hub library to determine the local path and/or to update
     try:
