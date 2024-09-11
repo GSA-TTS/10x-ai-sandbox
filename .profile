@@ -4,13 +4,22 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 cd "$SCRIPT_DIR" || exit
 
 if [ -n "$VCAP_APPLICATION" ]; then
-    # echo "Running inside a Cloud Foundry instance, setting paths"
+    echo "Running inside a Cloud Foundry instance, setting paths"
     # export PATH="$HOME/deps/1/node/bin:$HOME/deps/0/bin:$PATH"
     # export PATH="$HOME/deps/0/python/bin:$PATH"
-
     # export LD_LIBRARY_PATH="$HOME/deps/0/lib:$LD_LIBRARY_PATH"
+
     echo "PATH is set to: $PATH"
     echo "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
+
+    NEW_PATH="/home/vcap/deps/0/python/bin"
+    echo "New path to add: $NEW_PATH"
+    # Check if the new path is already in the PATH variable
+    if [[ ":$PATH:" != *":$NEW_PATH:"* ]]; then
+        echo "Adding $NEW_PATH to PATH..."
+        export PATH="$NEW_PATH:$PATH"
+    fi
+    echo "Current PATH is now: $PATH"
 
     alias pip='pip3'
 
@@ -105,16 +114,6 @@ export USE_DISTRIBUTED=0
 export USE_QNNPACK=0
 export BUILD_TEST=0
 
-NEW_PATH="/home/vcap/deps/0/python/bin"
-echo "Current PATH: $PATH"
-echo "New path to add: $NEW_PATH"
-# Check if the new path is already in the PATH variable
-if [[ ":$PATH:" != *":$NEW_PATH:"* ]]; then
-    echo "Adding $NEW_PATH to PATH..."
-    export PATH="$NEW_PATH:$PATH"
-fi
-echo "Current PATH is now: $PATH"
-
 echo "Installing torch"
 pip3 install torch==2.3.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 # pip3 install torch==2.4.1 --extra-index-url https://download.pytorch.org/whl/cpu
@@ -124,6 +123,8 @@ pip3 cache purge
 echo "Disk usage after installing torch:"
 df -h | sed -n '2p'
 
+echo "pip show torch: $(pip3 show torch)"
+
 echo "Installing sentence_transformers"
 pip3 install sentence_transformers==2.7.0
 
@@ -131,6 +132,8 @@ echo "Clearing pip cache..."
 pip3 cache purge
 echo "Disk usage after installing ST and purging pip cache:"
 df -h | sed -n '2p'
+
+echo "pip show sentence_transformers: $(pip3 show sentence_transformers)"
 
 # Read requirements.txt file line by line
 # while IFS= read -r package || [[ -n "$package" ]]; do
