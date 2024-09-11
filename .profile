@@ -6,11 +6,13 @@ cd "$SCRIPT_DIR" || exit
 if [ -n "$VCAP_APPLICATION" ]; then
     # echo "Running inside a Cloud Foundry instance, setting paths"
     # export PATH="$HOME/deps/1/node/bin:$HOME/deps/0/bin:$PATH"
+    export PATH="$HOME/deps/0/python/bin:$PATH"
+
     # export LD_LIBRARY_PATH="$HOME/deps/0/lib:$LD_LIBRARY_PATH"
     echo "PATH is set to: $PATH"
     echo "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
 
-    echo "===========/startup/===========$(df -h)"
+    echo "===========/startup/===========\n$(df -h)\n============================"
 
     rm -rf node_modules
 
@@ -36,11 +38,11 @@ if [ -n "$VCAP_APPLICATION" ]; then
     echo "Installing npm packages with temporary cache..."
     npm install --include=dev
 
-    echo "===========/installed node dev deps/===========$(df -h)"
+    echo "===========/installed node dev deps/===========\n$(df -h)\n============================"
 
     npm run build
 
-    echo "===========/build has run/===========$(df -h)"
+    echo "===========/build has run/===========\n$(df -h)"
 else
     echo "Not running inside a Cloud Foundry instance. Skipping path setting."
 fi
@@ -53,7 +55,7 @@ echo "Cleaning npm and Yarn caches..."
 npm cache clean --force
 yarn cache clean
 
-echo "===========/remove modules, install prod, clean/===========$(df -h)"
+echo "===========/remove modules, install prod, clean/===========\n$(df -h)"
 
 # Clean output directory (dist)
 echo "Cleaning Vite output directory..."
@@ -87,14 +89,40 @@ fi
 
 echo "All caches cleaned!"
 
-echo "===========/node vite caches clean/===========$(df -h)"
+echo "===========/node vite caches clean/===========\n$(df -h)"
 
-pip3 install -r ./backend/requirements.txt --no-cache-dir
+# pip3 install -r ./backend/requirements.txt --no-cache-dir
 
-echo "===========/installed backend reqs/===========$(df -h)"
+# Read requirements.txt file line by line
+while IFS= read -r package || [[ -n "$package" ]]; do
+    # Skip empty lines and comments
+    if [[ -z "$package" || "$package" == \#* ]]; then
+        continue
+    fi
+
+    # Install the package
+    echo "Installing $package..."
+    pip install "$package"
+
+    # Display the current disk usage
+    echo "Disk usage after installing $package:"
+    df -h | head -n 1
+
+    # Clear pip cache to free up disk space
+    echo "Clearing pip cache..."
+    pip cache purge
+
+    echo "Finished installing $package."
+    echo
+
+done <"./backend/requirements.txt"
+
+echo "All packages installed."
+
+echo "===========/installed backend reqs/===========\n$(df -h)"
 
 # pip3 install -r ./backend/open-webui-pipelines/requirements.txt --no-cache-dir
 
-# echo "===========//===========$(df -h)"
+# echo "===========//===========\n$(df -h)"
 
 # bash $SCRIPT_DIR/backend/start.sh
