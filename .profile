@@ -135,6 +135,8 @@ df -h | sed -n '2p'
 
 echo "pip show sentence_transformers: $(pip3 show sentence_transformers)"
 
+echo "===========/install requirements.txt/===========\n$(df -h)"
+
 # Read requirements.txt file line by line
 # while IFS= read -r package || [[ -n "$package" ]]; do
 #     # Skip empty lines and comments
