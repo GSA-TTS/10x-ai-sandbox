@@ -8,7 +8,7 @@ cd "$SCRIPT_DIR" || exit
 # Default value for PIPELINES_DIR
 # PIPELINES_DIR=${PIPELINES_DIR:-./pipelines}
 
-PIPELINES_REQUIREMENTS_PATH=$SCRIPT_DIR/requirements.txt
+# PIPELINES_REQUIREMENTS_PATH=$SCRIPT_DIR/requirements.txt
 
 # Function to install requirements if requirements.txt is provided
 install_requirements() {
