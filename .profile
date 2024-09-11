@@ -114,8 +114,12 @@ export USE_DISTRIBUTED=0
 export USE_QNNPACK=0
 export BUILD_TEST=0
 
+echo "Clearing pip cache..."
+pip3 cache purge
+df -h | sed -n '2p'
+
 echo "Installing torch"
-pip3 install torch==2.4.1
+pip3 install torch==2.4.1 --no-cache-dir
 # pip3 install torch==2.4.1 --extra-index-url https://download.pytorch.org/whl/cpu
 
 echo "Clearing pip cache..."
@@ -126,7 +130,7 @@ df -h | sed -n '2p'
 echo "pip show torch: $(pip3 show torch)"
 
 echo "Installing sentence_transformers"
-pip3 install sentence_transformers==2.7.0
+pip3 install sentence_transformers==2.7.0 --no-cache-dir
 
 echo "Clearing pip cache..."
 pip3 cache purge
