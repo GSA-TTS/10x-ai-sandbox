@@ -105,10 +105,7 @@ export USE_DISTRIBUTED=0
 export USE_QNNPACK=0
 export BUILD_TEST=0
 
-pip3 install pip-autoremove
-echo "pip show pip-autoremove $(pip3 show pip-autoremove)"
-
-NEW_PATH="home/vcap/deps/0/python/bin"
+NEW_PATH="/home/vcap/deps/0/python/bin"
 echo "Current PATH: $PATH"
 echo "New path to add: $NEW_PATH"
 # Check if the new path is already in the PATH variable
@@ -117,9 +114,6 @@ if [[ ":$PATH:" != *":$NEW_PATH:"* ]]; then
     export PATH="$NEW_PATH:$PATH"
 fi
 echo "Current PATH is now: $PATH"
-echo "pip3 show pip-autoremove $(pip3 show pip-autoremove) <--"
-echo "pip-autoremove --version $(pip-autoremove --version) <--"
-echo "/home/vcap/deps/0/python/bin/pip-autoremove --version $(/home/vcap/deps/0/python/bin/pip-autoremove --version) <--"
 
 echo "Installing torch"
 pip3 install torch==2.3.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
@@ -130,21 +124,12 @@ pip3 cache purge
 echo "Disk usage after installing torch:"
 df -h | sed -n '2p'
 
-echo "auto removing unused torch deps"
-pip-autoremove torch -y
-echo "pip3 show pip-autoremove $(pip3 show pip-autoremove) <--"
-
-echo "Clearing pip cache..."
-pip3 cache purge
-echo "Disk usage after autoremove torch deps"
-df -h | sed -n '2p'
-
 echo "Installing sentence_transformers"
 pip3 install sentence_transformers==2.7.0
 
 echo "Clearing pip cache..."
 pip3 cache purge
-echo "Disk usage after installing ST:"
+echo "Disk usage after installing ST and purging pip cache:"
 df -h | sed -n '2p'
 
 echo "auto removing unused ST deps"
@@ -155,7 +140,7 @@ pip3 cache purge
 echo "Disk usage after autoremove sentence_transformers deps"
 df -h | sed -n '2p'
 
-# # Read requirements.txt file line by line
+# Read requirements.txt file line by line
 # while IFS= read -r package || [[ -n "$package" ]]; do
 #     # Skip empty lines and comments
 #     if [[ -z "$package" || "$package" == \#* ]]; then
@@ -165,9 +150,6 @@ df -h | sed -n '2p'
 #     # Install the package
 #     echo "Installing $package..."
 #     pip3 install "$package"
-
-#     echo "auto-removing $package deps..."
-#     pip-autoremove "$package" -y
 
 #     # Clear pip cache to free up disk space
 #     echo "Clearing pip cache..."
