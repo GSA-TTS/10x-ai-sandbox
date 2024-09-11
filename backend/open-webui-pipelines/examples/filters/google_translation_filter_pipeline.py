@@ -1,185 +1,185 @@
-"""
-title: Google Translate Filter
-author: SimonOriginal
-date: 2024-06-28
-version: 1.0
-license: MIT
-description: This pipeline integrates Google Translate for automatic translation of user and assistant messages 
-without requiring an API key. It supports multilingual communication by translating based on specified source 
-and target languages.
-"""
+# """
+# title: Google Translate Filter
+# author: SimonOriginal
+# date: 2024-06-28
+# version: 1.0
+# license: MIT
+# description: This pipeline integrates Google Translate for automatic translation of user and assistant messages
+# without requiring an API key. It supports multilingual communication by translating based on specified source
+# and target languages.
+# """
 
-import re
-from typing import List, Optional
-from schemas import OpenAIChatMessage
-from pydantic import BaseModel
-import requests
-import os
-import time
-import asyncio
-from functools import lru_cache
+# import re
+# from typing import List, Optional
+# from schemas import OpenAIChatMessage
+# from pydantic import BaseModel
+# import requests
+# import os
+# import time
+# import asyncio
+# from functools import lru_cache
 
-from utils.pipelines.main import get_last_user_message, get_last_assistant_message
+# from utils.pipelines.main import get_last_user_message, get_last_assistant_message
 
-class Pipeline:
-    class Valves(BaseModel):
-        pipelines: List[str] = []
-        priority: int = 0
-        source_user: Optional[str] = "auto"
-        target_user: Optional[str] = "en"
-        source_assistant: Optional[str] = "en"
-        target_assistant: Optional[str] = "uk"
+# class Pipeline:
+#     class Valves(BaseModel):
+#         pipelines: List[str] = []
+#         priority: int = 0
+#         source_user: Optional[str] = "auto"
+#         target_user: Optional[str] = "en"
+#         source_assistant: Optional[str] = "en"
+#         target_assistant: Optional[str] = "uk"
 
-    def __init__(self):
-        self.type = "filter"
-        self.name = "Google Translate Filter"
-        self.valves = self.Valves(
-            **{
-                "pipelines": ["*"],
-            }
-        )
+#     def __init__(self):
+#         self.type = "filter"
+#         self.name = "Google Translate Filter"
+#         self.valves = self.Valves(
+#             **{
+#                 "pipelines": ["*"],
+#             }
+#         )
 
-        # Initialize translation cache
-        self.translation_cache = {}
-        self.code_blocks = []  # List to store code blocks
+#         # Initialize translation cache
+#         self.translation_cache = {}
+#         self.code_blocks = []  # List to store code blocks
 
-    async def on_startup(self):
-        print(f"on_startup:{__name__}")
-        pass
+#     async def on_startup(self):
+#         print(f"on_startup:{__name__}")
+#         pass
 
-    async def on_shutdown(self):
-        print(f"on_shutdown:{__name__}")
-        pass
+#     async def on_shutdown(self):
+#         print(f"on_shutdown:{__name__}")
+#         pass
 
-    async def on_valves_updated(self):
-        pass
+#     async def on_valves_updated(self):
+#         pass
 
-    # @lru_cache(maxsize=128)  # LRU cache to store translation results
-    def translate(self, text: str, source: str, target: str) -> str:
-        url = "https://translate.googleapis.com/translate_a/single"
-        params = {
-            "client": "gtx",
-            "sl": source,
-            "tl": target,
-            "dt": "t",
-            "q": text,
-        }
-        
-        try:
-            r = requests.get(url, params=params)
-            r.raise_for_status()
-            result = r.json()
-            translated_text = ''.join([sentence[0] for sentence in result[0]])
-            return translated_text
-        except requests.exceptions.RequestException as e:
-            print(f"Network error: {e}")
-            time.sleep(1)
-            return self.translate(text, source, target)
-        except Exception as e:
-            print(f"Error translating text: {e}")
-            return text
+#     # @lru_cache(maxsize=128)  # LRU cache to store translation results
+#     def translate(self, text: str, source: str, target: str) -> str:
+#         url = "https://translate.googleapis.com/translate_a/single"
+#         params = {
+#             "client": "gtx",
+#             "sl": source,
+#             "tl": target,
+#             "dt": "t",
+#             "q": text,
+#         }
 
-    def split_text_around_table(self, text: str) -> List[str]:
-        table_regex = r'((?:^.*?\|.*?\n)+)(?=\n[^\|\s].*?\|)'
-        matches = re.split(table_regex, text, flags=re.MULTILINE)
+#         try:
+#             r = requests.get(url, params=params)
+#             r.raise_for_status()
+#             result = r.json()
+#             translated_text = ''.join([sentence[0] for sentence in result[0]])
+#             return translated_text
+#         except requests.exceptions.RequestException as e:
+#             print(f"Network error: {e}")
+#             time.sleep(1)
+#             return self.translate(text, source, target)
+#         except Exception as e:
+#             print(f"Error translating text: {e}")
+#             return text
 
-        if len(matches) > 1:
-            return [matches[0], matches[1]]
-        else:
-            return [text, ""]
+#     def split_text_around_table(self, text: str) -> List[str]:
+#         table_regex = r'((?:^.*?\|.*?\n)+)(?=\n[^\|\s].*?\|)'
+#         matches = re.split(table_regex, text, flags=re.MULTILINE)
 
-    def clean_table_delimiters(self, text: str) -> str:
-        # Remove extra spaces from table delimiters
-        return re.sub(r'(\|\s*-+\s*)+', lambda m: m.group(0).replace(' ', '-'), text)
+#         if len(matches) > 1:
+#             return [matches[0], matches[1]]
+#         else:
+#             return [text, ""]
 
-    async def inlet(self, body: dict, user: Optional[dict] = None) -> dict:
-        print(f"inlet:{__name__}")
+#     def clean_table_delimiters(self, text: str) -> str:
+#         # Remove extra spaces from table delimiters
+#         return re.sub(r'(\|\s*-+\s*)+', lambda m: m.group(0).replace(' ', '-'), text)
 
-        messages = body["messages"]
-        user_message = get_last_user_message(messages)
+#     async def inlet(self, body: dict, user: Optional[dict] = None) -> dict:
+#         print(f"inlet:{__name__}")
 
-        print(f"User message: {user_message}")
+#         messages = body["messages"]
+#         user_message = get_last_user_message(messages)
 
-        # Find and store code blocks
-        code_block_regex = r'```[\s\S]+?```'
-        self.code_blocks = re.findall(code_block_regex, user_message)
-        # Replace code blocks with placeholders
-        user_message_no_code = re.sub(code_block_regex, '__CODE_BLOCK__', user_message)
+#         print(f"User message: {user_message}")
 
-        parts = self.split_text_around_table(user_message_no_code)
-        text_before_table, table_text = parts
+#         # Find and store code blocks
+#         code_block_regex = r'```[\s\S]+?```'
+#         self.code_blocks = re.findall(code_block_regex, user_message)
+#         # Replace code blocks with placeholders
+#         user_message_no_code = re.sub(code_block_regex, '__CODE_BLOCK__', user_message)
 
-        # Check translation cache for text before table
-        translated_before_table = self.translation_cache.get(text_before_table)
-        if translated_before_table is None:
-            translated_before_table = self.translate(
-                text_before_table,
-                self.valves.source_user,
-                self.valves.target_user,
-            )
-            self.translation_cache[text_before_table] = translated_before_table
+#         parts = self.split_text_around_table(user_message_no_code)
+#         text_before_table, table_text = parts
 
-        translated_user_message = translated_before_table + table_text
+#         # Check translation cache for text before table
+#         translated_before_table = self.translation_cache.get(text_before_table)
+#         if translated_before_table is None:
+#             translated_before_table = self.translate(
+#                 text_before_table,
+#                 self.valves.source_user,
+#                 self.valves.target_user,
+#             )
+#             self.translation_cache[text_before_table] = translated_before_table
 
-        # Clean table delimiters
-        translated_user_message = self.clean_table_delimiters(translated_user_message)
+#         translated_user_message = translated_before_table + table_text
 
-        # Restore code blocks
-        for code_block in self.code_blocks:
-            translated_user_message = translated_user_message.replace('__CODE_BLOCK__', code_block, 1)
+#         # Clean table delimiters
+#         translated_user_message = self.clean_table_delimiters(translated_user_message)
 
-        print(f"Translated user message: {translated_user_message}")
+#         # Restore code blocks
+#         for code_block in self.code_blocks:
+#             translated_user_message = translated_user_message.replace('__CODE_BLOCK__', code_block, 1)
 
-        for message in reversed(messages):
-            if message["role"] == "user":
-                message["content"] = translated_user_message
-                break
+#         print(f"Translated user message: {translated_user_message}")
 
-        body = {**body, "messages": messages}
-        return body
+#         for message in reversed(messages):
+#             if message["role"] == "user":
+#                 message["content"] = translated_user_message
+#                 break
 
-    async def outlet(self, body: dict, user: Optional[dict] = None) -> dict:
-        print(f"outlet:{__name__}")
+#         body = {**body, "messages": messages}
+#         return body
 
-        messages = body["messages"]
-        assistant_message = get_last_assistant_message(messages)
+#     async def outlet(self, body: dict, user: Optional[dict] = None) -> dict:
+#         print(f"outlet:{__name__}")
 
-        print(f"Assistant message: {assistant_message}")
+#         messages = body["messages"]
+#         assistant_message = get_last_assistant_message(messages)
 
-        # Find and store code blocks
-        code_block_regex = r'```[\s\S]+?```'
-        self.code_blocks = re.findall(code_block_regex, assistant_message)
-        # Replace code blocks with placeholders
-        assistant_message_no_code = re.sub(code_block_regex, '__CODE_BLOCK__', assistant_message)
+#         print(f"Assistant message: {assistant_message}")
 
-        parts = self.split_text_around_table(assistant_message_no_code)
-        text_before_table, table_text = parts
+#         # Find and store code blocks
+#         code_block_regex = r'```[\s\S]+?```'
+#         self.code_blocks = re.findall(code_block_regex, assistant_message)
+#         # Replace code blocks with placeholders
+#         assistant_message_no_code = re.sub(code_block_regex, '__CODE_BLOCK__', assistant_message)
 
-        # Check translation cache for text before table
-        translated_before_table = self.translation_cache.get(text_before_table)
-        if translated_before_table is None:
-            translated_before_table = self.translate(
-                text_before_table,
-                self.valves.source_assistant,
-                self.valves.target_assistant,
-            )
-            self.translation_cache[text_before_table] = translated_before_table
+#         parts = self.split_text_around_table(assistant_message_no_code)
+#         text_before_table, table_text = parts
 
-        translated_assistant_message = translated_before_table + table_text
+#         # Check translation cache for text before table
+#         translated_before_table = self.translation_cache.get(text_before_table)
+#         if translated_before_table is None:
+#             translated_before_table = self.translate(
+#                 text_before_table,
+#                 self.valves.source_assistant,
+#                 self.valves.target_assistant,
+#             )
+#             self.translation_cache[text_before_table] = translated_before_table
 
-        # Clean table delimiters
-        translated_assistant_message = self.clean_table_delimiters(translated_assistant_message)
+#         translated_assistant_message = translated_before_table + table_text
 
-        # Restore code blocks
-        for code_block in self.code_blocks:
-            translated_assistant_message = translated_assistant_message.replace('__CODE_BLOCK__', code_block, 1)
+#         # Clean table delimiters
+#         translated_assistant_message = self.clean_table_delimiters(translated_assistant_message)
 
-        print(f"Translated assistant message: {translated_assistant_message}")
+#         # Restore code blocks
+#         for code_block in self.code_blocks:
+#             translated_assistant_message = translated_assistant_message.replace('__CODE_BLOCK__', code_block, 1)
 
-        for message in reversed(messages):
-            if message["role"] == "assistant":
-                message["content"] = translated_assistant_message
-                break
+#         print(f"Translated assistant message: {translated_assistant_message}")
 
-        body = {**body, "messages": messages}
-        return body
+#         for message in reversed(messages):
+#             if message["role"] == "assistant":
+#                 message["content"] = translated_assistant_message
+#                 break
+
+#         body = {**body, "messages": messages}
+#         return body

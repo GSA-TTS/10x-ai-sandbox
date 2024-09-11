@@ -1,16 +1,8 @@
 aiohttp==3.9.5
-anthropic==0.34.2
 boto3==1.34.110
 botocore==1.34.144
-datasets==2.21.0
-ddtrace==2.9.2
-detoxify==0.5.2
-django_haystack==3.3.0
 fastapi==0.114.0
 huggingface_hub==0.23.4
-langfuse==2.48.0
-llama_index==0.11.8
-llm_guard==0.3.15
 openai==1.44.1
 passlib==1.7.4
 protobuf==5.28.0
@@ -19,9 +11,5 @@ pydantic==2.9.1
 PyJWT==2.8.0
 PyJWT==2.9.0
 python-dotenv==1.0.1
-pytz==2024.1
-PyYAML==6.0.1
-PyYAML==6.0.2
 Requests==2.32.3
-SQLAlchemy==2.0.31
 starlette==0.38.5
