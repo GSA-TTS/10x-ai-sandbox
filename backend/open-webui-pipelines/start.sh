@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-PORT="${PORT:-9099}"
+PORT=9099
 HOST="${HOST:-0.0.0.0}"
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
