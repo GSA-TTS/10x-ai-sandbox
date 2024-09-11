@@ -19,7 +19,7 @@ langchain_community==0.2.16
 langchain_core==0.2.39
 langfuse==2.48.0
 llama_index==0.11.8
-llm_guard==0.3.15
+# llm_guard==0.3.15
 Markdown==3.6
 openai==1.44.1
 passlib==1.7.4

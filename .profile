@@ -21,10 +21,6 @@ if [ -n "$VCAP_APPLICATION" ]; then
     fi
     echo "Current PATH is now: $PATH"
 
-    alias pip='pip3'
-
-    echo "pip is: $(which pip)"
-
     echo "===========/startup/===========\n$(df -h)\n============================"
 
     rm -rf node_modules
@@ -119,7 +115,8 @@ pip3 cache purge
 df -h | sed -n '2p'
 
 echo "Installing torch"
-pip3 install torch==2.4.1 --no-cache-dir
+# pip3 install torch==2.4.1 --no-cache-dir
+pip3 install torch+cpu --index-url https://download.pytorch.org/whl/cpu --no-cache-dir
 # pip3 install torch==2.4.1 --extra-index-url https://download.pytorch.org/whl/cpu
 
 echo "Clearing pip cache..."
