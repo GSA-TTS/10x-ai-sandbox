@@ -117,8 +117,9 @@ if [[ ":$PATH:" != *":$NEW_PATH:"* ]]; then
     export PATH="$NEW_PATH:$PATH"
 fi
 echo "Current PATH is now: $PATH"
-echo "pip show pip-autoremove $(pip show pip-autoremove)"
-echo "pip-autoremove --version $(pip-autoremove --version)"
+echo "pip3 show pip-autoremove $(pip3 show pip-autoremove) <--"
+echo "pip-autoremove --version $(pip-autoremove --version) <--"
+echo "/home/vcap/deps/0/python/bin/pip-autoremove --version $(/home/vcap/deps/0/python/bin/pip-autoremove --version) <--"
 
 echo "Installing torch"
 pip3 install torch==2.3.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
@@ -131,7 +132,7 @@ df -h | sed -n '2p'
 
 echo "auto removing unused torch deps"
 pip-autoremove torch -y
-echo "pip show pip-autoremove $(pip show pip-autoremove)"
+echo "pip3 show pip-autoremove $(pip3 show pip-autoremove) <--"
 
 echo "Clearing pip cache..."
 pip3 cache purge
@@ -147,7 +148,7 @@ echo "Disk usage after installing ST:"
 df -h | sed -n '2p'
 
 echo "auto removing unused ST deps"
-pip-autoremove sentence_transformers -y
+/home/vcap/deps/0/python/bin/pip-autoremove sentence_transformers -y
 
 echo "Clearing pip cache..."
 pip3 cache purge
