@@ -5,10 +5,9 @@ fastapi==0.114.0
 huggingface_hub==0.23.4
 openai==1.44.1
 passlib==1.7.4
-protobuf==5.28.0
+protobuf==4.25.4
 psutil==6.0.0
 pydantic==2.9.1
-PyJWT==2.8.0
 PyJWT==2.9.0
 python-dotenv==1.0.1
 Requests==2.32.3
