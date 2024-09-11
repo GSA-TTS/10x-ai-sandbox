@@ -12,6 +12,10 @@ if [ -n "$VCAP_APPLICATION" ]; then
     echo "PATH is set to: $PATH"
     echo "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
 
+    alias pip='pip3'
+
+    echo "pip is: $(which pip)"
+
     echo "===========/startup/===========\n$(df -h)\n============================"
 
     rm -rf node_modules
@@ -102,17 +106,16 @@ while IFS= read -r package || [[ -n "$package" ]]; do
 
     # Install the package
     echo "Installing $package..."
-    pip install "$package"
-
-    # Display the current disk usage
-    echo "Disk usage after installing $package:"
-    df -h | head -n 1
+    pip3 install "$package"
 
     # Clear pip cache to free up disk space
     echo "Clearing pip cache..."
-    pip cache purge
+    pip3 cache purge
 
-    echo "Finished installing $package."
+    # Display the current disk usage
+    echo "Disk usage after installing $package:"
+    df -h | sed -n '2p'
+
     echo
 
 done <"./backend/requirements.txt"
