@@ -124,47 +124,47 @@ pip3 cache purge
 echo "Disk usage after autoremove torch deps"
 df -h | sed -n '2p'
 
-# echo "Installing sentence_transformers"
-# pip3 install sentence_transformers==2.7.0
+echo "Installing sentence_transformers"
+pip3 install sentence_transformers==2.7.0
 
-# echo "Clearing pip cache..."
-# pip3 cache purge
-# echo "Disk usage after installing ST:"
-# df -h | sed -n '2p'
+echo "Clearing pip cache..."
+pip3 cache purge
+echo "Disk usage after installing ST:"
+df -h | sed -n '2p'
 
-# echo "auto removing unused ST deps"
-# pip-autoremove sentence_transformers -y
+echo "auto removing unused ST deps"
+pip-autoremove sentence_transformers -y
 
-# echo "Clearing pip cache..."
-# pip3 cache purge
-# echo "Disk usage after autoremove sentence_transformers deps"
-# df -h | sed -n '2p'
+echo "Clearing pip cache..."
+pip3 cache purge
+echo "Disk usage after autoremove sentence_transformers deps"
+df -h | sed -n '2p'
 
-# # Read requirements.txt file line by line
-# while IFS= read -r package || [[ -n "$package" ]]; do
-#     # Skip empty lines and comments
-#     if [[ -z "$package" || "$package" == \#* ]]; then
-#         continue
-#     fi
+# Read requirements.txt file line by line
+while IFS= read -r package || [[ -n "$package" ]]; do
+    # Skip empty lines and comments
+    if [[ -z "$package" || "$package" == \#* ]]; then
+        continue
+    fi
 
-#     # Install the package
-#     echo "Installing $package..."
-#     pip3 install "$package"
+    # Install the package
+    echo "Installing $package..."
+    pip3 install "$package"
 
-#     echo "auto-removing $package deps..."
-#     pip-autoremove "$package" -y
+    echo "auto-removing $package deps..."
+    pip-autoremove "$package" -y
 
-#     # Clear pip cache to free up disk space
-#     echo "Clearing pip cache..."
-#     pip3 cache purge
+    # Clear pip cache to free up disk space
+    echo "Clearing pip cache..."
+    pip3 cache purge
 
-#     # Display the current disk usage
-#     echo "Disk usage after installing $package:"
-#     df -h | sed -n '2p'
+    # Display the current disk usage
+    echo "Disk usage after installing $package:"
+    df -h | sed -n '2p'
 
-#     echo
+    echo
 
-# done <"./backend/requirements.txt"
+done <"./backend/requirements.txt"
 
 echo "All packages installed."
 
