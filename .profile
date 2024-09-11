@@ -97,28 +97,74 @@ echo "===========/node vite caches clean/===========\n$(df -h)"
 
 # pip3 install -r ./backend/requirements.txt --no-cache-dir
 
-# Read requirements.txt file line by line
-while IFS= read -r package || [[ -n "$package" ]]; do
-    # Skip empty lines and comments
-    if [[ -z "$package" || "$package" == \#* ]]; then
-        continue
-    fi
+export USE_CUDA=0
+export USE_CUDNN=0
+export USE_MKLDNN=0
+export USE_NCCL=0
+export USE_DISTRIBUTED=0
+export USE_QNNPACK=0
+export BUILD_TEST=0
 
-    # Install the package
-    echo "Installing $package..."
-    pip3 install "$package"
+pip3 install pip-autoremove
 
-    # Clear pip cache to free up disk space
-    echo "Clearing pip cache..."
-    pip3 cache purge
+echo "Installing torch"
+pip3 install torch==2.4.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
+# pip3 install torch==2.4.1 --extra-index-url https://download.pytorch.org/whl/cpu
 
-    # Display the current disk usage
-    echo "Disk usage after installing $package:"
-    df -h | sed -n '2p'
+echo "Clearing pip cache..."
+pip3 cache purge
+echo "Disk usage after installing torch:"
+df -h | sed -n '2p'
 
-    echo
+echo "auto removing unused torch deps"
+pip-autoremove torch -y
 
-done <"./backend/requirements.txt"
+echo "Clearing pip cache..."
+pip3 cache purge
+echo "Disk usage after autoremove torch deps"
+df -h | sed -n '2p'
+
+# echo "Installing sentence_transformers"
+# pip3 install sentence_transformers==2.7.0
+
+# echo "Clearing pip cache..."
+# pip3 cache purge
+# echo "Disk usage after installing ST:"
+# df -h | sed -n '2p'
+
+# echo "auto removing unused ST deps"
+# pip-autoremove sentence_transformers -y
+
+# echo "Clearing pip cache..."
+# pip3 cache purge
+# echo "Disk usage after autoremove sentence_transformers deps"
+# df -h | sed -n '2p'
+
+# # Read requirements.txt file line by line
+# while IFS= read -r package || [[ -n "$package" ]]; do
+#     # Skip empty lines and comments
+#     if [[ -z "$package" || "$package" == \#* ]]; then
+#         continue
+#     fi
+
+#     # Install the package
+#     echo "Installing $package..."
+#     pip3 install "$package"
+
+#     echo "auto-removing $package deps..."
+#     pip-autoremove "$package" -y
+
+#     # Clear pip cache to free up disk space
+#     echo "Clearing pip cache..."
+#     pip3 cache purge
+
+#     # Display the current disk usage
+#     echo "Disk usage after installing $package:"
+#     df -h | sed -n '2p'
+
+#     echo
+
+# done <"./backend/requirements.txt"
 
 echo "All packages installed."
 
