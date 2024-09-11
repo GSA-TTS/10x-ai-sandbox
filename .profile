@@ -118,7 +118,7 @@ fi
 echo "Current PATH is now: $PATH"
 
 echo "Installing torch"
-pip3 install torch==2.3.0+cpu
+pip3 install torch==2.3.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 # pip3 install torch==2.4.1 --extra-index-url https://download.pytorch.org/whl/cpu
 
 echo "Clearing pip cache..."
@@ -127,7 +127,7 @@ echo "Disk usage after installing torch:"
 df -h | sed -n '2p'
 
 echo "auto removing unused torch deps"
-home/vcap/deps/0/python/bin/pip-autoremove torch -y
+$HOME/deps/0/python/bin/pip-autoremove torch -y
 
 echo "Clearing pip cache..."
 pip3 cache purge
@@ -143,7 +143,7 @@ echo "Disk usage after installing ST:"
 df -h | sed -n '2p'
 
 echo "auto removing unused ST deps"
-home/vcap/deps/0/python/bin/pip-autoremove sentence_transformers -y
+$HOME/deps/0/python/bin/pip-autoremove sentence_transformers -y
 
 echo "Clearing pip cache..."
 pip3 cache purge
