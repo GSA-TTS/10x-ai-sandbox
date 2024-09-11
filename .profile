@@ -135,28 +135,30 @@ df -h | sed -n '2p'
 
 echo "pip show sentence_transformers: $(pip3 show sentence_transformers)"
 
+echo "===========/install requirements.txt/===========\n$(df -h)"
+
 # Read requirements.txt file line by line
-# while IFS= read -r package || [[ -n "$package" ]]; do
-#     # Skip empty lines and comments
-#     if [[ -z "$package" || "$package" == \#* ]]; then
-#         continue
-#     fi
+while IFS= read -r package || [[ -n "$package" ]]; do
+    # Skip empty lines and comments
+    if [[ -z "$package" || "$package" == \#* ]]; then
+        continue
+    fi
 
-#     # Install the package
-#     echo "Installing $package..."
-#     pip3 install "$package"
+    # Install the package
+    echo "Installing $package..."
+    pip3 install "$package"
 
-#     # Clear pip cache to free up disk space
-#     echo "Clearing pip cache..."
-#     pip3 cache purge
+    # Clear pip cache to free up disk space
+    echo "Clearing pip cache..."
+    pip3 cache purge
 
-#     # Display the current disk usage
-#     echo "Disk usage after installing $package:"
-#     df -h | sed -n '2p'
+    # Display the current disk usage
+    echo "Disk usage after installing $package:"
+    df -h | sed -n '2p'
 
-#     echo
+    echo
 
-# done <"./backend/requirements.txt"
+done <"./backend/requirements.txt"
 
 echo "All packages installed."
 
