@@ -36,7 +36,7 @@ pytz==2024.1
 PyYAML==6.0.1
 PyYAML==6.0.2
 Requests==2.32.3
-sentence_transformers==2.7.0
+# sentence_transformers==2.7.0
 SQLAlchemy==2.0.31
 starlette==0.38.5
 typer==0.12.5
