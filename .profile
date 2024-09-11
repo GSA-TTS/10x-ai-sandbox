@@ -106,6 +106,7 @@ export USE_QNNPACK=0
 export BUILD_TEST=0
 
 pip3 install pip-autoremove
+echo "pip show pip-autoremove $(pip show pip-autoremove)"
 
 NEW_PATH="home/vcap/deps/0/python/bin"
 echo "Current PATH: $PATH"
@@ -116,6 +117,8 @@ if [[ ":$PATH:" != *":$NEW_PATH:"* ]]; then
     export PATH="$NEW_PATH:$PATH"
 fi
 echo "Current PATH is now: $PATH"
+echo "pip show pip-autoremove $(pip show pip-autoremove)"
+echo "pip-autoremove --version $(pip-autoremove --version)"
 
 echo "Installing torch"
 pip3 install torch==2.3.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
@@ -127,7 +130,8 @@ echo "Disk usage after installing torch:"
 df -h | sed -n '2p'
 
 echo "auto removing unused torch deps"
-$HOME/deps/0/python/bin/pip-autoremove torch -y
+pip-autoremove torch -y
+echo "pip show pip-autoremove $(pip show pip-autoremove)"
 
 echo "Clearing pip cache..."
 pip3 cache purge
@@ -143,7 +147,7 @@ echo "Disk usage after installing ST:"
 df -h | sed -n '2p'
 
 echo "auto removing unused ST deps"
-$HOME/deps/0/python/bin/pip-autoremove sentence_transformers -y
+pip-autoremove sentence_transformers -y
 
 echo "Clearing pip cache..."
 pip3 cache purge
