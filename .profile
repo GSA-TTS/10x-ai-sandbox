@@ -155,4 +155,4 @@ echo "All packages installed."
 
 echo "===========/installed backend reqs/===========\n$(df -h | sed -n '2p')"
 
-bash $SCRIPT_DIR/backend/start.sh
+# bash $SCRIPT_DIR/backend/start.sh
