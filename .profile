@@ -106,7 +106,7 @@ export USE_QNNPACK=0
 export BUILD_TEST=0
 
 pip3 install pip-autoremove
-echo "pip show pip-autoremove $(pip show pip-autoremove)"
+echo "pip show pip-autoremove $(pip3 show pip-autoremove)"
 
 NEW_PATH="home/vcap/deps/0/python/bin"
 echo "Current PATH: $PATH"
