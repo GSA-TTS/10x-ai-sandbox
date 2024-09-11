@@ -21,7 +21,7 @@ if [ -n "$VCAP_APPLICATION" ]; then
     fi
     echo "Current PATH is now: $PATH"
 
-    echo "===========/startup/===========\n$(df -h)\n============================"
+    echo "===========/startup/===========\n$(df -h | sed -n '2p')\n============================"
 
     rm -rf node_modules
 
@@ -47,11 +47,11 @@ if [ -n "$VCAP_APPLICATION" ]; then
     # echo "Installing npm packages with temporary cache..."
     # npm install --include=dev
 
-    # echo "===========/installed node dev deps/===========\n$(df -h)\n============================"
+    # echo "===========/installed node dev deps/===========\n$(df -h | sed -n '2p')\n============================"
 
     # npm run build
 
-    # echo "===========/build has run/===========\n$(df -h)"
+    # echo "===========/build has run/===========\n$(df -h | sed -n '2p')"
 else
     echo "Not running inside a Cloud Foundry instance. Skipping path setting."
 fi
@@ -64,7 +64,7 @@ fi
 # npm cache clean --force
 # yarn cache clean
 
-# echo "===========/remove modules, install prod, clean/===========\n$(df -h)"
+# echo "===========/remove modules, install prod, clean/===========\n$(df -h | sed -n '2p')"
 
 # # Clean output directory (dist)
 # echo "Cleaning Vite output directory..."
@@ -98,7 +98,7 @@ fi
 
 # echo "All caches cleaned!"
 
-echo "===========/node vite caches clean/===========\n$(df -h)"
+echo "===========/node vite caches clean/===========\n$(df -h | sed -n '2p')"
 
 # pip3 install -r ./backend/requirements.txt --no-cache-dir
 
@@ -116,7 +116,7 @@ df -h | sed -n '2p'
 
 echo "Installing torch"
 # pip3 install torch==2.4.1 --no-cache-dir
-pip3 install torch+cpu --index-url https://download.pytorch.org/whl/cpu
+pip3 install torch --index-url https://download.pytorch.org/whl/cpu
 # pip3 install torch==2.4.1 --extra-index-url https://download.pytorch.org/whl/cpu
 
 echo "Clearing pip cache..."
@@ -136,7 +136,7 @@ echo "pip show torch: $(pip3 show torch)"
 
 # echo "pip show sentence_transformers: $(pip3 show sentence_transformers)"
 
-echo "===========/install requirements.txt/===========\n$(df -h)"
+echo "===========/install requirements.txt/===========\n$(df -h | sed -n '2p')"
 
 # Read requirements.txt file line by line
 while IFS= read -r package || [[ -n "$package" ]]; do
@@ -163,10 +163,10 @@ done <"./backend/requirements.txt"
 
 echo "All packages installed."
 
-echo "===========/installed backend reqs/===========\n$(df -h)"
+echo "===========/installed backend reqs/===========\n$(df -h | sed -n '2p')"
 
 # pip3 install -r ./backend/open-webui-pipelines/requirements.txt --no-cache-dir
 
-# echo "===========//===========\n$(df -h)"
+# echo "===========//===========\n$(df -h | sed -n '2p')"
 
 # bash $SCRIPT_DIR/backend/start.sh
