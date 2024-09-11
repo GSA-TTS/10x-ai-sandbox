@@ -6,7 +6,7 @@ cd "$SCRIPT_DIR" || exit
 if [ -n "$VCAP_APPLICATION" ]; then
     # echo "Running inside a Cloud Foundry instance, setting paths"
     # export PATH="$HOME/deps/1/node/bin:$HOME/deps/0/bin:$PATH"
-    export PATH="$HOME/deps/0/python/bin:$PATH"
+    # export PATH="$HOME/deps/0/python/bin:$PATH"
 
     # export LD_LIBRARY_PATH="$HOME/deps/0/lib:$LD_LIBRARY_PATH"
     echo "PATH is set to: $PATH"
@@ -107,6 +107,16 @@ export BUILD_TEST=0
 
 pip3 install pip-autoremove
 
+NEW_PATH="home/vcap/deps/0/python/bin"
+echo "Current PATH: $PATH"
+echo "New path to add: $NEW_PATH"
+# Check if the new path is already in the PATH variable
+if [[ ":$PATH:" != *":$NEW_PATH:"* ]]; then
+    echo "Adding $NEW_PATH to PATH..."
+    export PATH="$NEW_PATH:$PATH"
+fi
+echo "Current PATH is now: $PATH"
+
 echo "Installing torch"
 pip3 install torch==2.4.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
 # pip3 install torch==2.4.1 --extra-index-url https://download.pytorch.org/whl/cpu
@@ -140,31 +150,31 @@ pip3 cache purge
 echo "Disk usage after autoremove sentence_transformers deps"
 df -h | sed -n '2p'
 
-# Read requirements.txt file line by line
-while IFS= read -r package || [[ -n "$package" ]]; do
-    # Skip empty lines and comments
-    if [[ -z "$package" || "$package" == \#* ]]; then
-        continue
-    fi
+# # Read requirements.txt file line by line
+# while IFS= read -r package || [[ -n "$package" ]]; do
+#     # Skip empty lines and comments
+#     if [[ -z "$package" || "$package" == \#* ]]; then
+#         continue
+#     fi
 
-    # Install the package
-    echo "Installing $package..."
-    pip3 install "$package"
+#     # Install the package
+#     echo "Installing $package..."
+#     pip3 install "$package"
 
-    echo "auto-removing $package deps..."
-    pip-autoremove "$package" -y
+#     echo "auto-removing $package deps..."
+#     pip-autoremove "$package" -y
 
-    # Clear pip cache to free up disk space
-    echo "Clearing pip cache..."
-    pip3 cache purge
+#     # Clear pip cache to free up disk space
+#     echo "Clearing pip cache..."
+#     pip3 cache purge
 
-    # Display the current disk usage
-    echo "Disk usage after installing $package:"
-    df -h | sed -n '2p'
+#     # Display the current disk usage
+#     echo "Disk usage after installing $package:"
+#     df -h | sed -n '2p'
 
-    echo
+#     echo
 
-done <"./backend/requirements.txt"
+# done <"./backend/requirements.txt"
 
 echo "All packages installed."
 
