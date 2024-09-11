@@ -3,95 +3,95 @@
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 cd "$SCRIPT_DIR" || exit
 
-if [ -n "$VCAP_APPLICATION" ]; then
-    # echo "Running inside a Cloud Foundry instance, setting paths"
-    # export PATH="$HOME/deps/1/node/bin:$HOME/deps/0/bin:$PATH"
-    # export PATH="$HOME/deps/0/python/bin:$PATH"
+# if [ -n "$VCAP_APPLICATION" ]; then
+#     # echo "Running inside a Cloud Foundry instance, setting paths"
+#     # export PATH="$HOME/deps/1/node/bin:$HOME/deps/0/bin:$PATH"
+#     # export PATH="$HOME/deps/0/python/bin:$PATH"
 
-    # export LD_LIBRARY_PATH="$HOME/deps/0/lib:$LD_LIBRARY_PATH"
-    echo "PATH is set to: $PATH"
-    echo "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
+#     # export LD_LIBRARY_PATH="$HOME/deps/0/lib:$LD_LIBRARY_PATH"
+#     echo "PATH is set to: $PATH"
+#     echo "LD_LIBRARY_PATH is set to: $LD_LIBRARY_PATH"
 
-    alias pip='pip3'
+#     alias pip='pip3'
 
-    echo "pip is: $(which pip)"
+#     echo "pip is: $(which pip)"
 
-    echo "===========/startup/===========\n$(df -h)\n============================"
+#     echo "===========/startup/===========\n$(df -h)\n============================"
 
-    rm -rf node_modules
+#     rm -rf node_modules
 
-    # Clean npm cache
-    echo "Cleaning npm cache..."
-    npm cache clean --force
+#     # Clean npm cache
+#     echo "Cleaning npm cache..."
+#     npm cache clean --force
 
-    # Clean Node.js cache if any (optional)
-    echo "Cleaning Node.js cache..."
-    if [ -d "$HOME/.node-gyp" ]; then
-        rm -rf "$HOME/.node-gyp"
-    fi
+#     # Clean Node.js cache if any (optional)
+#     echo "Cleaning Node.js cache..."
+#     if [ -d "$HOME/.node-gyp" ]; then
+#         rm -rf "$HOME/.node-gyp"
+#     fi
 
-    if [ -d "$HOME/.npm" ]; then
-        rm -rf "$HOME/.npm"
-    fi
+#     if [ -d "$HOME/.npm" ]; then
+#         rm -rf "$HOME/.npm"
+#     fi
 
-    if [ -d "$HOME/.cache/yarn" ]; then
-        rm -rf "$HOME/.cache/yarn"
-    fi
+#     if [ -d "$HOME/.cache/yarn" ]; then
+#         rm -rf "$HOME/.cache/yarn"
+#     fi
 
-    # Install packages with temporary cache
-    echo "Installing npm packages with temporary cache..."
-    npm install --include=dev
+#     # Install packages with temporary cache
+#     echo "Installing npm packages with temporary cache..."
+#     npm install --include=dev
 
-    echo "===========/installed node dev deps/===========\n$(df -h)\n============================"
+#     echo "===========/installed node dev deps/===========\n$(df -h)\n============================"
 
-    npm run build
+#     npm run build
 
-    echo "===========/build has run/===========\n$(df -h)"
-else
-    echo "Not running inside a Cloud Foundry instance. Skipping path setting."
-fi
+#     echo "===========/build has run/===========\n$(df -h)"
+# else
+#     echo "Not running inside a Cloud Foundry instance. Skipping path setting."
+# fi
 
-rm -rf node_modules
-npm install --only=production --prefer-online
+# rm -rf node_modules
+# npm install --only=production --prefer-online
 
-# Clean npm and Yarn caches
-echo "Cleaning npm and Yarn caches..."
-npm cache clean --force
-yarn cache clean
+# # Clean npm and Yarn caches
+# echo "Cleaning npm and Yarn caches..."
+# npm cache clean --force
+# yarn cache clean
 
-echo "===========/remove modules, install prod, clean/===========\n$(df -h)"
+# echo "===========/remove modules, install prod, clean/===========\n$(df -h)"
 
-# Clean output directory (dist)
-echo "Cleaning Vite output directory..."
-rm -rf dist
+# # Clean output directory (dist)
+# echo "Cleaning Vite output directory..."
+# rm -rf dist
 
-# Clean ESLint and Prettier caches
-echo "Cleaning ESLint and Prettier caches..."
-rm -f .eslintcache
-rm -f .prettiercache
+# # Clean ESLint and Prettier caches
+# echo "Cleaning ESLint and Prettier caches..."
+# rm -f .eslintcache
+# rm -f .prettiercache
 
-# Clean Babel cache
-echo "Cleaning Babel cache..."
-rm -rf .babel_cache
+# # Clean Babel cache
+# echo "Cleaning Babel cache..."
+# rm -rf .babel_cache
 
-# Clean TypeScript cache
-echo "Cleaning TypeScript cache..."
-rm -f tsconfig.tsbuildinfo
+# # Clean TypeScript cache
+# echo "Cleaning TypeScript cache..."
+# rm -f tsconfig.tsbuildinfo
 
-# Clean any other potential caches related to Vite or build tools
-echo "Cleaning .vite and other build caches..."
-rm -rf .vite
-rm -rf .cache
+# # Clean any other potential caches related to Vite or build tools
+# echo "Cleaning .vite and other build caches..."
+# rm -rf .vite
+# rm -rf .cache
 
-if [ -d "$HOME/.node-gyp" ]; then
-    rm -rf "$HOME/.node-gyp"
-fi
+# if [ -d "$HOME/.node-gyp" ]; then
+#     rm -rf "$HOME/.node-gyp"
+# fi
 
-if [ -d "$HOME/.cache/yarn" ]; then
-    rm -rf "$HOME/.cache/yarn"
-fi
+# if [ -d "$HOME/.cache/yarn" ]; then
+#     rm -rf "$HOME/.cache/yarn"
+# fi
 
-echo "All caches cleaned!"
+# echo "All caches cleaned!"
 
 echo "===========/node vite caches clean/===========\n$(df -h)"
 
