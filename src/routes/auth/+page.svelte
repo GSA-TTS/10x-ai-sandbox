@@ -164,11 +164,12 @@
 						submitHandler();
 					}}
 				>
-					<div class="mb-1">
+					<div class="mb-1 pb-10">
 						<div class=" text-2xl font-medium">
-							{mode === 'signin' ? $i18n.t('Sign in') : $i18n.t('Sign up')}
-							{$i18n.t('to')}
+							<!-- {mode === 'signin' ? $i18n.t('Sign in') : $i18n.t('Sign up')}
+							{$i18n.t('to')} -->
 							{$WEBUI_NAME}
+							<br>(powered by 10x)
 						</div>
 
 						{#if mode === 'signup'}
@@ -181,7 +182,7 @@
 						{/if}
 					</div>
 
-					<div class="flex flex-col mt-4">
+					<!-- <div class="flex flex-col mt-4">
 						{#if mode === 'signup'}
 							<div>
 								<div class=" text-sm font-medium text-left mb-1">{$i18n.t('Name')}</div>
@@ -222,9 +223,9 @@
 								required
 							/>
 						</div>
-					</div>
+					</div> -->
 
-					<div class="mt-5">
+					<!-- <div class="mt-5">
 						<button
 							class=" bg-gray-900 hover:bg-gray-800 w-full rounded-2xl text-white font-medium text-sm py-3 transition"
 							type="submit"
@@ -253,10 +254,10 @@
 								</button>
 							</div>
 						{/if}
-					</div>
+					</div> -->
 					<div class="mb-1">
 						<div class=" text-2xl font-medium">
-							{$i18n.t('or')}
+							<!-- {$i18n.t('or')} -->
 						</div>
 						<a
 							href="{WEBUI_BASE_URL}/authorize/github"
