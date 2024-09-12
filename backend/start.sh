@@ -76,4 +76,9 @@ if [ -n "$SPACE_ID" ]; then
   export WEBUI_URL=${SPACE_HOST}
 fi
 
-WEBUI_SECRET_KEY="$WEBUI_SECRET_KEY" exec uvicorn main:app --host "$HOST" --port "$PORT" --forwarded-allow-ips '*'
+if [ -n "$VCAP_APPLICATION" ]; then
+  WEBUI_SECRET_KEY="$WEBUI_SECRET_KEY" exec uvicorn main:app --host "$HOST" --port "$PORT" --forwarded-allow-ips '*'
+else
+  echo "Not running inside a Cloud Foundry instance."
+  WEBUI_SECRET_KEY="$WEBUI_SECRET_KEY" exec uvicorn main:app --port $PORT --host 0.0.0.0 --forwarded-allow-ips '*' --reload
+fi

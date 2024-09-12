@@ -52,7 +52,7 @@
 			</div>
 
 			{#if selectedModelIdx === 0}
-				<div class="  self-center mr-2 disabled:text-gray-600 disabled:hover:text-gray-600">
+				<!-- <div class="  self-center mr-2 disabled:text-gray-600 disabled:hover:text-gray-600">
 					<Tooltip content={$i18n.t('Add Model')}>
 						<button
 							class=" "
@@ -73,7 +73,7 @@
 							</svg>
 						</button>
 					</Tooltip>
-				</div>
+				</div> -->
 			{:else}
 				<div class="  self-center disabled:text-gray-600 disabled:hover:text-gray-600 mr-2">
 					<Tooltip content={$i18n.t('Remove Model')}>
