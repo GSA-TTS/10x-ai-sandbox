@@ -125,22 +125,8 @@
 	</div>
 
 	<div class=" bg-white dark:bg-gray-950 min-h-screen w-full flex justify-center font-mona">
-		<!-- <div class="hidden lg:flex lg:flex-1 px-10 md:px-16 w-full bg-yellow-50 justify-center">
-			<div class=" my-auto pb-16 text-left">
-				<div>
-					<div class=" font-bold text-yellow-600 text-4xl">
-						Get up and running with <br />large language models, locally.
-					</div>
-
-					<div class="mt-2 text-yellow-600 text-xl">
-						Run Llama 2, Code Llama, and other models. Customize and create your own.
-					</div>
-				</div>
-			</div>
-		</div> -->
-
 		<div class="w-full sm:max-w-md px-10 min-h-screen flex flex-col text-center">
-			<!-- {#if ($config?.features.auth_trusted_header ?? false) || $config?.features.auth === false}
+			{#if ($user !== undefined)}
 				<div class=" my-auto pb-10 w-full">
 					<div
 						class="flex items-center justify-center gap-3 text-xl sm:text-2xl text-center font-medium dark:text-gray-200"
@@ -156,7 +142,7 @@
 						</div>
 					</div>
 				</div>
-			{:else} -->
+			{:else}
 			<div class="  my-auto pb-10 w-full dark:text-gray-100">
 				<form
 					class=" flex flex-col justify-center"
@@ -166,8 +152,6 @@
 				>
 					<div class="mb-1 pb-10">
 						<div class=" text-2xl font-medium">
-							<!-- {mode === 'signin' ? $i18n.t('Sign in') : $i18n.t('Sign up')}
-							{$i18n.t('to')} -->
 							{$WEBUI_NAME}
 							<br>(powered by 10x)
 						</div>
@@ -181,95 +165,17 @@
 							</div>
 						{/if}
 					</div>
-
-					<!-- <div class="flex flex-col mt-4">
-						{#if mode === 'signup'}
-							<div>
-								<div class=" text-sm font-medium text-left mb-1">{$i18n.t('Name')}</div>
-								<input
-									bind:value={name}
-									type="text"
-									class=" px-5 py-3 rounded-2xl w-full text-sm outline-none border dark:border-none dark:bg-gray-900"
-									autocomplete="name"
-									placeholder={$i18n.t('Enter Your Full Name')}
-									required
-								/>
-							</div>
-
-							<hr class=" my-3 dark:border-gray-900" />
-						{/if}
-
-						<div class="mb-2">
-							<div class=" text-sm font-medium text-left mb-1">{$i18n.t('Email')}</div>
-							<input
-								bind:value={email}
-								type="email"
-								class=" px-5 py-3 rounded-2xl w-full text-sm outline-none border dark:border-none dark:bg-gray-900"
-								autocomplete="email"
-								placeholder={$i18n.t('Enter Your Email')}
-								required
-							/>
-						</div>
-
-						<div>
-							<div class=" text-sm font-medium text-left mb-1">{$i18n.t('Password')}</div>
-
-							<input
-								bind:value={password}
-								type="password"
-								class=" px-5 py-3 rounded-2xl w-full text-sm outline-none border dark:border-none dark:bg-gray-900"
-								placeholder={$i18n.t('Enter Your Password')}
-								autocomplete="current-password"
-								required
-							/>
-						</div>
-					</div> -->
-
-					<!-- <div class="mt-5">
-						<button
-							class=" bg-gray-900 hover:bg-gray-800 w-full rounded-2xl text-white font-medium text-sm py-3 transition"
-							type="submit"
-						>
-							{mode === 'signin' ? $i18n.t('Sign in') : $i18n.t('Create Account')}
-						</button>
-
-						{#if $config?.features.enable_signup}
-							<div class=" mt-4 text-sm text-center">
-								{mode === 'signin'
-									? $i18n.t("Don't have an account?")
-									: $i18n.t('Already have an account?')}
-
-								<button
-									class=" font-medium underline"
-									type="button"
-									on:click={() => {
-										if (mode === 'signin') {
-											mode = 'signup';
-										} else {
-											mode = 'signin';
-										}
-									}}
-								>
-									{mode === 'signin' ? $i18n.t('Sign up') : $i18n.t('Sign in')}
-								</button>
-							</div>
-						{/if}
-					</div> -->
 					<div class="mb-1">
-						<div class=" text-2xl font-medium">
-							<!-- {$i18n.t('or')} -->
-						</div>
 						<a
 							href="{WEBUI_BASE_URL}/authorize/github"
 							class="inline-block bg-gray-900 hover:bg-gray-800 w-full rounded-2xl text-white font-medium text-sm py-3 transition text-center"
 						>
-							<!-- {$i18n.t('Sign in with Github')} -->
 							{'Sign in with Github'}
 						</a>
 					</div>
 				</form>
 			</div>
-			<!-- {/if} -->
+			{/if}
 		</div>
 	</div>
 {/if}
