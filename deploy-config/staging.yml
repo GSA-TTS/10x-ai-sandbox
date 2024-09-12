@@ -1,5 +1,5 @@
 env: staging
 app_name: gsa-ai-sandbox
 web_instances: 1
-web_memory: 4G
-worker_memory: 2G
+web_memory: 8G
+worker_memory: 8G

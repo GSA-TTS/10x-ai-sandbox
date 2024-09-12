@@ -57,6 +57,8 @@ jobs:
           WEBUI_SECRET_KEY: ${{ secrets.WEBUI_SECRET_KEY }}
           ADMIN_USER_EMAIL: ${{ secrets.ADMIN_USER_EMAIL }}
           ADMIN_USER_PASSWORD: ${{ secrets.ADMIN_USER_PASSWORD }}
+          DEV_ADMIN_EMAILS: ${{ secrets.DEV_ADMIN_EMAILS }}
+          DEV_USER_EMAILS: ${{ secrets.DEV_USER_EMAILS }}
         with:
           cf_username: ${{ secrets.CLOUDGOV_USERNAME }}
           cf_password: ${{ secrets.CLOUDGOV_PASSWORD }}
@@ -81,6 +83,8 @@ jobs:
             --var WEBUI_SECRET_KEY=$"WEBUI_SECRET_KEY"
             --var ADMIN_USER_EMAIL=$"ADMIN_USER_EMAIL"
             --var ADMIN_USER_PASSWORD=$"ADMIN_USER_PASSWORD"
+            --var DEV_ADMIN_EMAILS=$"DEV_ADMIN_EMAILS"
+            --var DEV_USER_EMAILS=$"DEV_USER_EMAILS"
 
   bail:
     runs-on: ubuntu-latest
