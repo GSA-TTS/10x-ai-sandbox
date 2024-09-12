@@ -366,12 +366,17 @@ async def signup(request: Request, form_data: SignupForm):
     if Users.get_user_by_email(form_data.email.lower()):
         raise HTTPException(400, detail=ERROR_MESSAGES.EMAIL_TAKEN)
 
+    dev_admin_emails_str = os.getenv("DEV_ADMIN_EMAILS", " , ")
+    dev_user_emails_str = os.getenv("DEV_USER_EMAILS", " , ")
+    dev_admin_emails = dev_admin_emails_str.split(",") if dev_admin_emails_str else []
+    dev_user_emails = dev_user_emails_str.split(",") if dev_user_emails_str else []
+
     try:
-        role = (
-            "admin"
-            if Users.get_num_users() == 0
-            else request.app.state.config.DEFAULT_USER_ROLE
-        )
+        role = request.app.state.config.DEFAULT_USER_ROLE
+        if Users.get_num_users() == 0 or form_data.email.lower() in dev_admin_emails:
+            role = "admin"
+        if form_data.email.lower() in dev_user_emails:
+            role = "user"
         hashed = get_password_hash(form_data.password)
         user = Auths.insert_new_auth(
             form_data.email.lower(),
