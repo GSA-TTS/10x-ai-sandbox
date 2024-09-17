@@ -26,5 +26,5 @@
       ]
     }
   },
-  "postCreateCommand": "python --version"
+  "postCreateCommand": ".devcontainer/build.sh"
 }
