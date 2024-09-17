@@ -1,0 +1,7 @@
+{
+    "name": "Python Dev Container",
+    "build": {
+      "dockerfile": "Dockerfile"
+    },
+    "postCreateCommand": "source ~/.bashrc"
+}

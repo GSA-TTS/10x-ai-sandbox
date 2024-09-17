@@ -1,3 +1,4 @@
 {
-	"makefile.configureOnOpen": false
+	"makefile.configureOnOpen": false,
+	"terminal.integrated.shell.linux": "/bin/bash"
 }
