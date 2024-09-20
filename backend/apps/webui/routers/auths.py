@@ -231,7 +231,7 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
             status_code=401, detail=f"Missing email or unauthorized email domain"
         )
 
-    log.error(f"bananas: email is: {email}")
+    log.error(f"email is: {email}")
 
     if not name:
         name = email
@@ -243,7 +243,7 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
         )
 
     user = Auths.authenticate_user_by_trusted_header(email)
-    log.error(f"bananas user is: {user}")
+    log.error(f"user is: {user}")
 
     if user:
         token = create_token(
@@ -251,7 +251,7 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
             expires_delta=parse_duration(request.app.state.config.JWT_EXPIRES_IN),
         )
 
-        log.error(f"bananas finally user is: {user}")
+        log.error(f"finally user is: {user}")
 
         return {
             "token": token,
@@ -269,7 +269,7 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
 @router.post("/signin", response_model=SigninResponse, name="auths-signin")
 async def signin(request: Request, form_data: SigninForm):
 
-    log.error(f"bananas: header: {request.headers}")
+    log.error(f"header: {request.headers}")
 
     if request.client.host in ["127.0.0.1", "::1"]:
         log.error("Request is coming from the local server")
@@ -289,7 +289,7 @@ async def signin(request: Request, form_data: SigninForm):
                 ),
             )
         user = Auths.authenticate_user_by_trusted_header(trusted_email)
-        log.error(f"bananas user is: {user}")
+        log.error(f"user is: {user}")
     elif WEBUI_AUTH_TRUSTED_EMAIL_HEADER:
         if WEBUI_AUTH_TRUSTED_EMAIL_HEADER not in request.headers:
             raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_TRUSTED_HEADER)
@@ -308,7 +308,7 @@ async def signin(request: Request, form_data: SigninForm):
                 ),
             )
         user = Auths.authenticate_user_by_trusted_header(trusted_email)
-        print(f"bananas user is: {user}")
+        print(f"user is: {user}")
     elif WEBUI_AUTH is False:
         admin_email = "admin@localhost"
         admin_password = "admin"
@@ -334,7 +334,7 @@ async def signin(request: Request, form_data: SigninForm):
             expires_delta=parse_duration(request.app.state.config.JWT_EXPIRES_IN),
         )
 
-        log.error(f"bananas finally user is: {user}")
+        log.error(f"finally user is: {user}")
 
         return {
             "token": token,
