@@ -126,7 +126,7 @@
 
 	<div class=" bg-white dark:bg-gray-950 min-h-screen w-full flex justify-center font-mona">
 		<div class="w-full sm:max-w-md px-10 min-h-screen flex flex-col text-center">
-			{#if (code !== undefined)}
+			{#if ($user !== undefined)}
 				<div class=" my-auto pb-10 w-full">
 					<div
 						class="flex items-center justify-center gap-3 text-xl sm:text-2xl text-center font-medium dark:text-gray-200"
