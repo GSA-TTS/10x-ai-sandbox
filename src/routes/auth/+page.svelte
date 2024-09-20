@@ -126,7 +126,7 @@
 
 	<div class=" bg-white dark:bg-gray-950 min-h-screen w-full flex justify-center font-mona">
 		<div class="w-full sm:max-w-md px-10 min-h-screen flex flex-col text-center">
-			{#if ($user !== undefined)}
+			{#if $user !== undefined}
 				<div class=" my-auto pb-10 w-full">
 					<div
 						class="flex items-center justify-center gap-3 text-xl sm:text-2xl text-center font-medium dark:text-gray-200"
@@ -143,38 +143,38 @@
 					</div>
 				</div>
 			{:else}
-			<div class="  my-auto pb-10 w-full dark:text-gray-100">
-				<form
-					class=" flex flex-col justify-center"
-					on:submit|preventDefault={() => {
-						submitHandler();
-					}}
-				>
-					<div class="mb-1 pb-10">
-						<div class=" text-2xl font-medium">
-							{$WEBUI_NAME}
-							<br>powered by 10x
-						</div>
-
-						{#if mode === 'signup'}
-							<div class=" mt-1 text-xs font-medium text-gray-500">
-								ⓘ {$WEBUI_NAME}
-								{$i18n.t(
-									'does not make any external connections outside of GSA govcloud, and your data is stored securely on cloud.gov.'
-								)}
+				<div class="  my-auto pb-10 w-full dark:text-gray-100">
+					<form
+						class=" flex flex-col justify-center"
+						on:submit|preventDefault={() => {
+							submitHandler();
+						}}
+					>
+						<div class="mb-1 pb-10">
+							<div class=" text-2xl font-medium">
+								{$WEBUI_NAME}
+								<br />powered by 10x
 							</div>
-						{/if}
-					</div>
-					<div class="mb-1">
-						<a
-							href="{WEBUI_BASE_URL}/authorize/github"
-							class="inline-block bg-gray-900 hover:bg-gray-800 w-full rounded-2xl text-white font-medium text-sm py-3 transition text-center"
-						>
-							{'Sign in with Github'}
-						</a>
-					</div>
-				</form>
-			</div>
+
+							{#if mode === 'signup'}
+								<div class=" mt-1 text-xs font-medium text-gray-500">
+									ⓘ {$WEBUI_NAME}
+									{$i18n.t(
+										'does not make any external connections outside of GSA govcloud, and your data is stored securely on cloud.gov.'
+									)}
+								</div>
+							{/if}
+						</div>
+						<div class="mb-1">
+							<a
+								href="{WEBUI_BASE_URL}/authorize/github"
+								class="inline-block bg-gray-900 hover:bg-gray-800 w-full rounded-2xl text-white font-medium text-sm py-3 transition text-center"
+							>
+								{'Sign in with Github'}
+							</a>
+						</div>
+					</form>
+				</div>
 			{/if}
 		</div>
 	</div>
