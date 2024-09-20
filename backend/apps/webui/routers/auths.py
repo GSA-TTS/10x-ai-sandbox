@@ -159,7 +159,7 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
     if not form_data.code:
         # Handle missing code error
         raise HTTPException(status_code=401, detail=f"code is missing")
-    
+
     # TODO: use better params for environement detection
     redirect_uri = os.environ.get("CODESPACE_URL", request.url_for("oauth2_callback"))
 
@@ -371,20 +371,20 @@ async def signup(request: Request, form_data: SignupForm):
 
     dev_admin_emails_str = os.getenv("DEV_ADMIN_EMAILS", " , ")
     dev_user_emails_str = os.getenv("DEV_USER_EMAILS", " , ")
+    log.error(f"dev_admin_emails_str: {dev_admin_emails_str}")
+    log.error(f"dev_user_emails_str: {dev_user_emails_str}")
     dev_admin_emails = dev_admin_emails_str.split(",") if dev_admin_emails_str else []
     dev_user_emails = dev_user_emails_str.split(",") if dev_user_emails_str else []
     log.error(f"dev_admin_emails: {dev_admin_emails}")
-    log.error(f"dev_admin_emails: {dev_user_emails}")
+    log.error(f"dev_user_emails: {dev_user_emails}")
     try:
-        
+
         if form_data.email.lower() in dev_admin_emails:
             role = "admin"
         elif form_data.email.lower() in dev_user_emails:
             role = "user"
         else:
             role = request.app.state.config.DEFAULT_USER_ROLE
-        
-        
 
         name = form_data.name
 
@@ -396,8 +396,10 @@ async def signup(request: Request, form_data: SignupForm):
                 if first_name and last_name:
                     name = first_name.capitalize() + " " + last_name.capitalize()
 
-        log.error(f"New user: {form_data.email.lower()} has role: {role} and name {name}")
-        
+        log.error(
+            f"New user: {form_data.email.lower()} has role: {role} and name {name}"
+        )
+
         hashed = get_password_hash(form_data.password)
         user = Auths.insert_new_auth(
             form_data.email.lower(),
