@@ -734,21 +734,13 @@ async def oauth2_authorize(request: Request, current_user=None):
     if provider_data is None:
         raise HTTPException(status_code=404)
 
-    # Ensure the session middleware is working correctly
-    # generate a random string for the state parameter
-    log.error(f"state session.get: {request.session.get('oauth2_state')}")
-    log.error(f"state session: {request.session['oauth2_state']}")
     old_state = request.session.get("oauth2_state")
-    if os.environ["CODESPACE_URL"]:
+    if os.environ.get("CODESPACE_URL", None):
         log.error(f"Detected codespace url")
         new_state = old_state
     else:
         new_state = secrets.token_urlsafe(16)
         request.session["oauth2_state"] = new_state
-    log.error(f"old state: {old_state}")
-    log.error(f"new state: {new_state}")
-    log.error(f"state session.get: {request.session.get('oauth2_state')}")
-    log.error(f"state session: {request.session['oauth2_state']}")
 
     # TODO: use better params for environement detection
     redirect_uri = os.environ.get("CODESPACE_URL", request.url_for("oauth2_callback"))
@@ -760,7 +752,7 @@ async def oauth2_authorize(request: Request, current_user=None):
             "redirect_uri": redirect_uri,
             "response_type": "code",
             "scope": " ".join(provider_data["scopes"]),
-            "state": new_state
+            "state": new_state,
         }
     )
 
