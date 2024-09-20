@@ -153,7 +153,7 @@
 					<div class="mb-1 pb-10">
 						<div class=" text-2xl font-medium">
 							{$WEBUI_NAME}
-							<br>(powered by 10x)
+							<br>powered by 10x
 						</div>
 
 						{#if mode === 'signup'}

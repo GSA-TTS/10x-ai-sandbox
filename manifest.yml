@@ -12,8 +12,6 @@ applications:
       - route: gsa-ai-sandbox.app.cloud.gov
     env:
       WEBUI_SECRET_KEY: ((WEBUI_SECRET_KEY))
-      ADMIN_USER_EMAIL: ((ADMIN_USER_EMAIL))
-      ADMIN_USER_PASSWORD: ((ADMIN_USER_PASSWORD))
       OLLAMA_BASE_URL: ((OLLAMA_BASE_URL))
       WEBUI_NAME: ((WEBUI_NAME))
       SCARF_NO_ANALYTICS: ((SCARF_NO_ANALYTICS))

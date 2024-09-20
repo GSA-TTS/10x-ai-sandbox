@@ -736,22 +736,31 @@ async def oauth2_authorize(request: Request, current_user=None):
 
     # Ensure the session middleware is working correctly
     # generate a random string for the state parameter
-    request.session["oauth2_state"] = secrets.token_urlsafe(16)
+    log.error(f"state session.get: {request.session.get('oauth2_state')}")
+    log.error(f"state session: {request.session['oauth2_state']}")
+    old_state = request.session.get("oauth2_state")
+    if os.environ["CODESPACE_URL"]:
+        log.error(f"Detected codespace url")
+        new_state = old_state
+    else:
+        new_state = secrets.token_urlsafe(16)
+        request.session["oauth2_state"] = new_state
+    log.error(f"old state: {old_state}")
+    log.error(f"new state: {new_state}")
+    log.error(f"state session.get: {request.session.get('oauth2_state')}")
+    log.error(f"state session: {request.session['oauth2_state']}")
 
-    log.error(f"bananas: Oauth state is: {request.session.get('oauth2_state', 'N/A') }")
+    # TODO: use better params for environement detection
+    redirect_uri = os.environ.get("CODESPACE_URL", request.url_for("oauth2_callback"))
 
     # create a query string with all the OAuth2 parameters
     qs = urlencode(
         {
             "client_id": provider_data["client_id"],
-            "redirect_uri": str(
-                request.url_for("oauth2_callback")
-            ),  # Adjust as necessary
+            "redirect_uri": redirect_uri,
             "response_type": "code",
             "scope": " ".join(provider_data["scopes"]),
-            "state": request.session[
-                "oauth2_state"
-            ],  # Access the session value properly
+            "state": new_state
         }
     )
 
@@ -783,6 +792,7 @@ async def oauth2_callback(
 
     if state != request.session.get("oauth2_state"):
         # Handle state mismatch error
+        log.error(f"state mismatch: {state} != {request.session.get('oauth2_state')}")
         raise HTTPException(status_code=401)
 
     if not code:

@@ -4,12 +4,28 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<link rel="manifest" href="%sveltekit.assets%/manifest.json" crossorigin="use-credentials" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<link rel="apple-touch-icon" href="%sveltekit.assets%/favicon.png">
+		<meta name="apple-mobile-web-app-title" content="GSA AI Sandbox">
+		
+		<!-- Android Specific Tags -->
+		<meta name="theme-color" content="#000000">
+		<link rel="manifest" href="/manifest.json">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="application-name" content="GSA AI Sandbox">
+		<link rel="icon" sizes="192x192" href="%sveltekit.assets%/favicon-192x192.png">
+		<link rel="icon" sizes="512x512" href="%sveltekit.assets%/favicon-512x512.png">
+
+		<!-- General PWA Tags -->
+		<meta name="description" content="GSA AI Sandbox - Powered by 10x">
+		
 		<meta name="robots" content="noindex,nofollow" />
 		<link
 			rel="search"
 			type="application/opensearchdescription+xml"
-			title="Open WebUI"
+			title="GSA AI Sandbox"
 			href="/opensearch.xml"
 		/>
 
@@ -53,7 +69,7 @@
 			})();
 		</script>
 
-		<title>Open WebUI</title>
+		<title>GSA AI Sandbox</title>
 
 		%sveltekit.head%
 	</head>
@@ -151,7 +167,7 @@
 	}
 
 	html.dark #splash-screen img {
-		filter: invert(1);
+		filter: invert(1) hue-rotate(180deg);
 	}
 
 	html.her #splash-screen {
@@ -176,7 +192,7 @@
 
 	html.her #logo-her {
 		display: block;
-		filter: invert(1);
+		filter: invert(1) hue-rotate(180deg);
 	}
 
 	html.her #progress-background {

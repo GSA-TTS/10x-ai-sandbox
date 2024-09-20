@@ -1,0 +1,32 @@
+{
+  "name": "Webui Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "forwardPorts": [
+    8080,
+    9099
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "ms-python.python",
+        "ms-python.debugpy",
+        "esbenp.prettier-vscode",
+        "mikestead.dotenv",
+        "dbaeumer.vscode-eslint",
+        "DavidAnson.vscode-markdownlint",
+        "christian-kohler.path-intellisense",
+        "redhat.vscode-yaml",
+        "ms-python.vscode-pylance",
+        "github.vscode-github-actions",
+        "jock.svg"
+      ]
+    }
+  },
+  "postCreateCommand": "./.devcontainer/build.sh"
+}

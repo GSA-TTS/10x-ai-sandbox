@@ -159,6 +159,9 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
     if not form_data.code:
         # Handle missing code error
         raise HTTPException(status_code=401, detail=f"code is missing")
+    
+    # TODO: use better params for environement detection
+    redirect_uri = os.environ.get("CODESPACE_URL", request.url_for("oauth2_callback"))
 
     # Exchange the authorization code for an access token
     token_response = requests.post(
@@ -168,7 +171,7 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
             "client_secret": provider_data["client_secret"],
             "code": form_data.code,
             "grant_type": "authorization_code",
-            "redirect_uri": request.url_for("oauth2_callback"),
+            "redirect_uri": redirect_uri,
         },
         headers={"Accept": "application/json"},
     )
@@ -228,7 +231,7 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
             status_code=401, detail=f"Missing email or unauthorized email domain"
         )
 
-    log.error(f"bananas: email is: {email}")
+    log.error(f"email is: {email}")
 
     if not name:
         name = email
@@ -240,7 +243,7 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
         )
 
     user = Auths.authenticate_user_by_trusted_header(email)
-    log.error(f"bananas user is: {user}")
+    log.error(f"user is: {user}")
 
     if user:
         token = create_token(
@@ -248,7 +251,7 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
             expires_delta=parse_duration(request.app.state.config.JWT_EXPIRES_IN),
         )
 
-        log.error(f"bananas finally user is: {user}")
+        log.error(f"finally user is: {user}")
 
         return {
             "token": token,
@@ -266,7 +269,7 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
 @router.post("/signin", response_model=SigninResponse, name="auths-signin")
 async def signin(request: Request, form_data: SigninForm):
 
-    log.error(f"bananas: header: {request.headers}")
+    log.error(f"header: {request.headers}")
 
     if request.client.host in ["127.0.0.1", "::1"]:
         log.error("Request is coming from the local server")
@@ -286,7 +289,7 @@ async def signin(request: Request, form_data: SigninForm):
                 ),
             )
         user = Auths.authenticate_user_by_trusted_header(trusted_email)
-        log.error(f"bananas user is: {user}")
+        log.error(f"user is: {user}")
     elif WEBUI_AUTH_TRUSTED_EMAIL_HEADER:
         if WEBUI_AUTH_TRUSTED_EMAIL_HEADER not in request.headers:
             raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_TRUSTED_HEADER)
@@ -305,7 +308,7 @@ async def signin(request: Request, form_data: SigninForm):
                 ),
             )
         user = Auths.authenticate_user_by_trusted_header(trusted_email)
-        print(f"bananas user is: {user}")
+        print(f"user is: {user}")
     elif WEBUI_AUTH is False:
         admin_email = "admin@localhost"
         admin_password = "admin"
@@ -331,7 +334,7 @@ async def signin(request: Request, form_data: SigninForm):
             expires_delta=parse_duration(request.app.state.config.JWT_EXPIRES_IN),
         )
 
-        log.error(f"bananas finally user is: {user}")
+        log.error(f"finally user is: {user}")
 
         return {
             "token": token,
@@ -370,13 +373,31 @@ async def signup(request: Request, form_data: SignupForm):
     dev_user_emails_str = os.getenv("DEV_USER_EMAILS", " , ")
     dev_admin_emails = dev_admin_emails_str.split(",") if dev_admin_emails_str else []
     dev_user_emails = dev_user_emails_str.split(",") if dev_user_emails_str else []
-
+    log.error(f"dev_admin_emails: {dev_admin_emails}")
+    log.error(f"dev_admin_emails: {dev_user_emails}")
     try:
-        role = request.app.state.config.DEFAULT_USER_ROLE
-        if Users.get_num_users() == 0 or form_data.email.lower() in dev_admin_emails:
+        
+        if form_data.email.lower() in dev_admin_emails:
             role = "admin"
-        if form_data.email.lower() in dev_user_emails:
+        elif form_data.email.lower() in dev_user_emails:
             role = "user"
+        else:
+            role = request.app.state.config.DEFAULT_USER_ROLE
+        
+        
+
+        name = form_data.name
+
+        if form_data.email.lower() and "." in form_data.email.lower():
+            names = form_data.email.lower().split(".")
+            if names and len(names) > 1:
+                first_name = names[0]
+                last_name = names[1]
+                if first_name and last_name:
+                    name = first_name.capitalize() + " " + last_name.capitalize()
+
+        log.error(f"New user: {form_data.email.lower()} has role: {role} and name {name}")
+        
         hashed = get_password_hash(form_data.password)
         user = Auths.insert_new_auth(
             form_data.email.lower(),
