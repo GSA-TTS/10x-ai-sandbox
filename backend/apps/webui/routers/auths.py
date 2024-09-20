@@ -159,6 +159,9 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
     if not form_data.code:
         # Handle missing code error
         raise HTTPException(status_code=401, detail=f"code is missing")
+    
+    # TODO: use better params for environement detection
+    redirect_uri = os.environ.get("CODESPACE_URL", request.url_for("oauth2_callback"))
 
     # Exchange the authorization code for an access token
     token_response = requests.post(
@@ -168,7 +171,7 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
             "client_secret": provider_data["client_secret"],
             "code": form_data.code,
             "grant_type": "authorization_code",
-            "redirect_uri": request.url_for("oauth2_callback"),
+            "redirect_uri": redirect_uri,
         },
         headers={"Accept": "application/json"},
     )
@@ -183,6 +186,7 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
 
     if not oauth2_token:
         # Handle missing access token error
+        log.error(f"oauth2 token is missing from response: {token_response.json()}")
         raise HTTPException(
             status_code=401, detail=f"oauth2_token is missing or invalid"
         )
@@ -370,13 +374,16 @@ async def signup(request: Request, form_data: SignupForm):
     dev_user_emails_str = os.getenv("DEV_USER_EMAILS", " , ")
     dev_admin_emails = dev_admin_emails_str.split(",") if dev_admin_emails_str else []
     dev_user_emails = dev_user_emails_str.split(",") if dev_user_emails_str else []
-
+    log.error(f"dev_admin_emails: {dev_admin_emails}")
+    log.error(f"dev_admin_emails: {dev_user_emails}")
     try:
-        role = request.app.state.config.DEFAULT_USER_ROLE
-        if Users.get_num_users() == 0 or form_data.email.lower() in dev_admin_emails:
+        
+        if form_data.email.lower() in dev_admin_emails:
             role = "admin"
-        if form_data.email.lower() in dev_user_emails:
+        elif form_data.email.lower() in dev_user_emails:
             role = "user"
+        else:
+            role = request.app.state.config.DEFAULT_USER_ROLE
         hashed = get_password_hash(form_data.password)
         user = Auths.insert_new_auth(
             form_data.email.lower(),

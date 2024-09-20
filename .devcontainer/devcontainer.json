@@ -22,9 +22,11 @@
         "DavidAnson.vscode-markdownlint",
         "christian-kohler.path-intellisense",
         "redhat.vscode-yaml",
-        "ms-python.vscode-pylance"
+        "ms-python.vscode-pylance",
+        "github.vscode-github-actions",
+        "jock.svg"
       ]
     }
   },
-  "postCreateCommand": ".devcontainer/build.sh"
+  "postCreateCommand": "./.devcontainer/build.sh"
 }

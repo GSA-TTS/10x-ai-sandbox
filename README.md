@@ -19,7 +19,7 @@
    - Run:
 
    ```bash
-   python3.11 -m venv .env
+   python3.11 -m venv .venv
    ```
 
 3. **Activate the virtual environment**:
@@ -27,7 +27,7 @@
    - Run:
 
    ```bash
-   source .env/bin/activate
+   source ./venv/bin/activate
    ```
 
 4. **Install and use node 20.15.1**:

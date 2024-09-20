@@ -126,7 +126,7 @@
 
 	<div class=" bg-white dark:bg-gray-950 min-h-screen w-full flex justify-center font-mona">
 		<div class="w-full sm:max-w-md px-10 min-h-screen flex flex-col text-center">
-			{#if ($user !== undefined)}
+			{#if (code !== undefined)}
 				<div class=" my-auto pb-10 w-full">
 					<div
 						class="flex items-center justify-center gap-3 text-xl sm:text-2xl text-center font-medium dark:text-gray-200"
@@ -153,7 +153,7 @@
 					<div class="mb-1 pb-10">
 						<div class=" text-2xl font-medium">
 							{$WEBUI_NAME}
-							<br>(powered by 10x)
+							<br>powered by 10x
 						</div>
 
 						{#if mode === 'signup'}
