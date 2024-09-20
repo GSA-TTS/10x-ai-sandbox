@@ -186,7 +186,6 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
 
     if not oauth2_token:
         # Handle missing access token error
-        log.error(f"oauth2 token is missing from response: {token_response.json()}")
         raise HTTPException(
             status_code=401, detail=f"oauth2_token is missing or invalid"
         )
@@ -384,6 +383,21 @@ async def signup(request: Request, form_data: SignupForm):
             role = "user"
         else:
             role = request.app.state.config.DEFAULT_USER_ROLE
+        
+        
+
+        name = form_data.name
+
+        if form_data.email.lower() and "." in form_data.email.lower():
+            names = form_data.email.lower().split(".")
+            if names and len(names) > 1:
+                first_name = names[0]
+                last_name = names[1]
+                if first_name and last_name:
+                    name = first_name.capitalize() + " " + last_name.capitalize()
+
+        log.error(f"New user: {form_data.email.lower()} has role: {role} and name {name}")
+        
         hashed = get_password_hash(form_data.password)
         user = Auths.insert_new_auth(
             form_data.email.lower(),
