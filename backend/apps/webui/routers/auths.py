@@ -389,12 +389,14 @@ async def signup(request: Request, form_data: SignupForm):
         name = form_data.name
 
         if form_data.email.lower() and "." in form_data.email.lower():
-            names = form_data.email.lower().split(".")
-            if names and len(names) > 1:
-                first_name = names[0]
-                last_name = names[1]
-                if first_name and last_name:
-                    name = first_name.capitalize() + " " + last_name.capitalize()
+            names = form_data.email.lower().split("@")
+            if names:
+                names = names[0].split(".")
+                if names and len(names) > 1:
+                    first_name = names[0]
+                    last_name = names[1]
+                    if first_name and last_name:
+                        name = first_name.capitalize() + " " + last_name.capitalize()
 
         log.error(
             f"New user: {form_data.email.lower()} has role: {role} and name {name}"
@@ -404,7 +406,7 @@ async def signup(request: Request, form_data: SignupForm):
         user = Auths.insert_new_auth(
             form_data.email.lower(),
             hashed,
-            form_data.name,
+            name,
             form_data.profile_image_url,
             role,
         )
