@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "ახალი რეგისტრაციების ჩართვა",
 	"Enable Web Search": "ვებ ძიების ჩართვა",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "გთხოვთ, უზრუნველყოთ, რომთქვევის CSV-ფაილი შეიცავს 4 ველი, ჩაწერილი ორივე ველი უდრის პირველი ველით.",
-	"Enter {{role}} message here": "შეიყვანე {{role}} შეტყობინება აქ",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "შეიყვანე დეტალი ჩემთათვის, რომ ჩვენი LLMs-ს შეიძლოს აღაქვს",
 	"Enter Brave Search API Key": "შეიყვანეთ Brave Search API გასაღები",
 	"Enter Chunk Overlap": "შეიყვანეთ ნაწილის გადახურვა",

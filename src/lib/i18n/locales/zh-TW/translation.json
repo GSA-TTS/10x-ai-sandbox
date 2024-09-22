@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "允許註冊新帳號",
 	"Enable Web Search": "啟用網絡搜索",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "請確保你的 CSV 檔案包含這四個欄位，並按照此順序：名稱、電子郵件、密碼、角色。",
-	"Enter {{role}} message here": "在這裡輸入 {{role}} 訊息",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "輸入 LLM 記憶的詳細內容",
 	"Enter Brave Search API Key": "輸入 Brave Search API Key",
 	"Enter Chunk Overlap": "輸入 Chunk Overlap",

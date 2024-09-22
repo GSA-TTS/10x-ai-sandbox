@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "Salli uudet rekisteröitymiset",
 	"Enable Web Search": "Ota verkkohaku käyttöön",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "Varmista, että CSV-tiedostossasi on 4 saraketta seuraavassa järjestyksessä: Nimi, Sähköposti, Salasana, Rooli.",
-	"Enter {{role}} message here": "Kirjoita {{role}} viesti tähän",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "Kirjoita tieto itseestäsi LLM:ien muistamiseksi",
 	"Enter Brave Search API Key": "Anna Brave Search API -avain",
 	"Enter Chunk Overlap": "Syötä osien päällekkäisyys",

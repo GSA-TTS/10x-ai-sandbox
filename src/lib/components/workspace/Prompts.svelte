@@ -89,8 +89,6 @@
 			placeholder={$i18n.t('Search Prompts')}
 		/>
 	</div>
-
-	
 </div>
 <hr class=" dark:border-gray-850 my-2.5" />
 

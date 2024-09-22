@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "Permet Noves Inscripcions",
 	"Enable Web Search": "Activa la cerca web",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "Assegura't que el fitxer CSV inclou 4 columnes en aquest ordre: Nom, Correu Electrònic, Contrasenya, Rol.",
-	"Enter {{role}} message here": "Introdueix aquí el missatge de {{role}}",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "Introdueix un detall sobre tu per que els LLMs puguin recordar-te",
 	"Enter Brave Search API Key": "Introduïu la clau de l'API Brave Search",
 	"Enter Chunk Overlap": "Introdueix el Solapament de Blocs",

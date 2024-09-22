@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "Aktyvuoti naujas registracijas",
 	"Enable Web Search": "",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "Įsitikinkite, kad CSV failas turi 4 kolonas šiuo eiliškumu: Name, Email, Password, Role.",
-	"Enter {{role}} message here": "Įveskite {{role}} žinutę čia",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "",
 	"Enter Brave Search API Key": "",
 	"Enter Chunk Overlap": "Įveskite blokų persidengimą",

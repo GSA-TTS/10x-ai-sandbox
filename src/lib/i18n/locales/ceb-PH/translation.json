@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "I-enable ang bag-ong mga rehistro",
 	"Enable Web Search": "",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "",
-	"Enter {{role}} message here": "Pagsulod sa mensahe {{role}} dinhi",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "",
 	"Enter Brave Search API Key": "",
 	"Enter Chunk Overlap": "Pagsulod sa block overlap",

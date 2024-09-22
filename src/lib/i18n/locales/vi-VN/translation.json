@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "Cho phép đăng ký mới",
 	"Enable Web Search": "Kích hoạt tìm kiếm Web",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "Đảm bảo tệp CSV của bạn bao gồm 4 cột theo thứ tự sau: Name, Email, Password, Role.",
-	"Enter {{role}} message here": "Nhập yêu cầu của {{role}} ở đây",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "Nhập chi tiết về bản thân của bạn để LLMs có thể nhớ",
 	"Enter Brave Search API Key": "Nhập API key cho Brave Search",
 	"Enter Chunk Overlap": "Nhập Chunk chồng lấn (overlap)",
