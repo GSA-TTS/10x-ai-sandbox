@@ -1,0 +1,22 @@
+{
+    "name": "GSA AI Sandbox",
+    "short_name": "GSA AI",
+    "description": "GSA AI Sandbox - Powered by 10x",
+    "icons": [
+      {
+        "src": "%sveltekit.assets%/favicon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "%sveltekit.assets%/favicon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "orientation": "portrait-primary"
+  }
