@@ -1176,5 +1176,5 @@ if os.environ.get("VCAP_SERVICES"):
         "DATABASE_URL", None
     ):
         os.environ["DATABASE_URL"] = vcap_services["aws-rds"][0]["credentials"]["uri"]
-else:
-    DATABASE_URL = os.environ.get("DATABASE_URL", f"sqlite:///{DATA_DIR}/webui.db")
+
+DATABASE_URL = os.environ.get("DATABASE_URL", f"sqlite:///{DATA_DIR}/webui.db")
