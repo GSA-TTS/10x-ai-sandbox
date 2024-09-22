@@ -311,6 +311,7 @@ if os.environ.get("VCAP_SERVICES"):
             "cloud-gov-identity-provider"
         ][0]["credentials"]["client_secret"]
 
+
 OAUTH2_PROVIDERS = {
     # Example provider configuration
     "github": {
@@ -1169,5 +1170,11 @@ AUDIO_TTS_VOICE = PersistentConfig(
 ####################################
 # Database
 ####################################
-
-DATABASE_URL = os.environ.get("DATABASE_URL", f"sqlite:///{DATA_DIR}/webui.db")
+if os.environ.get("VCAP_SERVICES"):
+    vcap_services = json.loads(os.getenv("VCAP_SERVICES"))
+    if (vcap_services and "aws-rds" in vcap_services) and not os.getenv(
+        "DATABASE_URL", None
+    ):
+        os.environ["DATABASE_URL"] = vcap_services["aws-rds"][0]["credentials"]["uri"]
+else:
+    DATABASE_URL = os.environ.get("DATABASE_URL", f"sqlite:///{DATA_DIR}/webui.db")
