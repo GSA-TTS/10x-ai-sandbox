@@ -71,7 +71,6 @@ class SigninForm(BaseModel):
 class SigninFormOauth(BaseModel):
     state: str
     code: str
-    provider: str
 
 
 class ProfileImageUrlForm(BaseModel):

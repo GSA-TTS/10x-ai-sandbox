@@ -124,15 +124,6 @@ async def update_password(
 )
 async def signin_oauth(request: Request, provider: str, form_data: SigninFormOauth):
 
-    log.error(f"header: {request.headers}")
-    log.error(f"provider: {provider}")
-    log.error(f"form_data: {form_data}")
-    log.error(f"session: {request.session}")
-    log.error(f"session: {request.session.get('oauth2_state')}")
-    log.error(f"form_data.state: {form_data.state}")
-    log.error(f"form_data.code: {form_data.code}")
-    log.error(f"form_data.provider: {form_data.provider}")
-
     name = None
 
     provider_data = OAUTH2_PROVIDERS.get(provider)
