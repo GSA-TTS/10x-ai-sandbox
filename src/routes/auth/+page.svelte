@@ -20,17 +20,17 @@
 	let password = '';
 	let state = '';
 	let code = '';
+	let provider = '';
 
 	const setSessionUser = async (sessionUser) => {
 		if (sessionUser) {
-			console.log(sessionUser);
+			console.log('sessionUser:', sessionUser);
 			toast.success($i18n.t(`You're now logged in.`));
 			localStorage.token = sessionUser.token;
 
 			$socket.emit('user-join', { auth: { token: sessionUser.token } });
 			await user.set(sessionUser);
 			goto('/');
-			console.log('sessionUser:', sessionUser);
 		}
 	};
 
@@ -47,9 +47,12 @@
 	};
 
 	const signInHandlerOauth = async () => {
-		const sessionUser = await userSignInOauth(state, code).catch((error) => {
+		const sessionUser = await userSignInOauth(state, code, provider).catch((error) => {
 			toast.error(error); // Error handled here
-			return null; // sessionUser becomes null
+			state = '';
+			code = '';
+			provider = '';
+			goto('/auth');
 		});
 
 		if (sessionUser) {
@@ -83,17 +86,17 @@
 	};
 
 	onMount(async () => {
-		console.log('Current URL:', $page.url.href);
 		if ($user !== undefined) {
 			await goto('/');
 		}
 		loaded = true;
 
 		const params = $page.url.searchParams;
-		if (params.has('state') && params.has('code')) {
+		if (params.has('state') && params.has('code') && params.has('provider')) {
 			state = params.get('state') ?? '';
 			code = params.get('code') ?? '';
-			if (state && code) {
+			provider = params.get('provider') ?? '';
+			if (state && code && provider) {
 				await signInHandlerOauth();
 			}
 		}
@@ -126,7 +129,7 @@
 
 	<div class=" bg-white dark:bg-gray-950 min-h-screen w-full flex justify-center font-mona">
 		<div class="w-full sm:max-w-md px-10 min-h-screen flex flex-col text-center">
-			{#if $user !== undefined}
+			{#if code !== '' && state !== ''}
 				<div class=" my-auto pb-10 w-full">
 					<div
 						class="flex items-center justify-center gap-3 text-xl sm:text-2xl text-center font-medium dark:text-gray-200"
@@ -164,6 +167,14 @@
 									)}
 								</div>
 							{/if}
+						</div>
+						<div class="mb-1">
+							<a
+								href="{WEBUI_BASE_URL}/authorize/cloudgov"
+								class="inline-block bg-gray-900 hover:bg-gray-800 w-full rounded-2xl text-white font-medium text-sm py-3 transition text-center"
+							>
+								{'Sign in with Cloud.gov'}
+							</a>
 						</div>
 						<div class="mb-1">
 							<a

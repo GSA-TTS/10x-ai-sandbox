@@ -9,6 +9,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 import re
 import uuid
+import jwt
 
 # import csv
 import sys
@@ -43,6 +44,7 @@ from config import (
     WEBUI_AUTH,
     WEBUI_AUTH_TRUSTED_EMAIL_HEADER,
     WEBUI_AUTH_TRUSTED_NAME_HEADER,
+    OAUTH2_PROVIDERS,
 )
 
 router = APIRouter()
@@ -116,32 +118,11 @@ async def update_password(
 # SignIn
 ############################
 
-# TODO: move to utils
-OAUTH2_PROVIDERS = {
-    # Example provider configuration
-    "github": {
-        "client_id": os.environ.get(
-            "GITHUBLOCAL_CLIENT_ID", "you_forgot_to_set_GITHUBLOCAL_CLIENT_ID"
-        ),
-        "client_secret": os.environ.get(
-            "GITHUBLOCAL_CLIENT_SECRET", "you_forgot_to_set_GITHUBLOCAL_CLIENT_SECRET"
-        ),
-        "authorize_url": "https://github.com/login/oauth/authorize",
-        "token_url": "https://github.com/login/oauth/access_token",
-        "logout_url": "http://localhost:5000",  # probably substitute vcap primary route?
-        "userinfo": {
-            "url": "https://api.github.com/user/emails",
-            "email": lambda json: json[0]["email"],
-            "all_emails": lambda json: [item["email"] for item in json],
-        },
-        "scopes": ["user:email"],
-    },
-}
 
-
-@router.post("/signin_oauth", response_model=SigninResponse, name="oauth-signin")
-async def signin_oauth(request: Request, form_data: SigninFormOauth):
-    provider = "github"
+@router.post(
+    "/signin_oauth/{provider}", response_model=SigninResponse, name="oauth-signin"
+)
+async def signin_oauth(request: Request, provider: str, form_data: SigninFormOauth):
 
     name = None
 
@@ -161,7 +142,9 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
         raise HTTPException(status_code=401, detail=f"code is missing")
 
     # TODO: use better params for environement detection
-    redirect_uri = os.environ.get("CODESPACE_URL", request.url_for("oauth2_callback"))
+    redirect_uri = os.environ.get(
+        "CODESPACE_URL", request.url_for("oauth2_callback", provider=provider)
+    )
 
     # Exchange the authorization code for an access token
     token_response = requests.post(
@@ -186,33 +169,56 @@ async def signin_oauth(request: Request, form_data: SigninFormOauth):
 
     if not oauth2_token:
         # Handle missing access token error
+        log.error(
+            f"oauth2_token is missing or invalid from response: {token_response.json()}"
+        )
         raise HTTPException(
-            status_code=401, detail=f"oauth2_token is missing or invalid"
+            status_code=401,
+            detail=f"oauth2_token is missing or invalid from response: {token_response.json()}",
         )
 
-    try:
-        response = requests.get(
-            provider_data["userinfo"]["url"],
-            headers={
-                "Authorization": "Bearer " + oauth2_token,
-                "Accept": "application/json",
-            },
-            timeout=4,
-        )
-        if response.status_code != 200:
+    # Cloud.gov encodes the user's email address into the token itself, so we need to check for validity
+    if provider_data["userinfo"]["url"] == "access_token":
+        decoded_data = jwt.decode(
+            oauth2_token,
+            options={"verify_signature": False},
+        )  # TODO: replace with sig verification
+        # response = httpx.get(url="https://uaa.fr.cloud.gov/token_keys") # get public key from cloud's json web key url
+        # jwks = response.json() # should be a dict like {'keys': [{key_one}, {key_two}]}
+        # key = jwks['keys'][0] # should be the first key (dict) in the keys array
+        # algo = key['alg'] # You can view cloud's json web key structure at the url above, it'll open in a browser
+        # decoded_data = jwt.decode(token=oauth2_token, key=key, algorithms=[algo]) # note that algorithms expects an []
+        email = decoded_data.get("email")
+        all_emails = [email]
+    else:
+        try:
+            response = requests.get(
+                provider_data["userinfo"]["url"],
+                headers={
+                    "Authorization": "Bearer " + oauth2_token,
+                    "Accept": "application/json",
+                },
+                timeout=4,
+            )
+            if response.status_code != 200:
+                err = (
+                    f"OAUTH userinfo response request status not 200."
+                    + f"Status: {response.status_code}, Response: {response.json()}"
+                )
+                log.error(err)
+                raise HTTPException(status_code=401, detail=err)
+            email = provider_data["userinfo"]["email"](response.json())
+            all_emails = provider_data["userinfo"]["all_emails"](response.json())
+        except Exception as e:
+            # Handle email retrieval error
+            log.error(f"signin_oauth error: {e}")
+            log.error(f"response: {response}")
             err = (
-                f"OAUTH userinfo response request status not 200."
-                + f"Status: {response.status_code}, Response: {response.json()}"
+                f"Error: {e} for {provider} provider with token {oauth2_token}"
+                + f" and code {form_data.code}"
             )
             log.error(err)
             raise HTTPException(status_code=401, detail=err)
-        email = provider_data["userinfo"]["email"](response.json())
-        all_emails = provider_data["userinfo"]["all_emails"](response.json())
-    except Exception as e:
-        # Handle email retrieval error
-        err = f"Error: {e} for {provider} provider with token {oauth2_token} and code {form_data.code} from {response.json()}"
-        log.error(err)
-        raise HTTPException(status_code=401, detail=err)
 
     user_email_domains = []
     user_has_permitted_domain = False

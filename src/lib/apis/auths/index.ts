@@ -140,9 +140,10 @@ export const userSignIn = async (email: string, password: string) => {
 	return res;
 };
 
-export const userSignInOauth = async (state: string, code: string) => {
+export const userSignInOauth = async (state: string, code: string, provider: string) => {
 	let error = null;
-	const res = await fetch(`${WEBUI_API_BASE_URL}/auths/signin_oauth`, {
+
+	const res = await fetch(`${WEBUI_API_BASE_URL}/auths/signin_oauth/${provider}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

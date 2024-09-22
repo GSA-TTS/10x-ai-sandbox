@@ -78,6 +78,7 @@ from config import (
     WEBUI_NAME,
     WEBUI_URL,
     WEBUI_AUTH,
+    OAUTH2_PROVIDERS,
     ENV,
     VERSION,
     CHANGELOG,
@@ -701,49 +702,23 @@ async def get_models(user=Depends(get_verified_user)):
     return {"data": models}
 
 
-OAUTH2_PROVIDERS = {
-    # Example provider configuration
-    "github": {
-        "client_id": os.environ.get(
-            "GITHUBLOCAL_CLIENT_ID", "you_forgot_to_set_GITHUBLOCAL_CLIENT_ID"
-        ),
-        "client_secret": os.environ.get(
-            "GITHUBLOCAL_CLIENT_SECRET", "you_forgot_to_set_GITHUBLOCAL_CLIENT_SECRET"
-        ),
-        "authorize_url": "https://github.com/login/oauth/authorize",
-        "token_url": "https://github.com/login/oauth/access_token",
-        "logout_url": "http://localhost:5000",  # probably substitute vcap primary route?
-        "userinfo": {
-            "url": "https://api.github.com/user/emails",
-            "email": lambda json: json[0]["email"],
-            "all_emails": lambda json: [item["email"] for item in json],
-        },
-        "scopes": ["user:email"],
-    },
-}
-
-
-@app.get("/authorize/github")
-async def oauth2_authorize(request: Request, current_user=None):
-    provider = "github"
+@app.get("/authorize/{provider}")
+async def oauth2_authorize(request: Request, provider: str, current_user=None):
 
     if current_user is not None:
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
 
     provider_data = OAUTH2_PROVIDERS.get(provider)
+
     if provider_data is None:
         raise HTTPException(status_code=404)
 
-    old_state = request.session.get("oauth2_state")
-    if os.environ.get("CODESPACE_URL", None):
-        log.error(f"Detected codespace url")
-        new_state = old_state
-    else:
-        new_state = secrets.token_urlsafe(16)
-        request.session["oauth2_state"] = new_state
+    # old_state = request.session.get("oauth2_state")
+    new_state = secrets.token_urlsafe(16)
+    request.session["oauth2_state"] = new_state
 
     # TODO: use better params for environement detection
-    redirect_uri = os.environ.get("CODESPACE_URL", request.url_for("oauth2_callback"))
+    redirect_uri = request.url_for("oauth2_callback", provider=provider)
 
     # create a query string with all the OAuth2 parameters
     qs = urlencode(
@@ -760,15 +735,15 @@ async def oauth2_authorize(request: Request, current_user=None):
     return RedirectResponse(url=provider_data["authorize_url"] + "?" + qs)
 
 
-@app.get("/callback/github")
+@app.get("/callback/{provider}")
 async def oauth2_callback(
     request: Request,
-    state: str,
+    provider: str,
+    state: str = None,
     code: str = None,
     error: str = None,
     user: str = None,
 ):
-    provider = "github"
 
     if user:
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
@@ -782,18 +757,20 @@ async def oauth2_callback(
         # Handle the error, e.g., by flashing a message or logging
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
 
+    if not code or not state:
+        # Handle missing code error
+        raise HTTPException(status_code=401)
+
     if state != request.session.get("oauth2_state"):
         # Handle state mismatch error
         log.error(f"state mismatch: {state} != {request.session.get('oauth2_state')}")
         raise HTTPException(status_code=401)
 
-    if not code:
-        # Handle missing code error
-        raise HTTPException(status_code=401)
-
     # Get the current query parameters and append them to the redirect URL
     query_params = request.query_params
-    redirect_url = f"/auth?{query_params}" if query_params else "/auth"
+    redirect_url = (
+        f"/auth?{query_params}&provider={provider}" if query_params else "/auth"
+    )
 
     # Create the redirect response
     response = RedirectResponse(
