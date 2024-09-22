@@ -142,9 +142,7 @@ export const userSignIn = async (email: string, password: string) => {
 
 export const userSignInOauth = async (state: string, code: string, provider: string) => {
 	let error = null;
-	console.log('userSignInOauth state:', state);
-	console.log('userSignInOauth code:', code);
-	console.log('userSignInOauth provider:', provider);
+
 	const res = await fetch(`${WEBUI_API_BASE_URL}/auths/signin_oauth/${provider}`, {
 		method: 'POST',
 		headers: {
@@ -152,8 +150,7 @@ export const userSignInOauth = async (state: string, code: string, provider: str
 		},
 		body: JSON.stringify({
 			code: code,
-			state: state,
-			provider: provider
+			state: state
 		})
 	})
 		.then(async (res) => {

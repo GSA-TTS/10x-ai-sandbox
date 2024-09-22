@@ -24,14 +24,13 @@
 
 	const setSessionUser = async (sessionUser) => {
 		if (sessionUser) {
-			console.log(sessionUser);
+			console.log('sessionUser:', sessionUser);
 			toast.success($i18n.t(`You're now logged in.`));
 			localStorage.token = sessionUser.token;
 
 			$socket.emit('user-join', { auth: { token: sessionUser.token } });
 			await user.set(sessionUser);
 			goto('/');
-			console.log('sessionUser:', sessionUser);
 		}
 	};
 
@@ -87,7 +86,6 @@
 	};
 
 	onMount(async () => {
-		console.log('Current URL:', $page.url.href);
 		if ($user !== undefined) {
 			await goto('/');
 		}
@@ -99,9 +97,6 @@
 			code = params.get('code') ?? '';
 			provider = params.get('provider') ?? '';
 			if (state && code && provider) {
-				console.log('state:', state);
-				console.log('code:', code);
-				console.log('provider:', provider);
 				await signInHandlerOauth();
 			}
 		}
