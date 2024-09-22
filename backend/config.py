@@ -298,6 +298,55 @@ WEBUI_AUTH_TRUSTED_NAME_HEADER = os.environ.get("WEBUI_AUTH_TRUSTED_NAME_HEADER"
 JWT_EXPIRES_IN = PersistentConfig(
     "JWT_EXPIRES_IN", "auth.jwt_expiry", os.environ.get("JWT_EXPIRES_IN", "-1")
 )
+if os.environ.get("VCAP_SERVICES"):
+    DEBUG = False
+    vcap_services = json.loads(os.getenv("VCAP_SERVICES"))
+    vcap_app = json.loads(os.getenv("VCAP_APPLICATION"))
+    routes = vcap_app["application_uris"]
+    if vcap_services and "cloud-gov-identity-provider" in vcap_services:
+        os.environ["CLOUDGOV_CLIENT_ID"] = vcap_services["cloud-gov-identity-provider"][
+            0
+        ]["credentials"]["client_id"]
+        os.environ["CLOUDGOV_CLIENT_SECRET"] = vcap_services[
+            "cloud-gov-identity-provider"
+        ][0]["credentials"]["client_secret"]
+
+OAUTH2_PROVIDERS = {
+    # Example provider configuration
+    "github": {
+        "client_id": os.environ.get(
+            "GITHUBLOCAL_CLIENT_ID", "you_forgot_to_set_GITHUBLOCAL_CLIENT_ID"
+        ),
+        "client_secret": os.environ.get(
+            "GITHUBLOCAL_CLIENT_SECRET", "you_forgot_to_set_GITHUBLOCAL_CLIENT_SECRET"
+        ),
+        "authorize_url": "https://github.com/login/oauth/authorize",
+        "token_url": "https://github.com/login/oauth/access_token",
+        "logout_url": "http://localhost:5000",  # probably substitute vcap primary route?
+        "userinfo": {
+            "url": "https://api.github.com/user/emails",
+            "email": lambda json: json[0]["email"],
+            "all_emails": lambda json: [item["email"] for item in json],
+        },
+        "scopes": ["user:email"],
+    },
+    "cloudgov": {
+        "client_id": os.environ.get(
+            "CLOUDGOV_CLIENT_ID", "you_forgot_to_set_CLOUDGOV_CLIENT_ID"
+        ),
+        "client_secret": os.environ.get(
+            "CLOUDGOV_CLIENT_SECRET", "you_forgot_to_set_CLOUDGOV_CLIENT_SECRET"
+        ),
+        "authorize_url": "https://login.fr.cloud.gov/oauth/authorize",
+        "token_url": "https://uaa.fr.cloud.gov/oauth/token",
+        "logout_url": "https://login.fr.cloud.gov/logout.do",
+        "userinfo": {
+            "url": "access_token",
+            "email": lambda json: json["email"],
+        },
+        "scopes": ["openid"],
+    },
+}
 
 ####################################
 # Static DIR

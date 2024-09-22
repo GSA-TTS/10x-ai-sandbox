@@ -46,14 +46,13 @@
    ```bash
    rm ./backend/data/webui.db && \
    pip install -r ./backend/requirements.txt && \
+   rm -rf node_modules && \
    npm install && \
    npm run build && \
-   npm run dev & \
-   ./backend/start.sh & \
-   open http://localhost:5173
+   ./backend/start.sh
    ```
 
-   - You should see the pipelines server running at 9099, the webui backend running at 8080 and you should be able to sign in at http://localhost:5173.
+   - You should see the pipelines server running at 9099, the static files should be compiled and the webui server should be running at http://0.0.0.0:8080.
 
 6. **Set up pipelines to access models via API**:
 
