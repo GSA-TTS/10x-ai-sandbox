@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "Enable New Bark Ups",
 	"Enable Web Search": "",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "",
-	"Enter {{role}} message here": "Enter {{role}} bork here",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "",
 	"Enter Brave Search API Key": "",
 	"Enter Chunk Overlap": "Enter Overlap of Chunks",

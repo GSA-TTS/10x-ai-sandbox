@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "Дозволити нові реєстрації",
 	"Enable Web Search": "Увімкнути веб-пошук",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "Переконайтеся, що ваш CSV-файл містить 4 колонки в такому порядку: Ім'я, Email, Пароль, Роль.",
-	"Enter {{role}} message here": "Введіть повідомлення {{role}} тут",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "Введіть відомості про себе для запам'ятовування вашими LLM.",
 	"Enter Brave Search API Key": "Введіть ключ API для пошуку Brave",
 	"Enter Chunk Overlap": "Введіть перекриття фрагменту",

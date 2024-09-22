@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "नए साइन अप सक्रिय करें",
 	"Enable Web Search": "वेब खोज सक्षम करें",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "सुनिश्चित करें कि आपकी CSV फ़ाइल में इस क्रम में 4 कॉलम शामिल हैं: नाम, ईमेल, पासवर्ड, भूमिका।",
-	"Enter {{role}} message here": "यहां {{role}} संदेश दर्ज करें",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "अपने एलएलएम को याद करने के लिए अपने बारे में एक विवरण दर्ज करें",
 	"Enter Brave Search API Key": "Brave सर्च एपीआई कुंजी डालें",
 	"Enter Chunk Overlap": "चंक ओवरलैप दर्ज करें",

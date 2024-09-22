@@ -185,8 +185,29 @@
 <AddDocModal bind:show={showAddDocModal} />
 
 <div class="mb-3">
-	<div class="flex justify-between items-center">
-		<div class=" text-lg font-semibold self-center">{$i18n.t('Documents')}</div>
+	<div class="flex justify-start items-center">
+		<div class=" text-lg mr-2 font-semibold self-center">
+			{$i18n.t('Documents')}
+		</div>
+		<div>
+			<button
+				class=" px-2 py-2 rounded-xl border border-gray-200 dark:border-gray-600 dark:border-0 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 transition font-medium text-sm flex items-center space-x-1"
+				on:click={() => {
+					showAddDocModal = true;
+				}}
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 16 16"
+					fill="currentColor"
+					class="w-4 h-4"
+				>
+					<path
+						d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z"
+					/>
+				</svg>
+			</button>
+		</div>
 	</div>
 </div>
 
@@ -213,7 +234,7 @@
 		/>
 	</div>
 
-	<div>
+	<!-- <div>
 		<button
 			class=" px-2 py-2 rounded-xl border border-gray-200 dark:border-gray-600 dark:border-0 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 transition font-medium text-sm flex items-center space-x-1"
 			on:click={() => {
@@ -231,7 +252,7 @@
 				/>
 			</svg>
 		</button>
-	</div>
+	</div> -->
 </div>
 
 <!-- <div>

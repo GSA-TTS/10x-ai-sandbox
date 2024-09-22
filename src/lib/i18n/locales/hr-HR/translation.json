@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "Omogući nove prijave",
 	"Enable Web Search": "Omogući pretraživanje weba",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "Provjerite da vaša CSV datoteka uključuje 4 stupca u ovom redoslijedu: Name, Email, Password, Role.",
-	"Enter {{role}} message here": "Unesite {{role}} poruku ovdje",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "Unesite pojedinosti o sebi da bi učitali memoriju u LLM",
 	"Enter Brave Search API Key": "Unesite Brave Search API ključ",
 	"Enter Chunk Overlap": "Unesite preklapanje dijelova",

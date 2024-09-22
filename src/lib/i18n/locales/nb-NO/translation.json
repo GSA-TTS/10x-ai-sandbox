@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "Aktiver nye registreringer",
 	"Enable Web Search": "Aktiver websøk",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "Sørg for at CSV-filen din inkluderer 4 kolonner i denne rekkefølgen: Navn, E-post, Passord, Rolle.",
-	"Enter {{role}} message here": "Skriv inn {{role}} melding her",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "Skriv inn en detalj om deg selv som LLM-ene dine kan huske",
 	"Enter Brave Search API Key": "Skriv inn Brave Search API-nøkkel",
 	"Enter Chunk Overlap": "Skriv inn Chunk Overlap",

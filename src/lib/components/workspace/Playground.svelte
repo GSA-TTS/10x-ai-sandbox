@@ -333,7 +333,7 @@
 							id="system-textarea"
 							class="w-full h-full bg-transparent resize-none outline-none text-sm"
 							bind:value={system}
-							placeholder={$i18n.t("You're a helpful assistant.")}
+							placeholder={"Enter some guidance for the model here, i.e. Please provide all of your answers in simple, plain, fourth grade level US english. OR You're a helpful email-writing assistant who politely declines to answer questions unrelated to writing emails. OR You're a pirate and you talk like a pirate."}
 							rows="4"
 						/>
 					</div>

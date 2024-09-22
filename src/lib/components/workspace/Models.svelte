@@ -235,7 +235,7 @@
 		/>
 	</div>
 
-	<div>
+	<!-- <div>
 		<a
 			class=" px-2 py-2 rounded-xl border border-gray-200 dark:border-gray-600 dark:border-0 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 transition font-medium text-sm flex items-center space-x-1"
 			href="/workspace/models/create"
@@ -251,7 +251,7 @@
 				/>
 			</svg>
 		</a>
-	</div>
+	</div> -->
 </div>
 <hr class=" dark:border-gray-850 my-2.5" />
 
@@ -493,7 +493,7 @@
 	{/if}
 </div>
 
-<div class=" my-16">
+<!-- <div class=" my-16">
 	<div class=" text-lg font-semibold mb-3">{$i18n.t('Made by OpenWebUI Community')}</div>
 
 	<a
@@ -520,4 +520,4 @@
 			<div class=" text-sm">{$i18n.t('Discover, download, and explore model presets')}</div>
 		</div>
 	</a>
-</div>
+</div> -->

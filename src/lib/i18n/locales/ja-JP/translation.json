@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "新規登録を有効化",
 	"Enable Web Search": "Web 検索を有効にする",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "CSVファイルに4つの列が含まれていることを確認してください: Name, Email, Password, Role.",
-	"Enter {{role}} message here": "{{role}} メッセージをここに入力してください",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "LLM が記憶するために、自分についての詳細を入力してください",
 	"Enter Brave Search API Key": "Brave Search APIキーの入力",
 	"Enter Chunk Overlap": "チャンクオーバーラップを入力してください",

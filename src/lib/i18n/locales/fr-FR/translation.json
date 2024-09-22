@@ -189,7 +189,7 @@
 	"Enable New Sign Ups": "Activer les nouvelles inscriptions",
 	"Enable Web Search": "Activer la recherche sur le Web",
 	"Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.": "Vérifiez que le fichier CSV contienne 4 colonnes dans cet ordre : Name (Nom), Email, Password (Mot de passe), Role (Rôle).",
-	"Enter {{role}} message here": "Entrez le message {{role}} ici",
+	"Enter {{role}} message here and hit submit below": "",
 	"Enter a detail about yourself for your LLMs to recall": "Saisissez une donnée vous concernant pour que vos LLMs s'en souviennent",
 	"Enter Brave Search API Key": "Entrez la clé API Brave Search",
 	"Enter Chunk Overlap": "Entrez le chevauchement de bloc",
