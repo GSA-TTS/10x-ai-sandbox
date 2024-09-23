@@ -74,7 +74,7 @@
 		}
 
 		const hyphenated_user_name = $user?.name.replace(/\s+/g, '-').toLowerCase();
-		
+
 		if (hyphenated_user_name === '' || hyphenated_user_name === undefined) {
 			toast.error('Error: Trouble fetching user info. Please try again later.');
 			loading = false;
@@ -84,7 +84,7 @@
 		if (!info.id.toString().includes(hyphenated_user_name)) {
 			info.id = id + '-by-' + hyphenated_user_name;
 		}
-		info.name = name
+		info.name = name;
 
 		info.meta.capabilities = capabilities;
 

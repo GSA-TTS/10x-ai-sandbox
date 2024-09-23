@@ -87,7 +87,7 @@
 		}
 
 		const hyphenated_user_name = $user?.name.replace(/\s+/g, '-').toLowerCase();
-		
+
 		if (hyphenated_user_name === '' || hyphenated_user_name === undefined) {
 			toast.error('Error: Trouble fetching user info. Please try again later.');
 			loading = false;
