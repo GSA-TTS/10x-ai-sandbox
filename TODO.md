@@ -2,6 +2,8 @@
 
 - Videos: playground switching sys prompts
 - Add links to Doc upload
+- Fix tagging ux, add tags should be clickable, should save when you hit save
+- Check and tag multiple docs
 - Use a user-create/admin-created attribute on models instead of testing name
 - Need initial (Type a message down there 👇 to get started) message for new users
 - Soft outline around new chat and documents buttons
