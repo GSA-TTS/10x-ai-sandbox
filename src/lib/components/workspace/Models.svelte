@@ -34,6 +34,8 @@
 	let sortable = null;
 	let searchValue = '';
 
+	let hyphenatedUserName = '';
+
 	const deleteModelHandler = async (model) => {
 		console.log(model.info);
 		if (!model?.info) {
@@ -178,6 +180,9 @@
 	onMount(async () => {
 		// Legacy code to sync localModelfiles with models
 		_models = $models;
+
+		hyphenatedUserName = ($user?.name ?? '').replace(/\s/g, '-').toLowerCase();
+
 		localModelfiles = JSON.parse(localStorage.getItem('modelfiles') ?? '[]');
 
 		if (localModelfiles) {
@@ -282,88 +287,90 @@
 	{#each _models.filter((m) => searchValue === '' || m.name
 				.toLowerCase()
 				.includes(searchValue.toLowerCase())) as model}
-		<div
-			class=" flex space-x-4 cursor-pointer w-full px-3 py-2 dark:hover:bg-white/5 hover:bg-black/5 rounded-xl"
-			id="model-item-{model.id}"
-		>
-			<a
-				class=" flex flex-1 space-x-3.5 cursor-pointer w-full"
-				href={`/?models=${encodeURIComponent(model.id)}`}
+		{#if model.id.toLowerCase().includes(hyphenatedUserName) || $user?.role === 'admin'}
+			<div
+				class=" flex space-x-4 cursor-pointer w-full px-3 py-2 dark:hover:bg-white/5 hover:bg-black/5 rounded-xl"
+				id="model-item-{model.id}"
 			>
-				<div class=" self-start w-8 pt-0.5">
-					<div
-						class=" rounded-full bg-stone-700 {model?.info?.meta?.hidden ?? false
-							? 'brightness-90 dark:brightness-50'
-							: ''} "
-					>
-						<img
-							src={model?.info?.meta?.profile_image_url ?? '/favicon.png'}
-							alt="modelfile profile"
-							class=" rounded-full w-full h-auto object-cover"
-						/>
-					</div>
-				</div>
-
-				<div
-					class=" flex-1 self-center {model?.info?.meta?.hidden ?? false ? 'text-gray-500' : ''}"
-				>
-					<div class="  font-bold line-clamp-1">{model.name}</div>
-					<div class=" text-xs overflow-hidden text-ellipsis line-clamp-1">
-						{!!model?.info?.meta?.description ? model?.info?.meta?.description : model.id}
-					</div>
-				</div>
-			</a>
-			<div class="flex flex-row gap-0.5 self-center">
 				<a
-					class="self-center w-fit text-sm px-2 py-2 dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-xl"
-					type="button"
-					href={`/workspace/models/edit?id=${encodeURIComponent(model.id)}`}
+					class=" flex flex-1 space-x-3.5 cursor-pointer w-full"
+					href={`/?models=${encodeURIComponent(model.id)}`}
 				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="currentColor"
-						class="w-4 h-4"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-						/>
-					</svg>
-				</a>
+					<div class=" self-start w-8 pt-0.5">
+						<div
+							class=" rounded-full bg-stone-700 {model?.info?.meta?.hidden ?? false
+								? 'brightness-90 dark:brightness-50'
+								: ''} "
+						>
+							<img
+								src={model?.info?.meta?.profile_image_url ?? '/favicon.png'}
+								alt="modelfile profile"
+								class=" rounded-full w-full h-auto object-cover"
+							/>
+						</div>
+					</div>
 
-				<ModelMenu
-					{model}
-					shareHandler={() => {
-						shareModelHandler(model);
-					}}
-					cloneHandler={() => {
-						cloneModelHandler(model);
-					}}
-					exportHandler={() => {
-						exportModelHandler(model);
-					}}
-					hideHandler={() => {
-						hideModelHandler(model);
-					}}
-					deleteHandler={() => {
-						selectedModel = model;
-						showModelDeleteConfirm = true;
-					}}
-					onClose={() => {}}
-				>
-					<button
-						class="self-center w-fit text-sm p-1.5 dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-xl"
-						type="button"
+					<div
+						class=" flex-1 self-center {model?.info?.meta?.hidden ?? false ? 'text-gray-500' : ''}"
 					>
-						<EllipsisHorizontal className="size-5" />
-					</button>
-				</ModelMenu>
+						<div class="  font-bold line-clamp-1">{model.name}</div>
+						<div class=" text-xs overflow-hidden text-ellipsis line-clamp-1">
+							{!!model?.info?.meta?.description ? model?.info?.meta?.description : model.id}
+						</div>
+					</div>
+				</a>
+				<div class="flex flex-row gap-0.5 self-center">
+					<a
+						class="self-center w-fit text-sm px-2 py-2 dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-xl"
+						type="button"
+						href={`/workspace/models/edit?id=${encodeURIComponent(model.id)}`}
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-4 h-4"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+							/>
+						</svg>
+					</a>
+
+					<ModelMenu
+						{model}
+						shareHandler={() => {
+							shareModelHandler(model);
+						}}
+						cloneHandler={() => {
+							cloneModelHandler(model);
+						}}
+						exportHandler={() => {
+							exportModelHandler(model);
+						}}
+						hideHandler={() => {
+							hideModelHandler(model);
+						}}
+						deleteHandler={() => {
+							selectedModel = model;
+							showModelDeleteConfirm = true;
+						}}
+						onClose={() => {}}
+					>
+						<button
+							class="self-center w-fit text-sm p-1.5 dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-xl"
+							type="button"
+						>
+							<EllipsisHorizontal className="size-5" />
+						</button>
+					</ModelMenu>
+				</div>
 			</div>
-		</div>
+		{/if}
 	{/each}
 </div>
 

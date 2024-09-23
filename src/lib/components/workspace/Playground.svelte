@@ -212,9 +212,9 @@
 	};
 
 	onMount(async () => {
-		if ($user?.role !== 'admin') {
-			await goto('/');
-		}
+		// if ($user?.role !== 'admin') {
+		// 	await goto('/');
+		// }
 
 		if ($settings?.models) {
 			selectedModelId = $settings?.models[0];

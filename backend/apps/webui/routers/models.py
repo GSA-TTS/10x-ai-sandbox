@@ -1,3 +1,6 @@
+import logging
+import sys
+
 from fastapi import Depends, FastAPI, HTTPException, status, Request
 from datetime import datetime, timedelta
 from typing import List, Union, Optional
@@ -7,8 +10,11 @@ from pydantic import BaseModel
 import json
 from apps.webui.models.models import Models, ModelModel, ModelForm, ModelResponse
 
-from utils.utils import get_verified_user, get_admin_user
+from utils.utils import get_verified_user  # , get_admin_user
 from constants import ERROR_MESSAGES
+
+logging.basicConfig(stream=sys.stdout, level="INFO")
+log = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -29,8 +35,14 @@ async def get_models(user=Depends(get_verified_user)):
 
 @router.post("/add", response_model=Optional[ModelModel])
 async def add_new_model(
-    request: Request, form_data: ModelForm, user=Depends(get_admin_user)
+    request: Request, form_data: ModelForm, user=Depends(get_verified_user)
 ):
+    hyphenated_user_name = user.name.replace(" ", "-").lower()
+    if hyphenated_user_name not in form_data.id and user.role == "user":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You must be an admin to create an unattributed model",
+        )
     if form_data.id in request.app.state.MODELS:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -73,8 +85,17 @@ async def get_model_by_id(id: str, user=Depends(get_verified_user)):
 
 @router.post("/update", response_model=Optional[ModelModel])
 async def update_model_by_id(
-    request: Request, id: str, form_data: ModelForm, user=Depends(get_admin_user)
+    request: Request, id: str, form_data: ModelForm, user=Depends(get_verified_user)
 ):
+    hyphenated_user_name = user.name.replace(" ", "-").lower()
+    log.error(
+        f"hyphenated_user_name: {hyphenated_user_name}\nid: {id}\nform_data: {form_data}"
+    )
+    if hyphenated_user_name not in id and user.role == "user":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You must be an admin to update this model",
+        )
     model = Models.get_model_by_id(id)
     if model:
         model = Models.update_model_by_id(id, form_data)
@@ -102,6 +123,13 @@ async def update_model_by_id(
 
 
 @router.delete("/delete", response_model=bool)
-async def delete_model_by_id(id: str, user=Depends(get_admin_user)):
+async def delete_model_by_id(id: str, user=Depends(get_verified_user)):
+    hyphenated_user_name = user.name.replace(" ", "-").lower()
+    log.error(f"hyphenated_user_name: {hyphenated_user_name}\nid: {id}")
+    if hyphenated_user_name not in id and user.role != "user":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You must be an admin to delete this model",
+        )
     result = Models.delete_model_by_id(id)
     return result
