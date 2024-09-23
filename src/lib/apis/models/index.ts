@@ -19,7 +19,7 @@ export const addNewModel = async (token: string, model: object) => {
 		.catch((err) => {
 			error = err.detail;
 			console.log(err);
-			return null;
+			throw error;
 		});
 
 	if (error) {

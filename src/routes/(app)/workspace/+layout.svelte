@@ -42,13 +42,13 @@
 		<div
 			class="flex scrollbar-none overflow-x-auto w-fit text-center text-sm font-medium rounded-xl bg-transparent/10 p-1"
 		>
+			
 			<a
-				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/workspace/models')
+				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/workspace/playground')
 					? 'bg-gray-50 dark:bg-gray-850'
 					: ''} transition"
-				href="/workspace/models">{$i18n.t('Models')}</a
+				href="/workspace/playground">{$i18n.t('Playground')}</a
 			>
-
 			<a
 				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/workspace/prompts')
 					? 'bg-gray-50 dark:bg-gray-850'
@@ -73,12 +73,11 @@
 			>
 				{$i18n.t('Tools')}
 			</a> -->
-
 			<a
-				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/workspace/playground')
+				class="min-w-fit rounded-lg p-1.5 px-3 {$page.url.pathname.includes('/workspace/models')
 					? 'bg-gray-50 dark:bg-gray-850'
 					: ''} transition"
-				href="/workspace/playground">{$i18n.t('Playground')}</a
+				href="/workspace/models">{$i18n.t('Models')}</a
 			>
 		</div>
 	</div>

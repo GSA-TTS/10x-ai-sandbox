@@ -34,6 +34,8 @@
 	let sortable = null;
 	let searchValue = '';
 
+	let hyphenatedUserName = '';
+
 	const deleteModelHandler = async (model) => {
 		console.log(model.info);
 		if (!model?.info) {
@@ -178,6 +180,15 @@
 	onMount(async () => {
 		// Legacy code to sync localModelfiles with models
 		_models = $models;
+
+		console.log('models', $models);
+		console.log('user name', $user?.name);
+		console.log('user role', $user?.role);
+
+		hyphenatedUserName = ($user?.name ?? '').replace(/\s/g, '-').toLowerCase();
+
+		console.log('hyphenatedUserName', hyphenatedUserName);
+
 		localModelfiles = JSON.parse(localStorage.getItem('modelfiles') ?? '[]');
 
 		if (localModelfiles) {
@@ -282,6 +293,7 @@
 	{#each _models.filter((m) => searchValue === '' || m.name
 				.toLowerCase()
 				.includes(searchValue.toLowerCase())) as model}
+		{#if (model.id.toLowerCase().includes(hyphenatedUserName) || $user?.role === 'admin')}
 		<div
 			class=" flex space-x-4 cursor-pointer w-full px-3 py-2 dark:hover:bg-white/5 hover:bg-black/5 rounded-xl"
 			id="model-item-{model.id}"
@@ -364,6 +376,7 @@
 				</ModelMenu>
 			</div>
 		</div>
+		{/if}
 	{/each}
 </div>
 

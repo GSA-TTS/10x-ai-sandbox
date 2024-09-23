@@ -301,7 +301,7 @@
 			</button>
 		</div>
 
-		{#if $user?.role === 'admin'}
+		{#if $user?.role === 'admin' || $user?.role === 'user'}
 			<div class="px-2.5 flex justify-center text-gray-800 dark:text-gray-200">
 				<a
 					class="flex-grow flex space-x-3 rounded-xl px-2.5 py-2 hover:bg-gray-100 dark:hover:bg-gray-900 transition"

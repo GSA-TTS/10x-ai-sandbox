@@ -79,9 +79,34 @@
 	const submitHandler = async () => {
 		loading = true;
 
-		info.id = id;
-		info.name = name;
+		if ($user?.name === '' || $user?.name === undefined) {
+			toast.error('Error: Trouble fetching user info. Please try again later.');
+			loading = false;
+			success = false;
+			return success;
+		}
+
+		const hyphenated_user_name = $user?.name.replace(/\s+/g, '-').toLowerCase();
+		
+		if (hyphenated_user_name === '' || hyphenated_user_name === undefined) {
+			toast.error('Error: Trouble fetching user info. Please try again later.');
+			loading = false;
+			success = false;
+			return success;
+		}
+		if (!info.id.toString().includes(hyphenated_user_name)) {
+			info.id = id + '-by-' + hyphenated_user_name;
+		}
+
+		if (!info.name.toString().includes($user?.name)) {
+			info.name = name + ' by ' + $user?.name;
+		}
+
 		info.meta.capabilities = capabilities;
+
+		console.log('info:', info);
+		console.log('name:', info.name);
+		console.log('id:', info.id);
 
 		if (knowledge.length > 0) {
 			info.meta.knowledge = knowledge;
@@ -126,6 +151,10 @@
 						: null
 				},
 				params: { ...info.params, ...params }
+			}).catch((error) => {
+				toast.error(error); // Error handled here
+				loading = false;
+				success = false;
 			});
 
 			if (res) {

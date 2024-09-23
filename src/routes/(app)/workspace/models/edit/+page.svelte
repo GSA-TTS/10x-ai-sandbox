@@ -66,8 +66,26 @@
 	const updateHandler = async () => {
 		loading = true;
 
-		info.id = id;
-		info.name = name;
+		if ($user?.name === '' || $user?.name === undefined) {
+			toast.error('Error: Trouble fetching user info. Please try again later.');
+			loading = false;
+			success = false;
+			return success;
+		}
+
+		const hyphenated_user_name = $user?.name.replace(/\s+/g, '-').toLowerCase();
+		
+		if (hyphenated_user_name === '' || hyphenated_user_name === undefined) {
+			toast.error('Error: Trouble fetching user info. Please try again later.');
+			loading = false;
+			success = false;
+			return success;
+		}
+		if (!info.id.toString().includes(hyphenated_user_name)) {
+			info.id = id + '-by-' + hyphenated_user_name;
+		}
+		info.name = name
+
 		info.meta.capabilities = capabilities;
 
 		if (knowledge.length > 0) {
