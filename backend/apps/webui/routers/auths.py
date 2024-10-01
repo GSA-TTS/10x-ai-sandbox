@@ -161,9 +161,9 @@ async def signin_oauth(request: Request, provider: str, form_data: SigninFormOau
 
     if token_response.status_code != 200:
         # Handle token exchange error
-        err_detail = f"token_response: {token_response.json()}"
-        log.error(err_detail)
-        raise HTTPException(status_code=401, detail=err_detail)
+        raise HTTPException(
+            status_code=401, detail=f"token_response: {token_response.json()}"
+        )
 
     oauth2_token = token_response.json().get("access_token")
 
@@ -188,7 +188,7 @@ async def signin_oauth(request: Request, provider: str, form_data: SigninFormOau
         # key = jwks['keys'][0] # should be the first key (dict) in the keys array
         # algo = key['alg'] # You can view cloud's json web key structure at the url above, it'll open in a browser
         # decoded_data = jwt.decode(token=oauth2_token, key=key, algorithms=[algo]) # note that algorithms expects an []
-        email = decoded_data.get("email").lower()
+        email = decoded_data.get("email")
         all_emails = [email]
     else:
         try:
@@ -208,8 +208,6 @@ async def signin_oauth(request: Request, provider: str, form_data: SigninFormOau
                 log.error(err)
                 raise HTTPException(status_code=401, detail=err)
             email = provider_data["userinfo"]["email"](response.json())
-            if email:
-                email = email.lower()
             all_emails = provider_data["userinfo"]["all_emails"](response.json())
         except Exception as e:
             # Handle email retrieval error
@@ -225,39 +223,18 @@ async def signin_oauth(request: Request, provider: str, form_data: SigninFormOau
     user_email_domains = []
     user_has_permitted_domain = False
 
-    log.error(f"provider is: {provider}")
-    log.error(f"all_emails is: {all_emails}")
-
     for this_email in all_emails:
-        this_email = this_email.lower()
         domain = this_email.split("@")[1]
         user_email_domains.append(domain)
-        if provider == "github":
-            if domain in ["gsa.gov"]:
-                email = this_email
-                user_has_permitted_domain = True
-                break
-        elif provider == "cloudgov":
+        if domain in ["gsa.gov"]:
             email = this_email
             user_has_permitted_domain = True
             break
 
-    if not email:
+    if not user_has_permitted_domain or not email:
         # Handle unauthorized domain error
-        err_detail = "Missing email, please contact your authorization provider"
-        log.error(err_detail)
         raise HTTPException(
-            status_code=401,
-            detail=err_detail,
-        )
-
-    if not user_has_permitted_domain:
-        # Handle unauthorized domain error
-        err_detail = "Users with your email domain are not yet authorized. Please reach out to jim.moffet@gsa.gov"
-        log.error(err_detail)
-        raise HTTPException(
-            status_code=401,
-            detail=err_detail,
+            status_code=401, detail=f"Missing email or unauthorized email domain"
         )
 
     log.error(f"email is: {email}")
@@ -292,7 +269,6 @@ async def signin_oauth(request: Request, provider: str, form_data: SigninFormOau
             "profile_image_url": user.profile_image_url,
         }
     else:
-        log.error(f"error creating : {ERROR_MESSAGES.INVALID_CRED}")
         raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_CRED)
 
 
