@@ -88,9 +88,11 @@ async def update_model_by_id(
     request: Request, id: str, form_data: ModelForm, user=Depends(get_verified_user)
 ):
     hyphenated_user_name = user.name.replace(" ", "-").lower()
+
     log.error(
         f"hyphenated_user_name: {hyphenated_user_name}\nid: {id}\nform_data: {form_data}"
     )
+
     if hyphenated_user_name not in id and user.role == "user":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -101,16 +103,19 @@ async def update_model_by_id(
         model = Models.update_model_by_id(id, form_data)
         return model
     else:
+        log.error("Couldn't find model in database")
         if form_data.id in request.app.state.MODELS:
             model = Models.insert_new_model(form_data, user.id)
             if model:
                 return model
             else:
+                log.error("Error inserting new model")
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail=ERROR_MESSAGES.DEFAULT(),
                 )
         else:
+            log.error("Couldn't find model in app state")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail=ERROR_MESSAGES.DEFAULT(),
@@ -126,7 +131,7 @@ async def update_model_by_id(
 async def delete_model_by_id(id: str, user=Depends(get_verified_user)):
     hyphenated_user_name = user.name.replace(" ", "-").lower()
     log.error(f"hyphenated_user_name: {hyphenated_user_name}\nid: {id}")
-    if hyphenated_user_name not in id and user.role != "user":
+    if hyphenated_user_name not in id and user.role == "user":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="You must be an admin to delete this model",
