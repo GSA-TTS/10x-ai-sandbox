@@ -1,10 +1,11 @@
 # TODOs
 
 - Videos: playground switching sys prompts
+- Models and docs need ownership and visibility in database, owner str, visibility [str]
+- Ability to share docs/models by pasting an email of another user ("This email is belongs to a sandbox user. They will now have access to the model" / "This email does not belong to a sandbox user"). Probably want comma separation...
 - Add links to Doc upload
 - Fix tagging ux, add tags should be clickable, should save when you hit save
 - Check and tag multiple docs
-- Use a user-create/admin-created attribute on models instead of testing name
 - Need initial (Type a message down there 👇 to get started) message for new users
 - Soft outline around new chat and documents buttons
 - Remove dangerous items from Workspace, rename Workspace "Documents & More"
