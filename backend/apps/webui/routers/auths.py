@@ -224,15 +224,20 @@ async def signin_oauth(request: Request, provider: str, form_data: SigninFormOau
     user_has_permitted_domain = False
 
     for this_email in all_emails:
+        this_email = this_email.lower()
         domain = this_email.split("@")[1]
+        domain_tld = domain[-4:]
         user_email_domains.append(domain)
         if provider == "github":
+            log.error(f"github provided email is: {this_email}")
             if domain in ["gsa.gov"]:
                 email = this_email
                 user_has_permitted_domain = True
                 break
         elif provider == "cloudgov":
-            if ".gov" in domain:
+            log.error(f"cloudgov provided email is: {this_email}")
+            log.error(f"email domain tld is: {domain_tld}")
+            if domain_tld == ".gov":
                 email = this_email
                 user_has_permitted_domain = True
                 break
