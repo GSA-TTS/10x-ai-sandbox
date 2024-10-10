@@ -24,11 +24,11 @@
 	};
 
 	const handleShowTagInputChange = async () => {
-        if (showTagInput) {
-            await tick(); // Wait for the DOM to update
-            tagInput.focus(); // Focus the input element
-        }
-    };
+		if (showTagInput) {
+			await tick(); // Wait for the DOM to update
+			tagInput.focus(); // Focus the input element
+		}
+	};
 </script>
 
 <div class="flex {showTagInput ? 'flex-row-reverse' : ''}">
@@ -96,9 +96,9 @@
 		<button
 			type="button"
 			on:click={async () => {
-                showTagInput = !showTagInput;
-                await handleShowTagInputChange();
-            }}
+				showTagInput = !showTagInput;
+				await handleShowTagInputChange();
+			}}
 		>
 			<span class="text-xs pl-2 self-center">{label}</span>
 		</button>
