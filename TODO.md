@@ -14,3 +14,4 @@
 - create a couple default custom prompts shortcuts like /quick-summary ([type something here]) and /quick-summary-from-paste {{clipboard}}
 - Unhide Tools from Docs & more layout
 - Chroma is kept in ram... need to swap for redisVL
+- tell run format to ignore package.json so we don't have to npm install in pre-commit to get formatting to match in the ci check
