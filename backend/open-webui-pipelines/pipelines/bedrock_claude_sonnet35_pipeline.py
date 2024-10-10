@@ -188,6 +188,24 @@ class Pipeline:
         if "max_tokens" not in filtered_body:
             filtered_body["max_tokens"] = 4000
 
+        # Claude likes a different format for images than OpenAI
+        for message in filtered_body["messages"]:
+            if message["role"] == "user":
+                if isinstance(message["content"], list):
+                    for content in message["content"]:
+                        if content["type"] == "image_url":
+                            content["type"] = "image"
+                            image_type = (
+                                content["image_url"]["url"].split(";")[0].split("/")[1]
+                            )
+                            data = content["image_url"]["url"].split(",")[1]
+                            content["source"] = {
+                                "type": "base64",  # base64
+                                "media_type": f"image/{image_type}",  # i.e. image/jpeg
+                                "data": data,
+                            }
+                            del content["image_url"]
+
         try:
 
             r = self.bedrock_client.invoke_model_with_response_stream(
@@ -199,6 +217,12 @@ class Pipeline:
                 if chunk["type"] == "content_block_delta":
                     yield chunk["delta"].get("text", "")
 
+        except requests.exceptions.HTTPError as e:  # This will catch HTTP errors
+            if r.status_code == 400:
+                print(f"400 Bad Request received: {r.text}")
+            else:
+                print(f"HTTP Error: {e} Response: {r.text}")
+            return f"Error with r: {e} ({r.text}) for body:\n{body}\nand filtered_body:\n{filtered_body}"
         except requests.exceptions.HTTPError as e:  # This will catch HTTP errors
             if r.status_code == 400:
                 print(f"400 Bad Request received: {r.text}")
