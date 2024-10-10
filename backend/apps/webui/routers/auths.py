@@ -397,10 +397,13 @@ async def signup(request: Request, form_data: SignupForm):
     try:
 
         if form_data.email.lower() in dev_admin_emails:
+            log.info(f"User {form_data.email.lower()} is a dev admin")
             role = "admin"
         elif form_data.email.lower() in dev_user_emails:
+            log.info(f"User {form_data.email.lower()} is a dev user")
             role = "user"
         else:
+            log.info(f"User {form_data.email.lower()} is a pending user")
             role = request.app.state.config.DEFAULT_USER_ROLE
 
         name = form_data.name

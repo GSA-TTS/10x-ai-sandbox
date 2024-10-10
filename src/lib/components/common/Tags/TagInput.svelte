@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, getContext } from 'svelte';
+	import { createEventDispatcher, getContext, tick } from 'svelte';
 	import { tags } from '$lib/stores';
 	import { toast } from 'svelte-sonner';
 	const dispatch = createEventDispatcher();
@@ -9,8 +9,10 @@
 	export let label = '';
 	let showTagInput = false;
 	let tagName = '';
+	let tagInput: HTMLInputElement;
 
 	const addTagHandler = async () => {
+		console.log('addTagHandler fired with:', tagName);
 		tagName = tagName.trim();
 		if (tagName !== '') {
 			dispatch('add', tagName);
@@ -20,12 +22,20 @@
 			toast.error($i18n.t(`Invalid Tag`));
 		}
 	};
+
+	const handleShowTagInputChange = async () => {
+        if (showTagInput) {
+            await tick(); // Wait for the DOM to update
+            tagInput.focus(); // Focus the input element
+        }
+    };
 </script>
 
 <div class="flex {showTagInput ? 'flex-row-reverse' : ''}">
 	{#if showTagInput}
 		<div class="flex items-center">
 			<input
+				bind:this={tagInput}
 				bind:value={tagName}
 				class=" px-2 cursor-pointer self-center text-xs h-fit bg-transparent outline-none line-clamp-1 w-[5.5rem]"
 				placeholder={$i18n.t('Add a tag')}
@@ -63,8 +73,9 @@
 	<button
 		class=" cursor-pointer self-center p-0.5 flex h-fit items-center dark:hover:bg-gray-700 rounded-full transition border dark:border-gray-600 border-dashed"
 		type="button"
-		on:click={() => {
+		on:click={async () => {
 			showTagInput = !showTagInput;
+			await handleShowTagInputChange();
 		}}
 	>
 		<div class=" m-auto self-center">
@@ -82,6 +93,14 @@
 	</button>
 
 	{#if label && !showTagInput}
-		<span class="text-xs pl-2 self-center">{label}</span>
+		<button
+			type="button"
+			on:click={async () => {
+                showTagInput = !showTagInput;
+                await handleShowTagInputChange();
+            }}
+		>
+			<span class="text-xs pl-2 self-center">{label}</span>
+		</button>
 	{/if}
 </div>
