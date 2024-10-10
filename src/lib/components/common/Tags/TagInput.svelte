@@ -12,7 +12,6 @@
 	let tagInput: HTMLInputElement;
 
 	const addTagHandler = async () => {
-		console.log('addTagHandler fired with:', tagName);
 		tagName = tagName.trim();
 		if (tagName !== '') {
 			dispatch('add', tagName);
