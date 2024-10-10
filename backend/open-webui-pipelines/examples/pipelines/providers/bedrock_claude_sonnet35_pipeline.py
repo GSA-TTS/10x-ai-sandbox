@@ -205,9 +205,11 @@ class Pipeline:
             else:
                 print(f"HTTP Error: {e} Response: {r.text}")
             return f"Error with r: {e} ({r.text}) for body:\n{body}\nand filtered_body:\n{filtered_body}"
-        except Exception as e:  # This will catch other errors
-            print(f"Error without r: {e}")
-            return f"Error without r: {e}"
+        except Exception as e:
+            print(
+                f"Error without r: {e} for body:\n{body}\nand filtered_body:\n{filtered_body}"
+            )
+            return f"Error without r: {e} for body:\n{body}\nand filtered_body:\n{filtered_body}"
 
 
 # import logging

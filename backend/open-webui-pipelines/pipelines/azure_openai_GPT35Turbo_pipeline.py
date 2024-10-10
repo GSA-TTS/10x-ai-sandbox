@@ -25,7 +25,7 @@ class Pipeline:
         """
 
         # self.id = "azure_openai_pipeline"
-        self.name = "FedRamp High Azure GPT 3.5 Turbo"
+        self.name = "FedRamp High Azure GPT 3.5 Turbo (no vision)"
         self.valves = self.Valves(
             **{
                 "AZURE_OPENAI_API_KEY": os.getenv(
@@ -114,6 +114,15 @@ class Pipeline:
             print(
                 f"Dropped params: {', '.join(set(body.keys()) - set(filtered_body.keys()))}"
             )
+
+        # GPT3.5 has no vision
+        for message in filtered_body["messages"]:
+            if message["role"] == "user":
+                if isinstance(message["content"], list):
+                    for content in message["content"]:
+                        if content["type"] == "image_url":
+                            # remove this content from the message
+                            message["content"].remove(content)
 
         try:
             r = requests.post(
