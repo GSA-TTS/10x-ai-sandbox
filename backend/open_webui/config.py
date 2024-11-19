@@ -421,6 +421,23 @@ OAUTH_ADMIN_ROLES = PersistentConfig(
     [role.strip() for role in os.environ.get("OAUTH_ADMIN_ROLES", "admin").split(",")],
 )
 
+OAUTH_ACR_CLAIM = PersistentConfig(
+    "OAUTH_ACR_CLAIM",
+    "oauth.oidc.acr_claim",
+    os.environ.get("OAUTH_ACR_CLAIM", ""),
+)
+OAUTH_NONCE_CLAIM = PersistentConfig(
+    "OAUTH_NONCE_CLAIM",
+    "oauth.oidc.nonce_claim",
+    os.environ.get("OAUTH_NONCE_CLAIM", ""),
+)
+
+OAUTH_USE_PKCE = PersistentConfig(
+    "OAUTH_USE_PKCE",
+    "oauth.oidc.use_pkce",
+    os.environ.get("OAUTH_USE_PKCE", ""),
+)
+
 
 def load_oauth_providers():
     OAUTH_PROVIDERS.clear()
@@ -459,6 +476,10 @@ def load_oauth_providers():
             "name": OAUTH_PROVIDER_NAME.value,
             "redirect_uri": OPENID_REDIRECT_URI.value,
         }
+
+        # TODO: does this work out of the box for google and microsoft, too?
+        if OAUTH_USE_PKCE.value:
+            OAUTH_PROVIDERS["oidc"]["pkce"] = OAUTH_USE_PKCE.value
 
 
 load_oauth_providers()
