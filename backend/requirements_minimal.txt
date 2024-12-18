@@ -38,7 +38,7 @@ xlrd==2.0.1
 
 
 python-dotenv==1.0.1
-python-multipart==0.0.9
+python-multipart==0.0.18
 python-socketio==5.11.4
 PyYAML==6.0.2
 Requests==2.32.3
