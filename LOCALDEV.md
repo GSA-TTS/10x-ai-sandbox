@@ -63,3 +63,27 @@
 
 - Once you're in, you should see the four default models available in the chat. If not, check that the pipelines server is running on 9099 and in the UI click on your user in the lower left > Admin Panel > Settings > Connections > OpenAI API section. Set the API URL to [<http://localhost:9099](http://localhost:9099>) and the API key to 0p3n-w3bu! and hit refresh to see if it connects to the pipeline server.
 - After completing these steps, the models specified in the pipeline settings should be available in the drop down at the upper left when you create a new conversation.
+
+7. **Local e2e testing**:
+
+- The cypress tests in the open-webui repo are out of date and need some love. Here's how to get started. Make sure you've run `npm install` locally and then install cypress locally:
+
+`npx cypress install`
+
+- You can remove the local backend db and run the backend and Ollama however you want, as long as they're available at `:8080` and `:11434` respectively. Here's how to run them via docker:
+
+```
+OPEN_WEBUI_PORT=8080 rm ./backend/data/webui.db || true && \
+            docker compose \
+            --file docker-compose.yaml \
+            --file docker-compose.api.yaml \
+            up --detach --build
+```
+
+- If you have Ollama installed and running locally with at least one model, you can just run:
+
+`rm ./backend/data/webui.db || true && ./backend/start.sh`
+
+- Once the app is available at 8080 and Ollama is available at 11434, you can run cypress with the helper script:
+
+`npm run cy:open`

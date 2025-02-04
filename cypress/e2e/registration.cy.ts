@@ -14,7 +14,8 @@ describe('Registration and Login', () => {
 	});
 
 	beforeEach(() => {
-		cy.visit('/');
+		cy.visit('/signout');
+		cy.visit('/auth');
 	});
 
 	it('should register a new user as pending', () => {
@@ -43,10 +44,17 @@ describe('Registration and Login', () => {
 		// Wait until the user is redirected to the home page
 		cy.contains(adminUser.name);
 		// Dismiss the changelog dialog if it is visible
-		cy.getAllLocalStorage().then((ls) => {
-			if (!ls['version']) {
-				cy.get('button').contains("Okay, Let's Go!").click();
-			}
-		});
+		// cy.getAllLocalStorage().then((ls) => {
+		// 	if (!ls['version']) {
+		// 		cy.get('button').contains("Okay, Let's Go!").click();
+		// 	}
+		// });
+		cy.get('button')
+			.contains("Okay, Let's Go!")
+			.then(($btn) => {
+				if ($btn.length) {
+					cy.wrap($btn).click();
+				}
+			});
 	});
 });

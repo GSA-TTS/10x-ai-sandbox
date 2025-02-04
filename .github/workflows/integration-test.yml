@@ -87,7 +87,7 @@ jobs:
   #     - name: Set up Python
   #       uses: actions/setup-python@v5
   #       with:
-  #         python-version: ${{ matrix.python-version }}
+  #         python-version: 
 
   #     - name: Install dependencies
   #       run: |
@@ -107,7 +107,7 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: postgres # pragma: allowlist secret (testing db)
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -134,7 +134,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.11
 
       - name: Set up uv
         uses: yezz123/setup-uv@v4
@@ -153,7 +153,7 @@ jobs:
       - name: Test backend with SQLite
         id: sqlite
         env:
-          WEBUI_SECRET_KEY: secret-key
+          WEBUI_SECRET_KEY: secret-key # pragma: allowlist secret (ephemeral testing app)
           GLOBAL_LOG_LEVEL: debug
         run: |
           cd backend
@@ -179,9 +179,9 @@ jobs:
       - name: Test backend with Postgres
         if: success() || steps.sqlite.conclusion == 'failure'
         env:
-          WEBUI_SECRET_KEY: secret-key
+          WEBUI_SECRET_KEY: secret-key # pragma: allowlist secret (ephemeral testing app)
           GLOBAL_LOG_LEVEL: debug
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres # pragma: allowlist secret (ephemeral testing db)
           DATABASE_POOL_SIZE: 10
           DATABASE_POOL_MAX_OVERFLOW: 10
           DATABASE_POOL_TIMEOUT: 30

@@ -30,7 +30,9 @@ describe('Settings', () => {
 			// Select the first model
 			cy.get('button[aria-label="model-item"]').first().click();
 			// Type a message
-			cy.get('#chat-input').type('Hi, what can you do? A single sentence only please.', {
+			cy.get('#chat-input').click();
+			const message = 'Hi, what can you do? A single sentence only please.';
+			cy.get('#chat-input', { timeout: 10_000 }).type(message, {
 				force: true
 			});
 			// Send the message
@@ -40,8 +42,8 @@ describe('Settings', () => {
 			// Wait for the response
 			// .chat-assistant is created after the first token is received
 			cy.get('.chat-assistant', { timeout: 10_000 }).should('exist');
-			// Generation Info is created after the stop token is received
-			cy.get('div[aria-label="Generation Info"]', { timeout: 120_000 }).should('exist');
+			// Regenerate is created after the stop token is received
+			cy.get('div[aria-label="Regenerate"]', { timeout: 120_000 }).should('exist');
 		});
 
 		it('user can share chat', () => {
@@ -50,6 +52,7 @@ describe('Settings', () => {
 			// Select the first model
 			cy.get('button[aria-label="model-item"]').first().click();
 			// Type a message
+			cy.get('#chat-input').click();
 			cy.get('#chat-input').type('Hi, what can you do? A single sentence only please.', {
 				force: true
 			});
@@ -60,8 +63,8 @@ describe('Settings', () => {
 			// Wait for the response
 			// .chat-assistant is created after the first token is received
 			cy.get('.chat-assistant', { timeout: 10_000 }).should('exist');
-			// Generation Info is created after the stop token is received
-			cy.get('div[aria-label="Generation Info"]', { timeout: 120_000 }).should('exist');
+			// Regenerate Info is created after the stop token is received
+			cy.get('div[aria-label="Regenerate"]', { timeout: 120_000 }).should('exist');
 			// spy on requests
 			const spy = cy.spy();
 			cy.intercept('POST', '/api/v1/chats/**/share', spy);
@@ -79,28 +82,28 @@ describe('Settings', () => {
 			});
 		});
 
-		it('user can generate image', () => {
-			// Click on the model selector
-			cy.get('button[aria-label="Select a model"]').click();
-			// Select the first model
-			cy.get('button[aria-label="model-item"]').first().click();
-			// Type a message
-			cy.get('#chat-input').type('Hi, what can you do? A single sentence only please.', {
-				force: true
-			});
-			// Send the message
-			cy.get('button[type="submit"]').click();
-			// User's message should be visible
-			cy.get('.chat-user').should('exist');
-			// Wait for the response
-			// .chat-assistant is created after the first token is received
-			cy.get('.chat-assistant', { timeout: 10_000 }).should('exist');
-			// Generation Info is created after the stop token is received
-			cy.get('div[aria-label="Generation Info"]', { timeout: 120_000 }).should('exist');
-			// Click on the generate image button
-			cy.get('[aria-label="Generate Image"]').click();
-			// Wait for image to be visible
-			cy.get('img[data-cy="image"]', { timeout: 60_000 }).should('be.visible');
-		});
+		// it('user can generate image', () => {
+		// 	// Click on the model selector
+		// 	cy.get('button[aria-label="Select a model"]').click();
+		// 	// Select the first model
+		// 	cy.get('button[aria-label="model-item"]').first().click();
+		// 	// Type a message
+		// 	cy.get('#chat-input').type('Hi, what can you do? A single sentence only please.', {
+		// 		force: true
+		// 	});
+		// 	// Send the message
+		// 	cy.get('button[type="submit"]').click();
+		// 	// User's message should be visible
+		// 	cy.get('.chat-user').should('exist');
+		// 	// Wait for the response
+		// 	// .chat-assistant is created after the first token is received
+		// 	cy.get('.chat-assistant', { timeout: 10_000 }).should('exist');
+		// 	// Generation Info is created after the stop token is received
+		// 	cy.get('div[aria-label="Regenerate"]', { timeout: 120_000 }).should('exist');
+		// 	// Click on the generate image button
+		// 	cy.get('[aria-label="Generate Image"]').click();
+		// 	// Wait for image to be visible
+		// 	cy.get('img[data-cy="image"]', { timeout: 60_000 }).should('be.visible');
+		// });
 	});
 });

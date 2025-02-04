@@ -7,12 +7,18 @@ services:
     tty: true
     restart: unless-stopped
     image: ollama/ollama:${OLLAMA_DOCKER_TAG-latest}
+    healthcheck:
+      test: ["CMD-SHELL", "ollama pull qwen:0.5b-chat-v1.5-q2_K || exit 1"]
+      interval: 60s
+      timeout: 59s
+      retries: 5
 
   open-webui:
     build:
       context: .
       args:
         OLLAMA_BASE_URL: '/ollama'
+        # CERT_FILE: '~/10x-ai-sandbox/z-root-public.crt'
       dockerfile: Dockerfile
     image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG-main}
     container_name: open-webui
