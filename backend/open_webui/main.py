@@ -213,6 +213,7 @@ from open_webui.config import (
     DEFAULT_ARENA_MODEL,
     MODEL_ORDER_LIST,
     EVALUATION_ARENA_MODELS,
+    ENABLE_ADMIN_FEEDBACKS,
     # WebUI (OAuth)
     ENABLE_OAUTH_ROLE_MANAGEMENT,
     OAUTH_ROLES_CLAIM,
@@ -1022,6 +1023,7 @@ async def get_app_config(request: Request):
                     "max_count": app.state.config.FILE_MAX_COUNT,
                 },
                 "permissions": {**app.state.config.USER_PERMISSIONS},
+                "enable_admin_feedbacks": ENABLE_ADMIN_FEEDBACKS,
             }
             if user is not None
             else {}
