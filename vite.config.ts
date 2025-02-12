@@ -58,6 +58,28 @@ export default defineConfig({
 
 				console.log(`Watching for changes in src/${project}...`);
 			}
+		},
+		{
+			name: 'watch-default-routes',
+			configureServer() {
+				const defaultRoutesDir = 'src/routes';
+
+				const watcher = chokidar.watch(defaultRoutesDir, {
+					ignoreInitial: true,
+					ignored: ['node_modules', '**/.*'],
+					persistent: true
+				});
+
+				// Provide warnings if there are edits being made to the open web ui files that
+				// are subject to collisions with upstream updates.
+				watcher.on('add', (filePath) => {
+					console.warn(`[WARNING]: You added a file to ${filePath}. You should probably add it to the overrides directory instead.`);
+				});
+
+				watcher.on('change', (filePath) => {
+					console.warn(`[WARNING]: You changed a file in ${filePath}. You should probably copy the file to the overrides directory instead.`);
+				});
+			}
 		}
 	],
 	define: {
