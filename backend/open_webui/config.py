@@ -945,6 +945,8 @@ ENABLE_MESSAGE_RATING = PersistentConfig(
 )
 
 
+ENABLE_ADMIN_FEEDBACKS = os.environ.get("ENABLE_ADMIN_FEEDBACKS", "False").lower() == "true"
+
 def validate_cors_origins(origins):
     for origin in origins:
         if origin != "*":
