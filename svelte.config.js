@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import { globSync as glob } from 'glob';
 
-const project = process.env.PROJECT || 'gsai-overrides';
+const project = process.env.PROJECT || 'upstream-overrides';
 let routes = 'src/routes';
 
 if (project) {

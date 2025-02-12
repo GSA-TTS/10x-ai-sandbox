@@ -24,7 +24,7 @@ export default defineConfig({
 		{
 			name: 'watch-routes-override',
 			configureServer() {
-				const project = process.env.PROJECT || 'gsai-overrides';
+				const project = process.env.PROJECT || 'upstream-overrides';
 				const projectPath = `src/.routes-${project}`;
 
 				const watcher = chokidar.watch(`src/${project}`, {
