@@ -10,7 +10,7 @@ passlib[bcrypt]
 PyJWT[crypto]
 
 requests==2.32.2
-aiohttp==3.9.5
+aiohttp==3.10.11
 httpx
 
 # AI libraries
