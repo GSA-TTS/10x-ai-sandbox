@@ -28,7 +28,9 @@ class Pipeline:
 
         self.valves = self.Valves(
             **{
-                "OLLAMA_BASE_URL": os.getenv("OLLAMA_BASE_URL", "http://localhost:11435"),
+                "OLLAMA_BASE_URL": os.getenv(
+                    "OLLAMA_BASE_URL", "http://localhost:11435"
+                ),
             }
         )
         self.pipelines = []

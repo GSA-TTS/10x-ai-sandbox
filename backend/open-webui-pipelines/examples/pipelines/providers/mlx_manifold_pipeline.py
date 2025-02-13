@@ -18,6 +18,7 @@ from huggingface_hub import login
 import time
 import psutil
 
+
 class Pipeline:
     class Valves(BaseModel):
         MLX_DEFAULT_MODEL: str = "mlx-community/Meta-Llama-3-8B-Instruct-8bit"
@@ -59,38 +60,44 @@ class Pipeline:
         """Fetch available MLX models based on the specified pattern."""
         try:
             cmd = [
-                'mlx_lm.manage',
-                '--scan',
-                '--pattern', self.valves.MLX_MODEL_FILTER,
+                "mlx_lm.manage",
+                "--scan",
+                "--pattern",
+                self.valves.MLX_MODEL_FILTER,
             ]
             result = subprocess.run(cmd, capture_output=True, text=True)
-            lines = result.stdout.strip().split('\n')
-            
-            content_lines = [line for line in lines if line and not line.startswith('-')]
-            
+            lines = result.stdout.strip().split("\n")
+
+            content_lines = [
+                line for line in lines if line and not line.startswith("-")
+            ]
+
             models = []
             for line in content_lines[2:]:  # Skip header lines
                 parts = line.split()
                 if len(parts) >= 2:
                     repo_id = parts[0]
-                    models.append({
-                        "id": f"{repo_id.split('/')[-1].lower()}",
-                        "name": repo_id
-                    })
+                    models.append(
+                        {"id": f"{repo_id.split('/')[-1].lower()}", "name": repo_id}
+                    )
             if not models:
                 # Add default model if no models are found
-                models.append({
-                    "id": f"mlx.{self.valves.MLX_DEFAULT_MODEL.split('/')[-1].lower()}",
-                    "name": self.valves.MLX_DEFAULT_MODEL
-                })
+                models.append(
+                    {
+                        "id": f"mlx.{self.valves.MLX_DEFAULT_MODEL.split('/')[-1].lower()}",
+                        "name": self.valves.MLX_DEFAULT_MODEL,
+                    }
+                )
             return models
         except Exception as e:
             logging.error(f"Error fetching MLX models: {e}")
             # Return default model on error
-            return [{
-                "id": f"mlx.{self.valves.MLX_DEFAULT_MODEL.split('/')[-1].lower()}",
-                "name": self.valves.MLX_DEFAULT_MODEL
-            }]
+            return [
+                {
+                    "id": f"mlx.{self.valves.MLX_DEFAULT_MODEL.split('/')[-1].lower()}",
+                    "name": self.valves.MLX_DEFAULT_MODEL,
+                }
+            ]
 
     def pipelines(self) -> List[dict]:
         """Return the list of available models as pipelines."""
@@ -99,7 +106,11 @@ class Pipeline:
     def start_mlx_server(self, model_name):
         """Start the MLX server with the specified model."""
         model_id = f"mlx.{model_name.split('/')[-1].lower()}"
-        if self.current_model == model_id and self.server_process and self.server_process.poll() is None:
+        if (
+            self.current_model == model_id
+            and self.server_process
+            and self.server_process.poll() is None
+        ):
             logging.info(f"MLX server already running with model {model_name}")
             return
 
@@ -109,8 +120,10 @@ class Pipeline:
 
         command = [
             "mlx_lm.server",
-            "--model", model_name,
-            "--port", str(self.port),
+            "--model",
+            model_name,
+            "--port",
+            str(self.port),
         ]
 
         # Add chat template options if specified
@@ -147,6 +160,7 @@ class Pipeline:
     def find_free_port(self):
         """Find and return a free port to use for the MLX server."""
         import socket
+
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(("", 0))
         port = s.getsockname()[1]
@@ -175,7 +189,10 @@ class Pipeline:
 
         # Switch model if necessary
         if model_id != self.current_model:
-            model_name = next((model['name'] for model in self.models if model['id'] == model_id), self.valves.MLX_DEFAULT_MODEL)
+            model_name = next(
+                (model["name"] for model in self.models if model["id"] == model_id),
+                self.valves.MLX_DEFAULT_MODEL,
+            )
             self.start_mlx_server(model_name)
 
         url = f"http://{self.host}:{self.port}/v1/chat/completions"

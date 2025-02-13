@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import os
 import requests
 
+
 class Pipeline:
     class Valves(BaseModel):
         PERPLEXITY_API_BASE_URL: str = "https://api.perplexity.ai"
@@ -26,14 +27,26 @@ class Pipeline:
 
         # List of models
         self.pipelines = [
-            {"id": "llama-3-sonar-large-32k-online", "name": "Llama 3 Sonar Large 32K Online"},
-            {"id": "llama-3-sonar-small-32k-online", "name": "Llama 3 Sonar Small 32K Online"},
-            {"id": "llama-3-sonar-large-32k-chat", "name": "Llama 3 Sonar Large 32K Chat"},
-            {"id": "llama-3-sonar-small-32k-chat", "name": "Llama 3 Sonar Small 32K Chat"},
+            {
+                "id": "llama-3-sonar-large-32k-online",
+                "name": "Llama 3 Sonar Large 32K Online",
+            },
+            {
+                "id": "llama-3-sonar-small-32k-online",
+                "name": "Llama 3 Sonar Small 32K Online",
+            },
+            {
+                "id": "llama-3-sonar-large-32k-chat",
+                "name": "Llama 3 Sonar Large 32K Chat",
+            },
+            {
+                "id": "llama-3-sonar-small-32k-chat",
+                "name": "Llama 3 Sonar Small 32K Chat",
+            },
             {"id": "llama-3-8b-instruct", "name": "Llama 3 8B Instruct"},
             {"id": "llama-3-70b-instruct", "name": "Llama 3 70B Instruct"},
             {"id": "mixtral-8x7b-instruct", "name": "Mixtral 8x7B Instruct"},
-            {"id": "related", "name": "Related"}
+            {"id": "related", "name": "Related"},
         ]
         pass
 
@@ -65,18 +78,18 @@ class Pipeline:
         headers = {
             "Authorization": f"Bearer {self.valves.PERPLEXITY_API_KEY}",
             "Content-Type": "application/json",
-            "accept": "application/json"
+            "accept": "application/json",
         }
 
         payload = {
             "model": model_id,
             "messages": [
                 {"role": "system", "content": "Be precise and concise."},
-                {"role": "user", "content": user_message}
+                {"role": "user", "content": user_message},
             ],
             "stream": body.get("stream", True),
             "return_citations": True,
-            "return_images": True
+            "return_images": True,
         }
 
         if "user" in payload:
@@ -114,27 +127,38 @@ class Pipeline:
                             "finish_reason": choice["finish_reason"],
                             "message": {
                                 "role": choice["message"]["role"],
-                                "content": choice["message"]["content"]
+                                "content": choice["message"]["content"],
                             },
-                            "delta": {"role": "assistant", "content": ""}
-                        } for choice in response["choices"]
-                    ]
+                            "delta": {"role": "assistant", "content": ""},
+                        }
+                        for choice in response["choices"]
+                    ],
                 }
                 return formatted_response
         except Exception as e:
             return f"Error: {e}"
 
+
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Perplexity API Client")
-    parser.add_argument("--api-key", type=str, required=True, help="API key for Perplexity")
-    parser.add_argument("--prompt", type=str, required=True, help="Prompt to send to the Perplexity API")
+    parser.add_argument(
+        "--api-key", type=str, required=True, help="API key for Perplexity"
+    )
+    parser.add_argument(
+        "--prompt", type=str, required=True, help="Prompt to send to the Perplexity API"
+    )
 
     args = parser.parse_args()
 
     pipeline = Pipeline()
     pipeline.valves.PERPLEXITY_API_KEY = args.api_key
-    response = pipeline.pipe(user_message=args.prompt, model_id="llama-3-sonar-large-32k-online", messages=[], body={"stream": False})
+    response = pipeline.pipe(
+        user_message=args.prompt,
+        model_id="llama-3-sonar-large-32k-online",
+        messages=[],
+        body={"stream": False},
+    )
 
     print("Response:", response)
