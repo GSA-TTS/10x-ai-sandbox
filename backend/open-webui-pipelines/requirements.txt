@@ -11,4 +11,4 @@ pydantic==2.9.1
 PyJWT==2.9.0
 python-dotenv==1.0.1
 Requests==2.32.3
-starlette==0.38.5
+starlette==0.40.0
