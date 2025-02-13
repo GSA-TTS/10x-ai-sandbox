@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 
 	import { flyAndScale } from '$lib/utils/transitions';
-	import { trapFocus } from 'trap-focus-svelte'
+	import { trapFocus } from 'trap-focus-svelte';
 
 	export let show = true;
 	export let size = 'md';
