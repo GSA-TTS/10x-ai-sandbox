@@ -196,6 +196,7 @@ from open_webui.config import (
     ADMIN_EMAIL,
     SHOW_ADMIN_DETAILS,
     JWT_EXPIRES_IN,
+    ENABLE_ONBOARDING_PAGE,
     ENABLE_SIGNUP,
     ENABLE_LOGIN_FORM,
     ENABLE_API_KEY,
@@ -960,7 +961,7 @@ async def get_app_config(request: Request):
     onboarding = False
     if user is None:
         user_count = Users.get_num_users()
-        onboarding = user_count == 0
+        onboarding = user_count == 0 and ENABLE_ONBOARDING_PAGE
 
     return {
         **({"onboarding": True} if onboarding else {}),
