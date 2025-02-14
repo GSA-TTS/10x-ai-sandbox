@@ -18,6 +18,7 @@ import subprocess
 import logging
 from huggingface_hub import login
 
+
 class Pipeline:
     class Valves(BaseModel):
         MLX_MODEL: str = "mistralai/Mistral-7B-Instruct-v0.3"
@@ -51,6 +52,7 @@ class Pipeline:
 
     def find_free_port(self):
         import socket
+
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(("", 0))
         port = s.getsockname()[1]

@@ -22,11 +22,7 @@ class Pipeline:
         self.name = "Groq: "
 
         self.valves = self.Valves(
-            **{
-                "GROQ_API_KEY": os.getenv(
-                    "GROQ_API_KEY", "your-groq-api-key-here"
-                )
-            }
+            **{"GROQ_API_KEY": os.getenv("GROQ_API_KEY", "your-groq-api-key-here")}
         )
 
         self.pipelines = self.get_models()

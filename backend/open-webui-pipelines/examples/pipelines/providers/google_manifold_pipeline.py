@@ -98,8 +98,10 @@ class Pipeline:
             print(f"Pipe function called for model: {model_id}")
             print(f"Stream mode: {body.get('stream', False)}")
 
-            system_message = next((msg["content"] for msg in messages if msg["role"] == "system"), None)
-            
+            system_message = next(
+                (msg["content"] for msg in messages if msg["role"] == "system"), None
+            )
+
             contents = []
             for message in messages:
                 if message["role"] != "system":
@@ -112,18 +114,32 @@ class Pipeline:
                                 image_url = content["image_url"]["url"]
                                 if image_url.startswith("data:image"):
                                     image_data = image_url.split(",")[1]
-                                    parts.append({"inline_data": {"mime_type": "image/jpeg", "data": image_data}})
+                                    parts.append(
+                                        {
+                                            "inline_data": {
+                                                "mime_type": "image/jpeg",
+                                                "data": image_data,
+                                            }
+                                        }
+                                    )
                                 else:
                                     parts.append({"image_url": image_url})
                         contents.append({"role": message["role"], "parts": parts})
                     else:
-                        contents.append({
-                            "role": "user" if message["role"] == "user" else "model",
-                            "parts": [{"text": message["content"]}]
-                        })
+                        contents.append(
+                            {
+                                "role": (
+                                    "user" if message["role"] == "user" else "model"
+                                ),
+                                "parts": [{"text": message["content"]}],
+                            }
+                        )
 
             if system_message:
-                contents.insert(0, {"role": "user", "parts": [{"text": f"System: {system_message}"}]})
+                contents.insert(
+                    0,
+                    {"role": "user", "parts": [{"text": f"System: {system_message}"}]},
+                )
 
             model = genai.GenerativeModel(model_name=model_id)
 

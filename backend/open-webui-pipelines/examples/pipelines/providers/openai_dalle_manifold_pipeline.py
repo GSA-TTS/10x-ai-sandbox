@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from openai import OpenAI
 
+
 class Pipeline:
     """OpenAI ImageGen pipeline"""
 
