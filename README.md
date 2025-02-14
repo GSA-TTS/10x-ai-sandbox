@@ -193,6 +193,37 @@ If you are running Open WebUI in an offline environment, you can set the `HF_HUB
 export HF_HUB_OFFLINE=1
 ```
 
+## UI Customizations
+
+### Summary
+
+The project integrates an open-source dependency called **Open Web UI**, which provides both front-end and back-end components. Open Web UI undergoes periodic updates that may affect the entire system. To avoid losing customizations during these updates, we have implemented a method for granular UI customizations that ensures our modifications persist without interfering with updates from upstream.
+
+### Customization Approach
+
+A directory named `src/upstream-overrides` has been introduced to manage custom overrides of the default Open Web UI routes. This mechanism allows selective route and layout overrides, ensuring that the default behavior from Open Web UI is used when no customization is applied.
+
+#### How to Customize
+
+1. **Locate the Default Route File**  
+   Identify the route or layout file to be customized in the `src/routes` directory (e.g., `src/routes/(app)/+page.svelte`).
+
+2. **Create an Override**  
+   Copy the file to the same relative path within the `src/upstream-overrides` directory. For example:
+
+   ```
+   src/routes/(app)/+page.svelte ➡ src/upstream-overrides/(app)/+page.svelte
+   ```
+
+3. **Make Your Changes**  
+   Modify the file located in the `src/upstream-overrides` directory as needed. Subsequent edits should be performed using the files in the `src/upstream-overrides` directory.
+
+#### Behind the Scenes
+
+- The build process ensures that files in `src/upstream-overrides` take precedence over their counterparts in `src/routes`.
+- During local development, mechanisms such as hot reloading are configured to work seamlessly with the override system.
+- This approach safeguards customizations, ensuring they are not affected by upstream updates to Open Web UI.
+
 ## What's Next? 🌟
 
 Discover upcoming features on our roadmap in the [Open WebUI Documentation](https://docs.openwebui.com/roadmap/).

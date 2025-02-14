@@ -324,3 +324,4 @@ cypress/screenshots
 # # hatch_build
 
 
+.routes-*
