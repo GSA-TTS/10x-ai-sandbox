@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-This project relies on an open source project called Open Web UI. When Open Web UI is updated, it is a wholesale update that includes front end and backend changes. We need a way to customize the UI where we can override the default Open Web UI interface in a granular way and still use the default Open Web UI where appropriate. We want to be able to preserve our customizations without fear of losing them due to an update coming from the upstream dependency.  
+This project relies on an open source project called Open Web UI. When Open Web UI is updated, it is a wholesale update that includes front end and backend changes. We need a way to customize the UI where we can override the default Open Web UI interface in a granular way and still use the default Open Web UI where appropriate. We want to be able to preserve our customizations without fear of losing them due to an update coming from the upstream dependency.
 
 ## Decision
 
@@ -23,4 +23,5 @@ There are mechanisms during the build process and during local development to ma
 This will safeguard the UI from getting overridden by upstream changes as Open Web UI is updated.
 
 ## Alternatives considered
+
 Alternative solutions involving Sveltekit `hooks` and a separate solution evaluating Sveltekit's advanced routing was also considered before making the decision.

@@ -8,9 +8,7 @@ const project = process.env.PROJECT || 'upstream-overrides';
 let routes = 'src/routes';
 
 if (project) {
-	const project_files = new Set(
-		glob('**', { cwd: `src/${project}`, filesOnly: true })
-	);
+	const project_files = new Set(glob('**', { cwd: `src/${project}`, filesOnly: true }));
 	const default_files = new Set(glob('**', { cwd: routes, filesOnly: true }));
 
 	const projectPath = `src/.routes-${project}`;
@@ -45,7 +43,7 @@ const config = {
 		}),
 		files: {
 			routes
-		},
+		}
 	},
 	onwarn: (warning, handler) => {
 		const { code, _ } = warning;

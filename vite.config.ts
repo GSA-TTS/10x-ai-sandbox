@@ -53,7 +53,9 @@ export default defineConfig({
 					const relativePath = path.relative(`src/${project}`, filePath);
 					const targetPath = path.join(projectPath, relativePath);
 					fs.removeSync(targetPath);
-					console.log(`[File Deleted] Removed: ${relativePath}. To pick up changes from the default directory, restart the server.`);
+					console.log(
+						`[File Deleted] Removed: ${relativePath}. To pick up changes from the default directory, restart the server.`
+					);
 				});
 
 				console.log(`Watching for changes in src/${project}...`);
