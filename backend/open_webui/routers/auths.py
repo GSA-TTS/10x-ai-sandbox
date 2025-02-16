@@ -329,7 +329,7 @@ async def signin(request: Request, response: Response, form_data: SigninForm):
         user = Auths.authenticate_user_by_trusted_header(trusted_email)
     elif WEBUI_AUTH == False:
         admin_email = "admin@localhost"
-        admin_password = "admin"
+        admin_password = "admin"  # pragma: allowlist secret
 
         if Users.get_user_by_email(admin_email.lower()):
             user = Auths.authenticate_user(admin_email.lower(), admin_password)
@@ -644,6 +644,20 @@ class AdminConfig(BaseModel):
 async def update_admin_config(
     request: Request, form_data: AdminConfig, user=Depends(get_admin_user)
 ):
+    previous = {
+        "SHOW_ADMIN_DETAILS": request.app.state.config.SHOW_ADMIN_DETAILS,
+        "WEBUI_URL": request.app.state.config.WEBUI_URL,
+        "ENABLE_SIGNUP": request.app.state.config.ENABLE_SIGNUP,
+        "ENABLE_API_KEY": request.app.state.config.ENABLE_API_KEY,
+        "ENABLE_API_KEY_ENDPOINT_RESTRICTIONS": request.app.state.config.ENABLE_API_KEY_ENDPOINT_RESTRICTIONS,
+        "API_KEY_ALLOWED_ENDPOINTS": request.app.state.config.API_KEY_ALLOWED_ENDPOINTS,
+        "ENABLE_CHANNELS": request.app.state.config.ENABLE_CHANNELS,
+        "DEFAULT_USER_ROLE": request.app.state.config.DEFAULT_USER_ROLE,
+        "JWT_EXPIRES_IN": request.app.state.config.JWT_EXPIRES_IN,
+        "ENABLE_COMMUNITY_SHARING": request.app.state.config.ENABLE_COMMUNITY_SHARING,
+        "ENABLE_MESSAGE_RATING": request.app.state.config.ENABLE_MESSAGE_RATING,
+    }
+
     request.app.state.config.SHOW_ADMIN_DETAILS = form_data.SHOW_ADMIN_DETAILS
     request.app.state.config.WEBUI_URL = form_data.WEBUI_URL
     request.app.state.config.ENABLE_SIGNUP = form_data.ENABLE_SIGNUP
@@ -671,6 +685,10 @@ async def update_admin_config(
         form_data.ENABLE_COMMUNITY_SHARING
     )
     request.app.state.config.ENABLE_MESSAGE_RATING = form_data.ENABLE_MESSAGE_RATING
+
+    log.info(
+        f"User {user.name} ({user.id}) updated admin config from: {previous} to: {dict(form_data)}"
+    )
 
     return {
         "SHOW_ADMIN_DETAILS": request.app.state.config.SHOW_ADMIN_DETAILS,

@@ -260,6 +260,9 @@ def add_file_to_knowledge_by_id(
         )
 
     if knowledge.user_id != user.id and user.role != "admin":
+        log.info(
+            f"User {user.name} ({user.id}) attempted to add file ID {form_data.file_id} to knowledge '{knowledge.name}' ({knowledge.id}) but lacks permission"
+        )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ERROR_MESSAGES.ACCESS_PROHIBITED,
@@ -301,6 +304,12 @@ def add_file_to_knowledge_by_id(
 
             if knowledge:
                 files = Files.get_files_by_ids(file_ids)
+                log.info(
+                    f"User {user.name} ({user.id}) added file {form_data.file_id} to knowledge '{knowledge.name}' ({knowledge.id})"
+                )
+                log.info(
+                    f"Files currently in knowledge '{knowledge.name}' ({knowledge.id}): {[{f.id: f.filename} for f in files]}"
+                )
 
                 return KnowledgeFilesResponse(
                     **knowledge.model_dump(),
