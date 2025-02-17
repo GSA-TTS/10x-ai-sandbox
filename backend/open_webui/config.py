@@ -944,6 +944,7 @@ ENABLE_MESSAGE_RATING = PersistentConfig(
     os.environ.get("ENABLE_MESSAGE_RATING", "True").lower() == "true",
 )
 
+DEFAULT_SHOW_CHANGELOG = os.environ.get("DEFAULT_SHOW_CHANGELOG", "True").lower() == "true"
 
 def validate_cors_origins(origins):
     for origin in origins:

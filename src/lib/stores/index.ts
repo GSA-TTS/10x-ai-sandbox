@@ -186,6 +186,7 @@ type Config = {
 	default_locale: string;
 	default_models: string;
 	default_prompt_suggestions: PromptSuggestion[];
+	default_show_changelog: boolean;
 	features: {
 		auth: boolean;
 		auth_trusted_header: boolean;
