@@ -217,9 +217,7 @@
 				}
 			},
 			editorProps: {
-				attributes: { id,
-					  ...(label ? { 'aria-label': label } : {})
-				},
+				attributes: { id, ...(label ? { 'aria-label': label } : {}) },
 				handleDOMEvents: {
 					focus: (view, event) => {
 						eventDispatch('focus', { event });
