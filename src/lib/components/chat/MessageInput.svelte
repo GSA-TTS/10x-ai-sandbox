@@ -686,6 +686,7 @@
 												bind:this={chatInputElement}
 												bind:value={prompt}
 												id="chat-input"
+												label={$i18n.t('Enter your prompt')}
 												messageInput={true}
 												shiftEnter={!$mobile ||
 													!(
@@ -885,6 +886,7 @@
 											bind:this={chatInputElement}
 											class="scrollbar-hidden bg-transparent dark:text-gray-100 outline-none w-full py-3 px-1 rounded-xl resize-none h-[48px]"
 											placeholder={placeholder ? placeholder : $i18n.t('Send a Message')}
+											aria-label={$i18n.t('Enter your prompt')}
 											bind:value={prompt}
 											on:keypress={(e) => {
 												if (

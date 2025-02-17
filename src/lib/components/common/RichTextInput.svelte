@@ -32,6 +32,7 @@
 
 	export let className = 'input-prose';
 	export let placeholder = 'Type here...';
+	export let label = '';
 	export let value = '';
 	export let id = '';
 
@@ -216,7 +217,7 @@
 				}
 			},
 			editorProps: {
-				attributes: { id },
+				attributes: { id, ...(label ? { 'aria-label': label } : {}) },
 				handleDOMEvents: {
 					focus: (view, event) => {
 						eventDispatch('focus', { event });
