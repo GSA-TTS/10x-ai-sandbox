@@ -53,7 +53,7 @@
 				</div>
 			</div>
 
-			{#if $config.features.allow_simultaneous_models}
+			{#if $config?.features?.allow_simultaneous_models}
 				{#if selectedModelIdx === 0}
 					<div
 						class="  self-center mx-1 disabled:text-gray-600 disabled:hover:text-gray-600 -translate-y-[0.5px]"
