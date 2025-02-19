@@ -59,6 +59,7 @@ export const showSidebar = writable(false);
 export const showSettings = writable(false);
 export const showArchivedChats = writable(false);
 export const showChangelog = writable(false);
+export const showActiveUsers = writable(false);
 
 export const showControls = writable(false);
 export const showOverview = writable(false);
