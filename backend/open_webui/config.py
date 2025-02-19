@@ -766,6 +766,10 @@ WEBUI_URL = PersistentConfig(
     "WEBUI_URL", "webui.url", os.environ.get("WEBUI_URL", "http://localhost:3000")
 )
 
+ENABLE_ONBOARDING_PAGE = (
+    os.environ.get("ENABLE_ONBOARDING_PAGE", "False").lower()
+    == "true"
+)
 
 ENABLE_SIGNUP = PersistentConfig(
     "ENABLE_SIGNUP",
