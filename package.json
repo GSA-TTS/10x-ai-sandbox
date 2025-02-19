@@ -108,6 +108,7 @@
 		"sortablejs": "^1.15.2",
 		"svelte-sonner": "^0.3.19",
 		"tippy.js": "^6.3.7",
+		"trap-focus-svelte": "^1.1.0",
 		"turndown": "^7.2.0",
 		"uuid": "^9.0.1"
 	},
