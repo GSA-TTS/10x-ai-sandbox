@@ -24,9 +24,7 @@ def refreshable_session(
             DurationSeconds=900,  # 15 minutes
         )
         credentials = response["Credentials"]
-        print(
-            f"Assumed role {role_arn} with expiration {credentials['Expiration'].isoformat()}"
-        )
+
         return {
             "access_key": credentials["AccessKeyId"],
             "secret_key": credentials["SecretAccessKey"],

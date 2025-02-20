@@ -44,6 +44,8 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.responses import Response, StreamingResponse
 
+from ddtrace import patch
+
 
 from open_webui.socket.main import (
     app as socket_app,
@@ -350,6 +352,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
+patch(fastapi=True)
 app = FastAPI(
     docs_url="/docs" if ENV == "dev" else None,
     openapi_url="/openapi.json" if ENV == "dev" else None,
