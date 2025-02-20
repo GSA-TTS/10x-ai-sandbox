@@ -206,7 +206,7 @@
 
 		showUsername = $settings.showUsername ?? false;
 		showUpdateToast = $settings.showUpdateToast ?? true;
-		showChangelog = $settings.showChangelog ?? true;
+		showChangelog = $settings.showChangelog ?? $config?.features.default_show_changelog ?? true;
 
 		showEmojiInCall = $settings.showEmojiInCall ?? false;
 		voiceInterruption = $settings.voiceInterruption ?? false;

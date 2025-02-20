@@ -213,6 +213,7 @@ from open_webui.config import (
     DEFAULT_ARENA_MODEL,
     MODEL_ORDER_LIST,
     EVALUATION_ARENA_MODELS,
+    DEFAULT_SHOW_CHANGELOG,
     # WebUI (OAuth)
     ENABLE_OAUTH_ROLE_MANAGEMENT,
     OAUTH_ROLES_CLAIM,
@@ -994,6 +995,7 @@ async def get_app_config(request: Request):
                     "allow_simultaneous_models": ALLOW_SIMULTANEOUS_MODELS,
                     "enable_admin_export": ENABLE_ADMIN_EXPORT,
                     "enable_admin_chat_access": ENABLE_ADMIN_CHAT_ACCESS,
+                    "default_show_changelog": DEFAULT_SHOW_CHANGELOG,
                 }
                 if user is not None
                 else {}

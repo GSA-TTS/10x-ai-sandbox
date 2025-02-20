@@ -948,6 +948,10 @@ ALLOW_SIMULTANEOUS_MODELS = (
     os.environ.get("ALLOW_SIMULTANEOUS_MODELS", "True").lower() == "true"
 )
 
+DEFAULT_SHOW_CHANGELOG = (
+    os.environ.get("DEFAULT_SHOW_CHANGELOG", "True").lower() == "true"
+)
+
 
 def validate_cors_origins(origins):
     for origin in origins:
