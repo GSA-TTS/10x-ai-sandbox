@@ -13,7 +13,7 @@
 	const i18n = getContext('i18n');
 
 	let users = [];
-
+	let limit = 1000;
 	let selectedTab = 'overview';
 	let loaded = false;
 
@@ -22,14 +22,14 @@
 	}
 
 	const getUsersHandler = async () => {
-		users = await getUsers(localStorage.token);
+		users = await getUsers(localStorage.token, limit);
 	};
 
 	onMount(async () => {
 		if ($user?.role !== 'admin') {
 			await goto('/');
 		} else {
-			users = await getUsers(localStorage.token);
+			users = await getUsers(localStorage.token, limit);
 		}
 		loaded = true;
 

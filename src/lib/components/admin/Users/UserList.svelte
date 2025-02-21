@@ -10,7 +10,7 @@
 
 	import { toast } from 'svelte-sonner';
 
-	import { updateUserRole, getUsers, deleteUserById } from '$lib/apis/users';
+	import { updateUserRole, getUsers, deleteUserById, searchUsers } from '$lib/apis/users';
 
 	import Pagination from '$lib/components/common/Pagination.svelte';
 	import ChatBubbles from '$lib/components/icons/ChatBubbles.svelte';
@@ -35,6 +35,7 @@
 	let selectedUser = null;
 
 	let page = 1;
+	let limit = 100;
 
 	let showDeleteConfirmDialog = false;
 	let showAddUserModal = false;
@@ -49,7 +50,7 @@
 		});
 
 		if (res) {
-			users = await getUsers(localStorage.token);
+			users = await getUsers(localStorage.token, limit);
 		}
 	};
 
@@ -59,7 +60,18 @@
 			return null;
 		});
 		if (res) {
-			users = await getUsers(localStorage.token);
+			users = await getUsers(localStorage.token, limit);
+		}
+	};
+
+	const submitSearchHandler = async () => {
+		const res = await searchUsers(localStorage.token, search).catch((error) => {
+			toast.error(error);
+			return null;
+		});
+
+		if (res) {
+			users = res;
 		}
 	};
 
@@ -78,15 +90,6 @@
 	let filteredUsers;
 
 	$: filteredUsers = users
-		.filter((user) => {
-			if (search === '') {
-				return true;
-			} else {
-				let name = user.name.toLowerCase();
-				const query = search.toLowerCase();
-				return name.includes(query);
-			}
-		})
 		.sort((a, b) => {
 			if (a[sortKey] < b[sortKey]) return sortOrder === 'asc' ? -1 : 1;
 			if (a[sortKey] > b[sortKey]) return sortOrder === 'asc' ? 1 : -1;
@@ -146,11 +149,18 @@
 						/>
 					</svg>
 				</div>
-				<input
-					class=" w-full text-sm pr-4 py-1 rounded-r-xl outline-none bg-transparent"
-					bind:value={search}
-					placeholder={$i18n.t('Search')}
-				/>
+				<form
+					on:submit={() => {
+						submitSearchHandler();
+					}}
+				>
+					<input
+						class=" w-full text-sm pr-4 py-1 rounded-r-xl outline-none bg-transparent"
+						bind:value={search}
+						placeholder={$i18n.t('Search users by name or email')}
+					/>
+					<button type="submit" class="px-3.5 py-1.5 text-sm font-medium bg-black hover:bg-gray-900 text-white dark:bg-white dark:text-black dark:hover:bg-gray-100 transition rounded-full flex flex-row space-x-1 items-center ">search</button>
+				</form>
 			</div>
 
 			<div>
