@@ -947,6 +947,9 @@ ENABLE_MESSAGE_RATING = PersistentConfig(
 ALLOW_SIMULTANEOUS_MODELS = (
     os.environ.get("ALLOW_SIMULTANEOUS_MODELS", "True").lower() == "true"
 )
+DEFAULT_SHOW_VERSION_UPDATE = (
+    os.environ.get("DEFAULT_SHOW_VERSION_UPDATE", "False").lower() == "true"
+)
 
 
 def validate_cors_origins(origins):
