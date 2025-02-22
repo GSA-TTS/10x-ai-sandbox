@@ -1,6 +1,6 @@
 # 10x AI Sandbox
 
-The **10x AI Sandbox** is an innovative project by **10x**, a venture studio in collaboration with the **General Services Administration (GSA)**. Its primary goal is to enable federal agencies to experiment with artificial intelligence (AI) in a secure, FedRAMP-compliant environment. By providing access to base models from leading AI companies and offering advanced UI features, the sandbox empowers agencies to test and validate new AI use cases efficiently.
+The **10x AI Sandbox** is an innovative project by **10x**, a venture studio in collaboration with the **General Services Administration (GSA)**. Its primary goal is to enable federal agencies to experiment with artificial intelligence (AI) in a secure, FedRAMP-compliant environment. By providing access to base models from leading AI companies and offering advanced UI features, the sandbox empowers agencies to test and validate new AI use cases efficiently
 
 ## Features
 

@@ -1,9 +1,11 @@
 import { datadogRum } from '@datadog/browser-rum';
+import { datadogLogs } from '@datadog/browser-logs';
 import { dev } from '$app/environment';
 
 import {
 	PUBLIC_DATADOG_APP_ID,
 	PUBLIC_DATADOG_CLIENT_TOKEN,
+	PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN,
 	PUBLIC_DATADOG_SERVICE
 } from '$env/static/public';
 
@@ -26,5 +28,11 @@ export function initDataDog() {
 		sessionSampleRate: 100,
 		sessionReplaySampleRate: 20,
 		defaultPrivacyLevel: 'mask-user-input'
+	});
+	datadogLogs.init({
+		clientToken: PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN,
+		site: 'ddog-gov.com',
+		forwardErrorsToLogs: true,
+		sessionSampleRate: 100
 	});
 }
