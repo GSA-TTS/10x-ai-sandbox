@@ -948,6 +948,10 @@ ALLOW_SIMULTANEOUS_MODELS = (
     os.environ.get("ALLOW_SIMULTANEOUS_MODELS", "True").lower() == "true"
 )
 
+ENABLE_ACTIVE_USERS_COUNT = (
+    os.environ.get("ENABLE_ACTIVE_USERS_COUNT", "True").lower() == "true"
+)
+
 
 def validate_cors_origins(origins):
     for origin in origins:
