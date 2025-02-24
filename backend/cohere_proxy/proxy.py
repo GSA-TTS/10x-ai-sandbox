@@ -23,7 +23,10 @@ async def proxy_embeddings(request: Request):
     try:
         body = await request.json()
 
+        logger.debug(f"Cohere request body: {body}")
+
         body_input = body.get("input")
+        input_type = "search_query" if len(body_input) == 1 else "search_document"
 
         tokens = 0
         for input in body_input:
@@ -33,7 +36,7 @@ async def proxy_embeddings(request: Request):
         body = json.dumps(
             {
                 "texts": body_input,
-                "input_type": "search_document",  # You can change this to 'search_query', 'classification', or 'clustering' based on your use case  # noqa E501
+                "input_type": input_type,  # You can change this to 'search_query', 'classification', or 'clustering' based on your use case  # noqa E501
             }
         )
 

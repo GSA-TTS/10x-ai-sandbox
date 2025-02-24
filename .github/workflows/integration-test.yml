@@ -14,6 +14,11 @@ jobs:
   cypress-run:
     name: Run Cypress Integration Tests
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_DATADOG_APP_ID: ${{ secrets.DATADOG_APP_ID }}
+      PUBLIC_DATADOG_CLIENT_TOKEN:  ${{ secrets.DATADOG_CLIENT_TOKEN }}
+      PUBLIC_DATADOG_SERVICE:  ${{ secrets.DATADOG_SERVICE }}
+
     steps:
       - name: Maximize build space
         uses: AdityaGarg8/remove-unwanted-software@v4.1
@@ -107,7 +112,7 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: postgres # pragma: allowlist secret
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -153,7 +158,7 @@ jobs:
       - name: Test backend with SQLite
         id: sqlite
         env:
-          WEBUI_SECRET_KEY: secret-key
+          WEBUI_SECRET_KEY: secret-key # pragma: allowlist secret
           GLOBAL_LOG_LEVEL: debug
         run: |
           cd backend
@@ -179,9 +184,9 @@ jobs:
       - name: Test backend with Postgres
         if: success() || steps.sqlite.conclusion == 'failure'
         env:
-          WEBUI_SECRET_KEY: secret-key
+          WEBUI_SECRET_KEY: secret-key  # pragma: allowlist secret
           GLOBAL_LOG_LEVEL: debug
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres  # pragma: allowlist secret
           DATABASE_POOL_SIZE: 10
           DATABASE_POOL_MAX_OVERFLOW: 10
           DATABASE_POOL_TIMEOUT: 30

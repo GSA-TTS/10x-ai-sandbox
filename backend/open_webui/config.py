@@ -563,16 +563,6 @@ if gsai_logo.exists():
 else:
     logging.warning(f"Built by logo not found at {gsai_logo}")
 
-built_by_logo = FRONTEND_BUILD_DIR / "static" / "10x_ai.png"
-
-if built_by_logo.exists():
-    try:
-        shutil.copyfile(built_by_logo, STATIC_DIR / "10x_ai.png")
-    except Exception as e:
-        logging.error(f"An error occurred: {e}")
-else:
-    logging.warning(f"Built by logo not found at {built_by_logo}")
-
 ####################################
 # CUSTOM_NAME
 ####################################
@@ -948,8 +938,13 @@ ALLOW_SIMULTANEOUS_MODELS = (
     os.environ.get("ALLOW_SIMULTANEOUS_MODELS", "True").lower() == "true"
 )
 
+
 ENABLE_CHAT_CONTROLS = (
     os.environ.get("ENABLE_CHAT_CONTROLS", "True").lower() == "true"
+)
+
+DEFAULT_SHOW_CHANGELOG = (
+    os.environ.get("DEFAULT_SHOW_CHANGELOG", "True").lower() == "true"
 )
 
 

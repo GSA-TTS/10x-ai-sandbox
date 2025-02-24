@@ -16,6 +16,14 @@ RUN NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/z-root-public.pem npm c
 COPY . .
 ENV APP_BUILD_HASH=dev-build
 ENV NODE_OPTIONS=--max-old-space-size=4096
+ARG PUBLIC_DATADOG_APP_ID
+ARG PUBLIC_DATADOG_CLIENT_TOKEN
+ARG PUBLIC_DATADOG_SERVICE
+
+ENV PUBLIC_DATADOG_APP_ID=${PUBLIC_DATADOG_APP_I}
+ENV PUBLIC_DATADOG_CLIENT_TOKEN=${PUBLIC_DATADOG_CLIENT_TOKEN}
+ENV PUBLIC_DATADOG_SERVICE=${PUBLIC_DATADOG_SERVICE}
+
 RUN npm run build
 
 # ##############################################################################

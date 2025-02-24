@@ -200,6 +200,7 @@ type Config = {
 		enable_community_sharing: boolean;
 		allow_simultaneous_models: boolean;
 		enable_chat_controls: boolean;
+		default_show_changelog: boolean;
 	};
 	oauth: {
 		providers: {
