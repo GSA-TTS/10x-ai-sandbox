@@ -223,7 +223,7 @@
 	};
 
 	const chatEventHandler = async (event, cb) => {
-		console.log(event);
+		// console.debug(event);
 
 		if (event.chat_id === $chatId) {
 			await tick();
@@ -755,7 +755,7 @@
 			const chatContent = chat.chat;
 
 			if (chatContent) {
-				console.log(chatContent);
+				console.debug(chatContent);
 
 				selectedModels =
 					(chatContent?.models ?? undefined) !== undefined
@@ -1070,7 +1070,7 @@
 				// Stream response
 				let value = choices[0]?.delta?.content ?? '';
 				if (message.content == '' && value == '\n') {
-					console.log('Empty response');
+					console.debug('Empty response');
 				} else {
 					message.content += value;
 
@@ -1191,7 +1191,7 @@
 			await chatCompletedHandler(chatId, message.model, message.id, createMessagesList(message.id));
 		}
 
-		console.log(data);
+		// console.debug(data);
 		if (autoScroll) {
 			scrollToBottom();
 		}
@@ -1202,7 +1202,7 @@
 	//////////////////////////
 
 	const submitPrompt = async (userPrompt, { _raw = false } = {}) => {
-		console.log('submitPrompt', userPrompt, $chatId);
+		console.debug('submitPrompt', userPrompt, $chatId);
 
 		const messages = createMessagesList(history.currentId);
 		const _selectedModels = selectedModels.map((modelId) =>
@@ -1412,7 +1412,7 @@
 									}, '');
 								}
 
-								console.log(userContext);
+								console.debug(userContext);
 							}
 						}
 					}
@@ -1575,7 +1575,7 @@
 			return null;
 		});
 
-		console.log(res);
+		// console.log(res);
 
 		if (res) {
 			taskId = res.task_id;

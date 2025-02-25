@@ -39,6 +39,22 @@ async def get_users(
 
 
 ############################
+# Search Users
+############################
+
+
+@router.get("/search", response_model=list[UserModel])
+async def search_users(
+    # TODO: scrub search text
+    q: str,
+    skip: Optional[int] = None,
+    limit: Optional[int] = None,
+    user=Depends(get_admin_user),
+):
+    return Users.search_users(q, skip, limit)
+
+
+############################
 # User Groups
 ############################
 

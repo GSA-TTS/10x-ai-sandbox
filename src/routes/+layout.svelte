@@ -40,6 +40,13 @@
 	import { getAllTags, getChatList } from '$lib/apis/chats';
 	import NotificationToast from '$lib/components/NotificationToast.svelte';
 
+	// Inject Datadog init
+	import { datadogLogs } from '@datadog/browser-logs';
+	import { initDataDog } from '$lib/logging/datadog';
+
+	initDataDog();
+	datadogLogs.logger.info('Init datadogLogs browser logging, hi!');
+
 	setContext('i18n', i18n);
 
 	let loaded = false;

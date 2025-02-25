@@ -8,6 +8,7 @@ pipelines/*
 !pipelines/azure_openai_GPT35Turbo_pipeline.py
 !pipelines/azure_openai_GPT4Omni_pipeline.py
 !pipelines/bedrock_claude_haiku35_pipeline.py
+!pipelines/bedrock_claude_haiku35_pipeline_mock.py
 !pipelines/bedrock_claude_instant_pipeline.py
 !pipelines/bedrock_claude_sonnet35_pipeline.py
 !pipelines/bedrock_claude_sonnet35_v2_pipeline.py

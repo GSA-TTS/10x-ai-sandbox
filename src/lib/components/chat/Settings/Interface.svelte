@@ -205,8 +205,11 @@
 		responseAutoCopy = $settings.responseAutoCopy ?? false;
 
 		showUsername = $settings.showUsername ?? false;
-		showUpdateToast = $settings.showUpdateToast ?? true;
-		showChangelog = $settings.showChangelog ?? true;
+
+		showUpdateToast =
+			$settings.showUpdateToast ?? $config?.features.default_show_version_update ?? true;
+
+		showChangelog = $settings.showChangelog ?? $config?.features.default_show_changelog ?? true;
 
 		showEmojiInCall = $settings.showEmojiInCall ?? false;
 		voiceInterruption = $settings.voiceInterruption ?? false;

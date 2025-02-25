@@ -196,6 +196,7 @@ from open_webui.config import (
     ADMIN_EMAIL,
     SHOW_ADMIN_DETAILS,
     JWT_EXPIRES_IN,
+    ENABLE_ONBOARDING_PAGE,
     ENABLE_SIGNUP,
     ENABLE_LOGIN_FORM,
     ENABLE_API_KEY,
@@ -205,6 +206,7 @@ from open_webui.config import (
     ENABLE_COMMUNITY_SHARING,
     ENABLE_MESSAGE_RATING,
     ALLOW_SIMULTANEOUS_MODELS,
+    ENABLE_CHAT_CONTROLS,
     ENABLE_EVALUATION_ARENA_MODELS,
     ENABLE_ACTIVE_USERS_COUNT,
     USER_PERMISSIONS,
@@ -214,6 +216,8 @@ from open_webui.config import (
     DEFAULT_ARENA_MODEL,
     MODEL_ORDER_LIST,
     EVALUATION_ARENA_MODELS,
+    DEFAULT_SHOW_VERSION_UPDATE,
+    DEFAULT_SHOW_CHANGELOG,
     # WebUI (OAuth)
     ENABLE_OAUTH_ROLE_MANAGEMENT,
     OAUTH_ROLES_CLAIM,
@@ -962,7 +966,7 @@ async def get_app_config(request: Request):
     onboarding = False
     if user is None:
         user_count = Users.get_num_users()
-        onboarding = user_count == 0
+        onboarding = user_count == 0 and ENABLE_ONBOARDING_PAGE
 
     return {
         **({"onboarding": True} if onboarding else {}),
@@ -993,9 +997,12 @@ async def get_app_config(request: Request):
                     "enable_community_sharing": app.state.config.ENABLE_COMMUNITY_SHARING,
                     "enable_message_rating": app.state.config.ENABLE_MESSAGE_RATING,
                     "allow_simultaneous_models": ALLOW_SIMULTANEOUS_MODELS,
+                    "enable_chat_controls": ENABLE_CHAT_CONTROLS,
                     "enable_active_users_count": ENABLE_ACTIVE_USERS_COUNT,
                     "enable_admin_export": ENABLE_ADMIN_EXPORT,
                     "enable_admin_chat_access": ENABLE_ADMIN_CHAT_ACCESS,
+                    "default_show_changelog": DEFAULT_SHOW_CHANGELOG,
+                    "default_show_version_update": DEFAULT_SHOW_VERSION_UPDATE,
                 }
                 if user is not None
                 else {}

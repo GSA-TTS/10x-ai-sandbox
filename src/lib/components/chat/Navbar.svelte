@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
+	import { config } from '$lib/stores';
 	import { toast } from 'svelte-sonner';
 
 	import {
@@ -115,7 +116,7 @@
 							</div>
 						</button>
 					</Menu>
-				{:else if $mobile}
+				{:else if $mobile && $config?.features?.enable_chat_controls}
 					<Tooltip content={$i18n.t('Controls')}>
 						<button
 							class=" flex cursor-pointer px-2 py-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-850 transition"
@@ -131,7 +132,7 @@
 					</Tooltip>
 				{/if}
 
-				{#if !$mobile}
+				{#if !$mobile && $config?.features?.enable_chat_controls}
 					<Tooltip content={$i18n.t('Controls')}>
 						<button
 							class=" flex cursor-pointer px-2 py-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-850 transition"

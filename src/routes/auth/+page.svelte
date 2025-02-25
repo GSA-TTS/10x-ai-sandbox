@@ -434,21 +434,6 @@
 								</button>
 							</div>
 						{/if}
-						<div class="inline-flex items-center justify-center w-full">
-							<hr class="w-32 h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
-						</div>
-						<a href="https://10x.gsa.gov" target="_blank" rel="noopener noreferrer">
-							<div class=" text-sm text-center">
-								powered by
-								<img
-									crossorigin="anonymous"
-									src="{WEBUI_BASE_URL}/static/10x_ai.png"
-									class=" w-7 inline-block"
-									style="vertical-align: baseline;"
-									alt="10x AI"
-								/>
-							</div>
-						</a>
 					</div>
 				{/if}
 			</div>

@@ -10,6 +10,12 @@ on:
       - main
       - dev
 
+env:
+    PUBLIC_DATADOG_APP_ID: ${{ secrets.DATADOG_APP_ID }},
+    PUBLIC_DATADOG_CLIENT_TOKEN:  ${{ secrets.DATADOG_CLIENT_TOKEN }},
+    PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN:  ${{ secrets.DATADOG_BROWSERLOGS_CLIENT_TOKEN }},
+    PUBLIC_DATADOG_SERVICE:  ${{ secrets.DATADOG_SERVICE }},
+
 jobs:
   build:
     name: 'Format & Build Frontend'
