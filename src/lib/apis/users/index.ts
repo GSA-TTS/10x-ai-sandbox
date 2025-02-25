@@ -116,10 +116,40 @@ export const updateUserRole = async (token: string, id: string, role: string) =>
 	return res;
 };
 
-export const getUsers = async (token: string) => {
+export const searchUsers = async (token: string, query: string) => {
 	let error = null;
 
-	const res = await fetch(`${WEBUI_API_BASE_URL}/users/`, {
+	const res = await fetch(`${WEBUI_API_BASE_URL}/users/search?q=${query}&limit=1000`, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`
+		}
+	})
+		.then(async (res) => {
+			if (!res.ok) throw await res.json();
+			return res.json();
+		})
+		.catch((err) => {
+			console.log(err);
+			error = err.detail;
+			return null;
+		});
+
+	if (error) {
+		throw error;
+	}
+
+	return res ? res : [];
+};
+
+export const getUsers = async (token: string, limit?: number) => {
+	let error = null;
+
+	let url = `${WEBUI_API_BASE_URL}/users/`;
+	if (limit) url = url + `?limit=${limit}`;
+
+	const res = await fetch(url, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
