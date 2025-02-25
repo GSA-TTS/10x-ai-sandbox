@@ -112,7 +112,7 @@
 	{/each}
 </div>
 
-{#if showSetDefault}
+{#if showSetDefault && $config?.features?.enable_set_as_default_model}
 	<div class=" absolute text-left mt-[1px] ml-1 text-[0.7rem] text-gray-500 font-primary">
 		<button on:click={saveDefaultModel}> {$i18n.t('Set as default')}</button>
 	</div>

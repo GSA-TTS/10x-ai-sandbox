@@ -944,11 +944,14 @@ DEFAULT_SHOW_VERSION_UPDATE = (
     os.environ.get("DEFAULT_SHOW_VERSION_UPDATE", "False").lower() == "true"
 )
 
+DEFAULT_SHOW_CHANGELOG = (
+    os.environ.get("DEFAULT_SHOW_CHANGELOG", "True").lower() == "true"
+)
 
 ENABLE_CHAT_CONTROLS = os.environ.get("ENABLE_CHAT_CONTROLS", "True").lower() == "true"
 
-DEFAULT_SHOW_CHANGELOG = (
-    os.environ.get("DEFAULT_SHOW_CHANGELOG", "True").lower() == "true"
+ENABLE_SET_AS_DEFAULT_MODEL = (
+    os.environ.get("ENABLE_SET_AS_DEFAULT_MODEL", "True").lower() == "true"
 )
 
 
