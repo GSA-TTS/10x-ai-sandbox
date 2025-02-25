@@ -201,6 +201,7 @@ type Config = {
 		allow_simultaneous_models: boolean;
 		enable_chat_controls: boolean;
 		default_show_changelog: boolean;
+		enable_active_users_count: boolean;
 		enable_admin_feedbacks: boolean;
 	};
 	oauth: {

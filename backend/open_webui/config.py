@@ -951,6 +951,10 @@ DEFAULT_SHOW_CHANGELOG = (
     os.environ.get("DEFAULT_SHOW_CHANGELOG", "True").lower() == "true"
 )
 
+ENABLE_ACTIVE_USERS_COUNT = (
+    os.environ.get("ENABLE_ACTIVE_USERS_COUNT", "False").lower() == "true"
+)
+
 ENABLE_ADMIN_FEEDBACKS = (
     os.environ.get("ENABLE_ADMIN_FEEDBACKS", "True").lower() == "true"
 )

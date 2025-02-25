@@ -9,6 +9,7 @@
 	import { fade, slide } from 'svelte/transition';
 	import Tooltip from '$lib/components/common/Tooltip.svelte';
 	import { userSignOut } from '$lib/apis/auths';
+	import { config } from '$lib/stores';
 
 	const i18n = getContext('i18n');
 
@@ -184,7 +185,7 @@
 				<div class=" self-center truncate">{$i18n.t('Sign Out')}</div>
 			</DropdownMenu.Item>
 
-			{#if $activeUserIds?.length > 0}
+			{#if $config?.features?.enable_active_users_count && $activeUserIds?.length > 0}
 				<hr class=" border-gray-50 dark:border-gray-850 my-1 p-0" />
 
 				<Tooltip
