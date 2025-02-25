@@ -73,3 +73,23 @@ async def proxy_embeddings(request: Request):
     except Exception as e:
         logger.error(f"An error occurred: {e}")
         return JSONResponse(status_code=500, content={"error": "Internal server error"})
+
+
+@app.get("/health")
+async def health():
+    is_healthy = False
+    test_body = json.dumps({"texts": ["test"], "input_type": "search_query"})
+    try:
+        response = bedrock_client.invoke_model(
+            body=test_body,
+            modelId=model_id,
+            accept="application/json",
+            contentType="application/json",
+        )
+        is_healthy = response.get("statusCode") == 200
+    except Exception as e:
+        logger.error(f"Cohere proxy health - error occurred: {e}")
+
+    return JSONResponse(
+        status_code=200 if is_healthy else 500, content={"ok": is_healthy}
+    )
