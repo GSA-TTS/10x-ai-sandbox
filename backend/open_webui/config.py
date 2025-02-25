@@ -956,6 +956,7 @@ ENABLE_ACTIVE_USERS_COUNT = (
 )
 
 
+
 def validate_cors_origins(origins):
     for origin in origins:
         if origin != "*":
