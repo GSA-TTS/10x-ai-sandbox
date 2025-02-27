@@ -204,6 +204,9 @@ type Config = {
 		enable_active_users_count: boolean;
 		enable_admin_feedbacks: boolean;
 		enable_more_inputs: boolean;
+		default_show_version_update: boolean;
+		enable_record_voice_and_call: boolean;
+		enable_disclaimer: boolean;
 	};
 	oauth: {
 		providers: {

@@ -963,6 +963,7 @@ ENABLE_ADMIN_FEEDBACKS = (
 ENABLE_RECORD_VOICE_AND_CALL = (
     os.environ.get("ENABLE_RECORD_VOICE_AND_CALL", "False").lower() == "true"
 )
+ENABLE_DISCLAIMER = os.environ.get("ENABLE_DISCLAIMER", "True").lower() == "true"
 
 
 def validate_cors_origins(origins):
