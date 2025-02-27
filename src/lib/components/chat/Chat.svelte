@@ -815,6 +815,11 @@
 	};
 
 	const chatCompletedHandler = async (chatId, modelId, responseMessageId, messages) => {
+		// SR announcement
+		document.getElementById('svelte-announcer').textContent = 'response generated';
+
+		// TODO: refocus to last message here
+
 		const res = await chatCompleted(localStorage.token, {
 			model: modelId,
 			messages: messages.map((m) => ({
@@ -1203,6 +1208,8 @@
 
 	const submitPrompt = async (userPrompt, { _raw = false } = {}) => {
 		console.debug('submitPrompt', userPrompt, $chatId);
+		// SR announcement
+		document.getElementById('svelte-announcer').textContent = 'response is loading';
 
 		const messages = createMessagesList(history.currentId);
 		const _selectedModels = selectedModels.map((modelId) =>
