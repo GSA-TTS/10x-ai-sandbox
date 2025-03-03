@@ -818,8 +818,11 @@
 		// SR announcement
 		document.getElementById('svelte-announcer').textContent = 'response generated';
 
-		// TODO: refocus to last message here
-		document.getElementById(`message-${responseMessageId}-content`)?.querySelector("#response-content-container")?.focus();
+		// Refocus to last message
+		document
+			.getElementById(`message-${responseMessageId}-content`)
+			?.querySelector('#response-content-container')
+			?.focus();
 
 		const res = await chatCompleted(localStorage.token, {
 			model: modelId,
