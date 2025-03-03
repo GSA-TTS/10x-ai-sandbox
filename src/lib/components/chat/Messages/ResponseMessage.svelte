@@ -513,7 +513,10 @@
 					</div>
 				{/if}
 
-				<div class="chat-{message.role} w-full min-w-full markdown-prose">
+				<div
+					class="chat-{message.role} w-full min-w-full markdown-prose"
+					id="message-{message.id}-content"
+				>
 					<div>
 						{#if (message?.statusHistory ?? [...(message?.status ? [message?.status] : [])]).length > 0}
 							{@const status = (
@@ -653,7 +656,12 @@
 								</div>
 							</div>
 						{:else}
-							<div class="w-full flex flex-col relative" id="response-content-container">
+							<div
+								class="w-full flex flex-col relative"
+								id="response-content-container"
+								tabindex="0"
+							>
+								<h2 class="sr-only">{model?.name ?? message.model} says:</h2>
 								{#if message.content === '' && !message.error}
 									<Skeleton />
 								{:else if message.content && message.error !== true}
