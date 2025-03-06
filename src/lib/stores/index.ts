@@ -211,6 +211,7 @@ type Config = {
 		enable_sidebar_create_folder: boolean;
 		enable_floating_buttons: boolean;
 		enable_delete_button: boolean;
+		enable_model_selector_search: boolean;
 	};
 	oauth: {
 		providers: {
