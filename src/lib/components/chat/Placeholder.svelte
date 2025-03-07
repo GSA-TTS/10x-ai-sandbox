@@ -125,8 +125,8 @@
 											($i18n.language === 'dg-DG'
 												? `/doge.png`
 												: `${WEBUI_BASE_URL}/static/gsai.png`)}
-										class=" w-16 sm:w-20 h-fit"
-										alt="GSAI"
+										class=" w-16 sm:w-20"
+										alt=""
 										draggable="false"
 									/>
 								</button>

@@ -1,22 +1,30 @@
 git rm -r --cached build/ >/dev/null 2>&1 || true
+(while sleep 1; do printf '.'; done) &
+spinner_pid=$!
 
 echo "Scanning commit... 30-60s 💅🥱⏳"
 
+# Exit on any error
+set -e
+
+# Ensure cleanup happens even if script fails
+cleanup() {
+    echo "Detected secrets in staged files!"
+    kill $spinner_pid
+}
+
 if ! gitleaks protect --staged -v --redact; then
-    echo "Gitleaks detected secrets in staged files"
+    cleanup
     exit 1
 fi
 
-git add .secrets.baseline
-if (git diff --staged --name-only -z | xargs -0 detect-secrets-hook --baseline .secrets.baseline) | grep -q "Secret Type"; then
-    echo "$(git diff --staged --name-only -z | xargs -0 detect-secrets-hook --baseline .secrets.baseline)"
-    echo "Detect-secrets detected secrets in staged files"
+if ! git diff --staged --name-only -z | xargs -0 detect-secrets-hook --baseline .secrets.baseline; then
+    cleanup
     exit 1
 fi
 
-echo "No secrets detected in staged files! 🎉"
+kill $spinner_pid
 
 npm install
 npm run format
-npm run format:backend
 npm run i18n:parse
