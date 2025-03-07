@@ -111,7 +111,11 @@ class Pipeline:
 
         try:
             r = self.bedrock_client.invoke_model_with_response_stream(
-                body=json.dumps(filtered_body), modelId=model_id
+                body=json.dumps(filtered_body), modelId=model_id,
+                guardrailIdentifier="pxfsn6645ss3",
+                guardrailVersion="1"
+                
+                
             )
 
             for event in r["body"]:
