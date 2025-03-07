@@ -492,16 +492,16 @@
 				}}
 			>
 				<div class="flex items-center">
-					<div class="self-center mx-1.5">
+					<div class="self-center">
 						<img
 							crossorigin="anonymous"
-							src="{WEBUI_BASE_URL}/static/favicon.png"
-							class=" size-5 -translate-x-1.5 rounded-full"
-							alt="logo"
+							src="{WEBUI_BASE_URL}/static/gsa-logo.svg"
+							class="size-7 -translate-x-1.5"
+							alt="GSA logo"
 						/>
 					</div>
-					<div class=" self-center font-medium text-sm text-gray-850 dark:text-white font-primary">
-						{$i18n.t('New Chat')}
+					<div class=" self-center font-medium text-2xl text-gray-850 dark:text-white font-primary">
+						{$i18n.t('Chat')}
 					</div>
 				</div>
 
@@ -838,7 +838,7 @@
 
 		<div class="px-2">
 			<div class="flex flex-col font-primary">
-				{#if $user !== undefined}
+				{#if $user !== undefined && $config?.features?.enable_sidebar_user_profile}
 					<UserMenu
 						role={$user.role}
 						on:show={(e) => {
