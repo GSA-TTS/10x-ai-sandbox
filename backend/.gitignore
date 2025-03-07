@@ -9,5 +9,5 @@ Pipfile
 !/data
 /data/*
 /open_webui/data/*
-/open-webui-pipelines/pipelines/*/valves.json
+/open_webui_pipelines/pipelines/*/valves.json
 .webui_secret_key
