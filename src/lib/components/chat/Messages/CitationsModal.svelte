@@ -49,9 +49,9 @@
 <Modal size="lg" bind:show>
 	<div>
 		<div class=" flex justify-between dark:text-gray-300 px-5 pt-4 pb-2">
-			<div class=" text-lg font-medium self-center capitalize">
+			<h2 class=" text-lg font-medium self-center capitalize">
 				{$i18n.t('Citation')}
-			</div>
+			</h2>
 			<button
 				class="self-center"
 				on:click={() => {

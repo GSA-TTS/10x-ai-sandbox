@@ -33,13 +33,13 @@
 						</div>
 					{/if}
 
-					<div>
+					<h2>
 						{#if codeExecution?.name}
 							{$i18n.t('Code execution')}: {codeExecution?.name}
 						{:else}
 							{$i18n.t('Code execution')}
 						{/if}
-					</div>
+					</h2>
 				</div>
 			</div>
 			<button
