@@ -172,10 +172,11 @@
 					<div class="px-1">
 						{#if tab === ''}
 							<div class="flex flex-col w-full">
-								<div class=" mb-1 text-xs text-gray-500">{$i18n.t('Role')}</div>
+								<label for="add-user-role" class=" mb-1 text-sm text-gray-700">{$i18n.t('Role')}</label>
 
 								<div class="flex-1">
 									<select
+										id="add-user-role"
 										class="w-full capitalize rounded-lg py-2 px-4 text-sm dark:text-gray-300 dark:bg-gray-850 disabled:text-gray-500 dark:disabled:text-gray-500 outline-none"
 										bind:value={_user.role}
 										placeholder={$i18n.t('Enter Your Role')}
@@ -189,10 +190,11 @@
 							</div>
 
 							<div class="flex flex-col w-full mt-1">
-								<div class=" mb-1 text-xs text-gray-500">{$i18n.t('Name')}</div>
+								<label for="add-name" class=" mb-1 text-sm text-gray-700">{$i18n.t('Name')}</label>
 
 								<div class="flex-1">
 									<input
+										id="add-name"
 										class="w-full rounded-lg py-2 px-4 text-sm dark:text-gray-300 dark:bg-gray-850 disabled:text-gray-500 dark:disabled:text-gray-500 outline-none"
 										type="text"
 										bind:value={_user.name}
@@ -206,10 +208,11 @@
 							<hr class=" border-gray-50 dark:border-gray-850 my-2.5 w-full" />
 
 							<div class="flex flex-col w-full">
-								<div class=" mb-1 text-xs text-gray-500">{$i18n.t('Email')}</div>
+								<label for="add-email" class=" mb-1 text-sm text-gray-700">{$i18n.t('Email')}</label>
 
 								<div class="flex-1">
 									<input
+										id="add-email"
 										class="w-full rounded-lg py-2 px-4 text-sm dark:text-gray-300 dark:bg-gray-850 disabled:text-gray-500 dark:disabled:text-gray-500 outline-none"
 										type="email"
 										bind:value={_user.email}
@@ -220,10 +223,11 @@
 							</div>
 
 							<div class="flex flex-col w-full mt-1">
-								<div class=" mb-1 text-xs text-gray-500">{$i18n.t('Password')}</div>
+								<label for="add-password" class=" mb-1 text-sm text-gray-700">{$i18n.t('Password')}</label>
 
 								<div class="flex-1">
 									<input
+										id="add-password"
 										class="w-full rounded-lg py-2 px-4 text-sm dark:text-gray-300 dark:bg-gray-850 disabled:text-gray-500 dark:disabled:text-gray-500 outline-none"
 										type="password"
 										bind:value={_user.password}
