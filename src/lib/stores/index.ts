@@ -59,6 +59,7 @@ export const showSidebar = writable(false);
 export const showSettings = writable(false);
 export const showArchivedChats = writable(false);
 export const showChangelog = writable(false);
+export const showTerms = writable(false);
 
 export const showControls = writable(false);
 export const showOverview = writable(false);
@@ -130,6 +131,7 @@ type Settings = {
 	title?: TitleSettings;
 	splitLargeDeltas?: boolean;
 	chatDirection: 'LTR' | 'RTL';
+	acceptedTermsVersion?: number;
 
 	system?: string;
 	requestFormat?: string;
