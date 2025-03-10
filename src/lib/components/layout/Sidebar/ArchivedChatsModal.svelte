@@ -89,6 +89,8 @@
 					viewBox="0 0 20 20"
 					fill="currentColor"
 					class="w-5 h-5"
+					aria-label="Close"
+					role="img"
 				>
 					<path
 						fill-rule="evenodd"
