@@ -59,6 +59,7 @@ export const showSidebar = writable(false);
 export const showSettings = writable(false);
 export const showArchivedChats = writable(false);
 export const showChangelog = writable(false);
+export const showTerms = writable(false);
 
 export const showControls = writable(false);
 export const showOverview = writable(false);
@@ -130,6 +131,7 @@ type Settings = {
 	title?: TitleSettings;
 	splitLargeDeltas?: boolean;
 	chatDirection: 'LTR' | 'RTL';
+	acceptedTermsVersion?: number;
 
 	system?: string;
 	requestFormat?: string;
@@ -212,8 +214,10 @@ type Config = {
 		enable_sidebar_create_folder: boolean;
 		enable_floating_buttons: boolean;
 		enable_delete_button: boolean;
+		enable_model_selector_search: boolean;
 		enable_sidebar_user_profile: boolean;
 		enable_message_input_logo: boolean;
+		enable_prompt_suggestions: boolean;
 	};
 	oauth: {
 		providers: {

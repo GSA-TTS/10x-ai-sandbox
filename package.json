@@ -73,6 +73,7 @@
 		"@tiptap/pm": "^2.10.0",
 		"@tiptap/starter-kit": "^2.10.0",
 		"@types/fs-extra": "^11.0.4",
+		"@uswds/uswds": "^3.11.0",
 		"@xyflow/svelte": "^0.1.19",
 		"async": "^3.2.5",
 		"bits-ui": "^0.19.7",

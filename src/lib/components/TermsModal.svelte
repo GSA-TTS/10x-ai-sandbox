@@ -1,120 +1,124 @@
+<script context="module">
+	// Update this version number when updating the terms content. Any change to
+	// this value will trigger a re-display of the terms for all users.
+	export const TERMS_VERSION = 1;
+</script>
+
 <script lang="ts">
-	import { onMount, getContext } from 'svelte';
-	import { Confetti } from 'svelte-confetti';
-
-	import { WEBUI_NAME, config, settings } from '$lib/stores';
-
-	import { WEBUI_VERSION } from '$lib/constants';
-	import { getChangelog } from '$lib/apis';
+	import { settings, user } from '$lib/stores';
 
 	import Modal from './common/Modal.svelte';
 	import { updateUserSettings } from '$lib/apis/users';
 
-	const i18n = getContext('i18n');
-
 	export let show = false;
 
-	let changelog = null;
+	let headingId = 'terms-heading';
 
-	onMount(async () => {
-		const res = await getChangelog();
-		changelog = res;
-	});
+	async function acceptTerms() {
+		await settings.set({ ...$settings, ...{ acceptedTermsVersion: TERMS_VERSION } });
+		await updateUserSettings(localStorage.token, { ui: $settings });
+		show = false;
+	}
 </script>
 
-<Modal bind:show>
-	<div class="px-5 pt-4 dark:text-gray-300 text-gray-700">
-		<div class="flex justify-between items-start">
-			<div class="text-xl font-semibold">
-				{$i18n.t('What’s New in')}
-				{$WEBUI_NAME}
-				<Confetti x={[-1, -0.25]} y={[0, 0.5]} />
-			</div>
-			<button
-				class="self-center"
-				on:click={() => {
-					localStorage.version = $config.version;
-					show = false;
-				}}
+<Modal bind:show allowEasyDismiss={false} {headingId} closeButton={false}>
+	<div class="px-5 pt-4">
+		<h2 id={headingId} class="text-xl text-[#00538E] font-semibold">
+			Welcome{$user?.name ? ` ${$user.name}` : ''}!
+			<span class="sr-only"
+				>Please review and accept the terms and conditions before proceeding.</span
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-					class="w-5 h-5"
-				>
-					<path
-						d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
-					/>
-				</svg>
-			</button>
-		</div>
-		<div class="flex items-center mt-1">
-			<div class="text-sm dark:text-gray-200">{$i18n.t('Release Notes')}</div>
-			<div class="flex self-center w-[1px] h-6 mx-2.5 bg-gray-200 dark:bg-gray-700" />
-			<div class="text-sm dark:text-gray-200">
-				v{WEBUI_VERSION}
-			</div>
-		</div>
+		</h2>
 	</div>
 
-	<div class=" w-full p-4 px-5 text-gray-700 dark:text-gray-100">
-		<div class=" overflow-y-scroll max-h-80 scrollbar-hidden">
+	<div class="w-full p-4 px-5 text-gray-700 dark:text-gray-100">
+		<div class="overflow-y-scroll max-h-100 scrollbar-hidden">
 			<div class="mb-3">
-				{#if changelog}
-					{#each Object.keys(changelog) as version}
-						<div class=" mb-3 pr-2">
-							<div class="font-semibold text-xl mb-1 dark:text-white">
-								v{version} - {changelog[version].date}
-							</div>
-
-							<hr class=" dark:border-gray-800 my-2" />
-
-							{#each Object.keys(changelog[version]).filter((section) => section !== 'date') as section}
-								<div class="">
-									<div
-										class="font-semibold uppercase text-xs {section === 'added'
-											? 'text-white bg-blue-600'
-											: section === 'fixed'
-												? 'text-white bg-green-600'
-												: section === 'changed'
-													? 'text-white bg-yellow-600'
-													: section === 'removed'
-														? 'text-white bg-red-600'
-														: ''}  w-fit px-3 rounded-full my-2.5"
-									>
-										{section}
-									</div>
-
-									<div class="my-2.5 px-1.5">
-										{#each Object.keys(changelog[version][section]) as item}
-											<div class="text-sm mb-2">
-												<div class="font-semibold uppercase">
-													{changelog[version][section][item].title}
-												</div>
-												<div class="mb-2 mt-1">{changelog[version][section][item].content}</div>
-											</div>
-										{/each}
-									</div>
-								</div>
-							{/each}
-						</div>
-					{/each}
-				{/if}
+				<p class="my-2 font-semibold">
+					Chat is GSA’s AI-powered chatbot. You can use Chat to help you:
+				</p>
+				<ul class="mt-1 list-disc pl-5">
+					<li>Write and edit documents</li>
+					<li>Summarize information</li>
+					<li>Research a common topic</li>
+				</ul>
+				<p class="my-2 font-semibold">
+					When using Chat, you need to understand and agree to our <a
+						href="https://insite.gsa.gov/services-and-offices/staff-offices/office-of-gsa-it/artificial-intelligence/gsas-aipowered-chat/chat-resources/chat-privacy-policy"
+						>privacy policy</a
+					>, which covers the following:
+				</p>
+				<ul class="terms-list list-none p-0">
+					<li>
+						All prompts and responses will be logged. Your data will be protected and used only to
+						improve and further refine Chat.
+					</li>
+					<li>
+						GSA's <a
+							href="https://insite.gsa.gov/directives-library/gsa-information-technology-it-general-rules-of-behavior-4"
+							>IT Rules of Behavior</a
+						>
+						and
+						<a
+							href="https://insite.gsa.gov/directives-library/use-of-artificial-intelligence-at-gsa"
+							>AI Directive</a
+						> prohibit using Chat inappropriately or for harmful purposes.
+					</li>
+					<li>
+						Chat may generate incorrect or misleading information. Please carefully review its
+						responses.
+					</li>
+				</ul>
+				<p class="my-2 font-semibold">
+					If you have any feedback, need further assistance, or have an issue, please reach out to
+					the team at <a href="mailto:chat@gsa.gov">chat@gsa.gov</a>.
+				</p>
 			</div>
 		</div>
 		<div class="flex justify-end pt-3 text-sm font-medium">
 			<button
-				on:click={async () => {
-					localStorage.version = $config.version;
-					await settings.set({ ...$settings, ...{ version: $config.version } });
-					await updateUserSettings(localStorage.token, { ui: $settings });
-					show = false;
-				}}
+				on:click={acceptTerms}
 				class=" px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-gray-100 transition rounded-lg"
 			>
-				<span class="relative">{$i18n.t("Okay, Let's Go!")}</span>
+				<span class="relative">Agree and continue</span>
 			</button>
 		</div>
 	</div>
 </Modal>
+
+<style>
+	.terms-list li::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0.25rem;
+		width: 2rem;
+		height: 2rem;
+		background-color: #e4f4ff;
+		border-radius: 50%;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 1.25rem;
+	}
+
+	.terms-list li {
+		padding-left: 2.75rem;
+		position: relative;
+		margin-bottom: 0.75rem;
+	}
+
+	.terms-list li:nth-child(1)::before {
+		/* icon: database */
+		background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2300538E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-database"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>');
+	}
+
+	.terms-list li:nth-child(2)::before {
+		/* icon: list */
+		background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2300538E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>');
+	}
+
+	.terms-list li:nth-child(3)::before {
+		/* icon: alert-triangle */
+		background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2300538E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>');
+	}
+</style>
