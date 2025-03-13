@@ -56,7 +56,7 @@
 	import { getChannels, createNewChannel } from '$lib/apis/channels';
 	import ChannelModal from './Sidebar/ChannelModal.svelte';
 	import ChannelItem from './Sidebar/ChannelItem.svelte';
-	import PencilSquare from '../icons/PencilSquare.svelte';
+	import NewChatIcon from '../icons/NewChatIcon.svelte';
 
 	const BREAKPOINT = 768;
 
@@ -496,9 +496,9 @@
 					<div class="self-center">
 						<img
 							crossorigin="anonymous"
-							src="{WEBUI_BASE_URL}/static/favicon.png"
-							class=" size-5 -translate-x-1.5 rounded-full"
-							alt={$WEBUI_NAME}
+							src="{WEBUI_BASE_URL}/static/gsa-logo.svg"
+							class="size-7 -translate-x-1.5"
+							alt="GSA"
 						/>
 					</div>
 					<div class=" self-center font-medium text-2xl text-gray-850 dark:text-white font-primary">
@@ -507,7 +507,7 @@
 				</div>
 
 				<div>
-					<PencilSquare className=" size-5" strokeWidth="2" />
+					<NewChatIcon className=" size-5" strokeWidth="2" />
 				</div>
 			</a>
 		</div>

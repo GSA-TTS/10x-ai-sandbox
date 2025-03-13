@@ -7,4 +7,3 @@
 </script>
 
 <Chat chatIdProp={$page.params.id} {mainContentId} />
-<Help />

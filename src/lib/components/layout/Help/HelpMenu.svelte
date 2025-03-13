@@ -6,7 +6,7 @@
 	import { flyAndScale } from '$lib/utils/transitions';
 
 	import Dropdown from '$lib/components/common/Dropdown.svelte';
-	import QuestionMarkCircle from '$lib/components/icons/QuestionMarkCircle.svelte';
+	import InfoCircle from '$lib/components/icons/InfoCircle.svelte';
 	import Lifebuoy from '$lib/components/icons/Lifebuoy.svelte';
 	import Keyboard from '$lib/components/icons/Keyboard.svelte';
 	const i18n = getContext('i18n');
@@ -38,10 +38,13 @@
 				class="flex gap-2 items-center px-3 py-2 text-sm  cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md"
 				id="chat-share-button"
 				on:click={() => {
-					window.open('https://docs.openwebui.com', '_blank');
+					window.open(
+						'https://insite.gsa.gov/services-and-offices/staff-offices/office-of-gsa-it/artificial-intelligence/gsas-aipowered-chat/chat-resources/chat-user-guide',
+						'_blank'
+					);
 				}}
 			>
-				<QuestionMarkCircle className="size-5" />
+				<InfoCircle className="size-5" strokeWidth="2" />
 				<div class="flex items-center">{$i18n.t('Documentation')}</div>
 			</DropdownMenu.Item>
 
