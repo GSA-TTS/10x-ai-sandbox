@@ -218,6 +218,7 @@ type Config = {
 		enable_sidebar_user_profile: boolean;
 		enable_message_input_logo: boolean;
 		enable_prompt_suggestions: boolean;
+		enable_user_settings_menu: boolean;
 	};
 	oauth: {
 		providers: {

@@ -232,6 +232,7 @@ from open_webui.config import (
     ENABLE_MESSAGE_INPUT_LOGO,
     ENABLE_SIDEBAR_USER_PROFILE,
     ENABLE_PROMPT_SUGGESTIONS,
+    ENABLE_USER_SETTINGS_MENU,
     # WebUI (OAuth)
     ENABLE_OAUTH_ROLE_MANAGEMENT,
     OAUTH_ROLES_CLAIM,
@@ -1031,6 +1032,7 @@ async def get_app_config(request: Request):
                     "enable_sidebar_user_profile": ENABLE_SIDEBAR_USER_PROFILE,
                     "enable_message_input_logo": ENABLE_MESSAGE_INPUT_LOGO,
                     "enable_prompt_suggestions": ENABLE_PROMPT_SUGGESTIONS,
+                    "enable_user_settings_menu": ENABLE_USER_SETTINGS_MENU
                 }
                 if user is not None
                 else {}
