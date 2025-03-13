@@ -26,6 +26,7 @@
 	import MenuLines from '../icons/MenuLines.svelte';
 	import AdjustmentsHorizontal from '../icons/AdjustmentsHorizontal.svelte';
 	import NewChatIcon from '../icons/NewChatIcon.svelte';
+	import Help from '$lib/components/layout/Help.svelte';
 
 	const i18n = getContext('i18n');
 
@@ -98,6 +99,7 @@
 
 				<div class="self-start flex flex-none items-center text-gray-600 dark:text-gray-400">
 					<div class="px-3 py-1 bg-gray-800 text-white text-sm rounded-full">{$i18n.t('BETA')}</div>
+					<Help />
 					<!-- <div class="md:hidden flex self-center w-[1px] h-5 mx-2 bg-gray-300 dark:bg-stone-700" /> -->
 					{#if shareEnabled && chat && (chat.id || $temporaryChatEnabled)}
 						<Menu
