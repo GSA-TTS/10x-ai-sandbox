@@ -228,8 +228,12 @@ from open_webui.config import (
     ENABLE_SIDEBAR_CREATE_FOLDER,
     ENABLE_FLOATING_BUTTONS,
     ENABLE_DELETE_BUTTON,
+    ENABLE_MODEL_SELECTOR_SEARCH,
     ENABLE_MESSAGE_INPUT_LOGO,
     ENABLE_SIDEBAR_USER_PROFILE,
+    ENABLE_PROMPT_SUGGESTIONS,
+    ENABLE_RESPONSE_PROMPT_EDIT,
+    ENABLE_RESPONSE_CONTINUE,
     # WebUI (OAuth)
     ENABLE_OAUTH_ROLE_MANAGEMENT,
     OAUTH_ROLES_CLAIM,
@@ -1025,8 +1029,12 @@ async def get_app_config(request: Request):
                     "enable_sidebar_create_folder": ENABLE_SIDEBAR_CREATE_FOLDER,
                     "enable_floating_buttons": ENABLE_FLOATING_BUTTONS,
                     "enable_delete_button": ENABLE_DELETE_BUTTON,
+                    "enable_model_selector_search": ENABLE_MODEL_SELECTOR_SEARCH,
                     "enable_sidebar_user_profile": ENABLE_SIDEBAR_USER_PROFILE,
                     "enable_message_input_logo": ENABLE_MESSAGE_INPUT_LOGO,
+                    "enable_prompt_suggestions": ENABLE_PROMPT_SUGGESTIONS,
+                    "enable_response_prompt_edit": ENABLE_RESPONSE_PROMPT_EDIT,
+                    "enable_response_continue": ENABLE_RESPONSE_CONTINUE,
                 }
                 if user is not None
                 else {}

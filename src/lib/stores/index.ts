@@ -212,8 +212,12 @@ type Config = {
 		enable_sidebar_create_folder: boolean;
 		enable_floating_buttons: boolean;
 		enable_delete_button: boolean;
+		enable_model_selector_search: boolean;
 		enable_sidebar_user_profile: boolean;
 		enable_message_input_logo: boolean;
+		enable_prompt_suggestions: boolean;
+		enable_response_prompt_edit: boolean;
+		enable_response_continue: boolean;
 	};
 	oauth: {
 		providers: {

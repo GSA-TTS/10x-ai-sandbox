@@ -25,8 +25,8 @@
 	import AdjustmentsHorizontal from '../icons/AdjustmentsHorizontal.svelte';
 	import Map from '../icons/Map.svelte';
 	import { stringify } from 'postcss';
-	import PencilSquare from '../icons/PencilSquare.svelte';
 	import Plus from '../icons/Plus.svelte';
+	import NewChatIcon from '../icons/NewChatIcon.svelte';
 
 	const i18n = getContext('i18n');
 
@@ -160,7 +160,7 @@
 						aria-label="New Chat"
 					>
 						<div class=" m-auto self-center">
-							<PencilSquare className=" size-5" strokeWidth="2" />
+							<NewChatIcon className=" size-5" strokeWidth="2" />
 						</div>
 					</button>
 				</Tooltip>

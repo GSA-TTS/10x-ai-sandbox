@@ -960,12 +960,28 @@ ENABLE_FLOATING_BUTTONS = (
 
 ENABLE_DELETE_BUTTON = os.environ.get("ENABLE_DELETE_BUTTON", "False").lower() == "true"
 
+ENABLE_MODEL_SELECTOR_SEARCH = (
+    os.environ.get("ENABLE_MODEL_SELECTOR_SEARCH", "False").lower() == "true"
+)
+
 ENABLE_SIDEBAR_USER_PROFILE = (
     os.environ.get("ENABLE_SIDEBAR_USER_PROFILE", "False").lower() == "true"
 )
 
 ENABLE_MESSAGE_INPUT_LOGO = (
     os.environ.get("ENABLE_MESSAGE_INPUT_LOGO", "False").lower() == "true"
+)
+
+ENABLE_PROMPT_SUGGESTIONS = (
+    os.environ.get("ENABLE_PROMPT_SUGGESTIONS", "True").lower() == "true"
+)
+
+ENABLE_RESPONSE_PROMPT_EDIT = (
+    os.environ.get("ENABLE_RESPONSE_PROMPT_EDIT", "True").lower() == "true"
+)
+
+ENABLE_RESPONSE_CONTINUE = (
+    os.environ.get("ENABLE_RESPONSE_CONTINUE", "True").lower() == "true"
 )
 
 

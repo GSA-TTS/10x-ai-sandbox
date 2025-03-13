@@ -6,11 +6,12 @@
 	import ShortcutsModal from '../chat/ShortcutsModal.svelte';
 	import Tooltip from '../common/Tooltip.svelte';
 	import HelpMenu from './Help/HelpMenu.svelte';
+	import QuestionMarkCircle from '$lib/components/icons/QuestionMarkCircle.svelte';
 
 	let showShortcuts = false;
 </script>
 
-<div class=" hidden lg:flex fixed bottom-0 right-0 px-2 py-2 z-20">
+<div class="px-2 pt-1">
 	<button
 		id="show-shortcuts-button"
 		class="hidden"
@@ -27,11 +28,11 @@
 			showShortcuts = !showShortcuts;
 		}}
 	>
-		<Tooltip content={$i18n.t('Help')} placement="left">
+		<Tooltip content={$i18n.t('Help')} placement="top">
 			<button
-				class="text-gray-600 dark:text-gray-300 bg-gray-300/20 size-5 flex items-center justify-center text-[0.7rem] rounded-full"
+				class="text-gray-600 dark:text-gray-300 bg-gray-300/20 flex items-center justify-center text-[0.7rem] rounded-full"
 			>
-				?
+				<QuestionMarkCircle className="size-5" />
 			</button>
 		</Tooltip>
 	</HelpMenu>

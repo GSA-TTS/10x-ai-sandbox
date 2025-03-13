@@ -787,7 +787,7 @@
 							{/if}
 
 							{#if message.done}
-								{#if !readOnly}
+								{#if !readOnly && $config?.features?.enable_response_prompt_edit}
 									{#if $user.role === 'user' ? ($user?.permissions?.chat?.edit ?? true) : true}
 										<Tooltip content={$i18n.t('Edit')} placement="bottom">
 											<button
@@ -829,100 +829,28 @@
 									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 20 20"
 											fill="none"
-											viewBox="0 0 24 24"
-											stroke-width="2.3"
 											stroke="currentColor"
 											class="w-4 h-4"
 											aria-hidden="true"
 										>
 											<path
+												d="M10.6667 7.5H3.16667C2.24619 7.5 1.5 8.24619 1.5 9.16667V16.6667C1.5 17.5871 2.24619 18.3333 3.16667 18.3333H10.6667C11.5871 18.3333 12.3333 17.5871 12.3333 16.6667V9.16667C12.3333 8.24619 11.5871 7.5 10.6667 7.5Z"
+												stroke-width="2"
 												stroke-linecap="round"
 												stroke-linejoin="round"
-												d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"
 											/>
+											<path
+												d="M7.66667 4.16666L7.66667 3.33332C7.66667 2.8913 7.84226 2.46737 8.15482 2.15481C8.46738 1.84225 8.89131 1.66666 9.33333 1.66666L16.8333 1.66666C17.2754 1.66666 17.6993 1.84225 18.0118 2.15481C18.3244 2.46737 18.5 2.8913 18.5 3.33332L18.5 10.8333C18.5 11.2754 18.3244 11.6993 18.0118 12.0118C17.6993 12.3244 17.2754 12.5 16.8333 12.5L16 12.5"
+												stroke-width="2"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+											/>
+											<defs>
+												<rect width="20" height="20" />
+											</defs>
 										</svg>
-									</button>
-								</Tooltip>
-
-								<Tooltip content={$i18n.t('Read Aloud')} placement="bottom">
-									<button
-										id="speak-button-{message.id}"
-										class="{isLastMessage
-											? 'visible'
-											: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition"
-										on:click={() => {
-											if (!loadingSpeech) {
-												toggleSpeakMessage();
-											}
-										}}
-									>
-										{#if loadingSpeech}
-											<svg
-												class=" w-4 h-4"
-												fill="currentColor"
-												viewBox="0 0 24 24"
-												xmlns="http://www.w3.org/2000/svg"
-												aria-hidden="true"
-											>
-												<style>
-													.spinner_S1WN {
-														animation: spinner_MGfb 0.8s linear infinite;
-														animation-delay: -0.8s;
-													}
-
-													.spinner_Km9P {
-														animation-delay: -0.65s;
-													}
-
-													.spinner_JApP {
-														animation-delay: -0.5s;
-													}
-
-													@keyframes spinner_MGfb {
-														93.75%,
-														100% {
-															opacity: 0.2;
-														}
-													}
-												</style>
-												<circle class="spinner_S1WN" cx="4" cy="12" r="3" />
-												<circle class="spinner_S1WN spinner_Km9P" cx="12" cy="12" r="3" />
-												<circle class="spinner_S1WN spinner_JApP" cx="20" cy="12" r="3" />
-											</svg>
-										{:else if speaking}
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke-width="2.3"
-												stroke="currentColor"
-												class="w-4 h-4"
-												aria-hidden="true"
-											>
-												<path
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z"
-												/>
-											</svg>
-										{:else}
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke-width="2.3"
-												stroke="currentColor"
-												class="w-4 h-4"
-												aria-hidden="true"
-											>
-												<path
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"
-												/>
-											</svg>
-										{/if}
 									</button>
 								</Tooltip>
 
@@ -1111,7 +1039,88 @@
 										</Tooltip>
 									{/if}
 
-									{#if isLastMessage}
+									<Tooltip content={$i18n.t('Read Aloud')} placement="bottom">
+										<button
+											id="speak-button-{message.id}"
+											class="{isLastMessage
+												? 'visible'
+												: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition"
+											on:click={() => {
+												if (!loadingSpeech) {
+													toggleSpeakMessage();
+												}
+											}}
+										>
+											{#if loadingSpeech}
+												<svg
+													class=" w-4 h-4"
+													fill="currentColor"
+													viewBox="0 0 24 24"
+													xmlns="http://www.w3.org/2000/svg"
+													aria-hidden="true"
+												>
+													<style>
+														.spinner_S1WN {
+															animation: spinner_MGfb 0.8s linear infinite;
+															animation-delay: -0.8s;
+														}
+
+														.spinner_Km9P {
+															animation-delay: -0.65s;
+														}
+
+														.spinner_JApP {
+															animation-delay: -0.5s;
+														}
+
+														@keyframes spinner_MGfb {
+															93.75%,
+															100% {
+																opacity: 0.2;
+															}
+														}
+													</style>
+													<circle class="spinner_S1WN" cx="4" cy="12" r="3" />
+													<circle class="spinner_S1WN spinner_Km9P" cx="12" cy="12" r="3" />
+													<circle class="spinner_S1WN spinner_JApP" cx="20" cy="12" r="3" />
+												</svg>
+											{:else if speaking}
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													fill="none"
+													viewBox="0 0 24 24"
+													stroke-width="2.3"
+													stroke="currentColor"
+													class="w-4 h-4"
+													aria-hidden="true"
+												>
+													<path
+														stroke-linecap="round"
+														stroke-linejoin="round"
+														d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z"
+													/>
+												</svg>
+											{:else}
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													fill="none"
+													viewBox="0 0 24 24"
+													stroke-width="2.3"
+													stroke="currentColor"
+													class="w-4 h-4"
+													aria-hidden="true"
+												>
+													<path
+														stroke-linecap="round"
+														stroke-linejoin="round"
+														d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"
+													/>
+												</svg>
+											{/if}
+										</button>
+									</Tooltip>
+
+									{#if isLastMessage && $config?.features?.enable_response_continue}
 										<Tooltip content={$i18n.t('Continue Response')} placement="bottom">
 											<button
 												type="button"
