@@ -497,7 +497,7 @@
 						<img
 							crossorigin="anonymous"
 							src="{WEBUI_BASE_URL}/static/gsa-logo.svg"
-							class="size-7 -translate-x-1.5"
+							class="size-7 -translate-x-1.5 rounded-md"
 							alt="GSA"
 						/>
 					</div>
