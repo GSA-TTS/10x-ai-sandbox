@@ -538,6 +538,15 @@ if gsai_logo.exists():
 else:
     logging.warning(f"Built by logo not found at {gsai_logo}")
 
+if not (STATIC_DIR / "uswds").exists():
+    logging.warning("USWDS directory not found, creating it")
+    (STATIC_DIR / "uswds").mkdir(parents=True, exist_ok=True)
+shutil.copytree(
+    FRONTEND_BUILD_DIR / "static" / "uswds",
+    STATIC_DIR / "uswds",
+    dirs_exist_ok=True,
+)
+
 ####################################
 # CUSTOM_NAME
 ####################################

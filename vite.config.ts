@@ -1,5 +1,6 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 import chokidar from 'chokidar';
 import path from 'path';
 import fs from 'fs-extra';
@@ -21,6 +22,22 @@ import fs from 'fs-extra';
 export default defineConfig({
 	plugins: [
 		sveltekit(),
+		viteStaticCopy({
+			targets: [
+				{
+					src: 'node_modules/@uswds/uswds/dist/css/*',
+					dest: 'static/uswds/css'
+				},
+				{
+					src: 'node_modules/@uswds/uswds/dist/fonts/*',
+					dest: 'static/uswds/fonts'
+				},
+				{
+					src: 'node_modules/@uswds/uswds/dist/img/*',
+					dest: 'static/uswds/img'
+				}
+			]
+		}),
 		{
 			name: 'watch-routes-override',
 			configureServer() {
