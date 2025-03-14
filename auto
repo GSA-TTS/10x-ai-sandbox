@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Get the directory the script is run in despite symlink
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+    DIR="$(cd -P "$(dirname "$SOURCE")" &>/dev/null && pwd)"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" &>/dev/null && pwd)"
+
+source "$SCRIPT_DIR/venv/bin/activate"
+
+python "$SCRIPT_DIR/auto.py" "$@"
