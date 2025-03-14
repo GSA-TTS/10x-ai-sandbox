@@ -408,7 +408,7 @@
 
 						<div class="flex w-full mt-1 justify-end">
 							<button
-								class="px-2 py-1 text-gray-500 rounded-lg text-xs"
+								class="px-2 py-1 text-gray-600 rounded-lg text-xs"
 								on:click={() => {
 									info.meta.profile_image_url = '/static/favicon.png';
 								}}
@@ -436,7 +436,7 @@
 						<div class="flex-1">
 							<div>
 								<input
-									class="text-xs w-full bg-transparent text-gray-500 outline-none"
+									class="text-xs w-full bg-transparent text-gray-600 outline-none"
 									placeholder={$i18n.t('Model ID')}
 									bind:value={id}
 									disabled={edit}
@@ -709,7 +709,7 @@
 						<Capabilities bind:capabilities />
 					</div>
 
-					<div class="my-2 text-gray-300 dark:text-gray-700">
+					<div class="my-2 text-gray-600 dark:text-gray-700">
 						<div class="flex w-full justify-between mb-2">
 							<div class=" self-center text-sm font-semibold">{$i18n.t('JSON Preview')}</div>
 

@@ -86,7 +86,7 @@
 										{document?.metadata?.name ?? document.source.name}
 									</a>
 									{#if document?.metadata?.page}
-										<span class="text-xs text-gray-500 dark:text-gray-400">
+										<span class="text-xs text-gray-600 dark:text-gray-400">
 											({$i18n.t('page')}
 											{document.metadata.page + 1})
 										</span>
@@ -110,11 +110,11 @@
 												<span class={`px-1 rounded font-medium ${getRelevanceColor(percentage)}`}>
 													{percentage.toFixed(2)}%
 												</span>
-												<span class="text-gray-500 dark:text-gray-500">
+												<span class="text-gray-600 dark:text-gray-500">
 													({document.distance.toFixed(4)})
 												</span>
 											{:else}
-												<span class="text-gray-500 dark:text-gray-500">
+												<span class="text-gray-600 dark:text-gray-500">
 													{document.distance.toFixed(4)}
 												</span>
 											{/if}

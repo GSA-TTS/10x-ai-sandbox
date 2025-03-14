@@ -47,7 +47,7 @@
 			class="px-0.5 py-1 min-w-fit rounded-lg flex-1 lg:flex-none flex text-right transition {selectedTab ===
 			'general'
 				? ''
-				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+				: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			on:click={() => {
 				selectedTab = 'general';
 			}}
@@ -73,7 +73,7 @@
 			class="px-0.5 py-1 min-w-fit rounded-lg flex-1 md:flex-none flex text-right transition {selectedTab ===
 			'connections'
 				? ''
-				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+				: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			on:click={() => {
 				selectedTab = 'connections';
 			}}
@@ -97,7 +97,7 @@
 			class="px-0.5 py-1 min-w-fit rounded-lg flex-1 md:flex-none flex text-right transition {selectedTab ===
 			'models'
 				? ''
-				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+				: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			on:click={() => {
 				selectedTab = 'models';
 			}}
@@ -123,7 +123,7 @@
 			class="px-0.5 py-1 min-w-fit rounded-lg flex-1 md:flex-none flex text-right transition {selectedTab ===
 			'evaluations'
 				? ''
-				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+				: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			on:click={() => {
 				selectedTab = 'evaluations';
 			}}
@@ -138,7 +138,7 @@
 			class="px-0.5 py-1 min-w-fit rounded-lg flex-1 md:flex-none flex text-right transition {selectedTab ===
 			'documents'
 				? ''
-				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+				: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			on:click={() => {
 				selectedTab = 'documents';
 			}}
@@ -168,7 +168,7 @@
 			class="px-0.5 py-1 min-w-fit rounded-lg flex-1 md:flex-none flex text-right transition {selectedTab ===
 			'web'
 				? ''
-				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+				: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			on:click={() => {
 				selectedTab = 'web';
 			}}
@@ -192,7 +192,7 @@
 			class="px-0.5 py-1 min-w-fit rounded-lg flex-1 md:flex-none flex text-right transition {selectedTab ===
 			'interface'
 				? ''
-				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+				: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			on:click={() => {
 				selectedTab = 'interface';
 			}}
@@ -218,7 +218,7 @@
 			class="px-0.5 py-1 min-w-fit rounded-lg flex-1 md:flex-none flex text-right transition {selectedTab ===
 			'audio'
 				? ''
-				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+				: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			on:click={() => {
 				selectedTab = 'audio';
 			}}
@@ -245,7 +245,7 @@
 			class="px-0.5 py-1 min-w-fit rounded-lg flex-1 md:flex-none flex text-right transition {selectedTab ===
 			'images'
 				? ''
-				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+				: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			on:click={() => {
 				selectedTab = 'images';
 			}}
@@ -271,7 +271,7 @@
 			class="px-0.5 py-1 min-w-fit rounded-lg flex-1 md:flex-none flex text-right transition {selectedTab ===
 			'pipelines'
 				? ''
-				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+				: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			on:click={() => {
 				selectedTab = 'pipelines';
 			}}
@@ -301,7 +301,7 @@
 			class="px-0.5 py-1 min-w-fit rounded-lg flex-1 md:flex-none flex text-right transition {selectedTab ===
 			'db'
 				? ''
-				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+				: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			on:click={() => {
 				selectedTab = 'db';
 			}}

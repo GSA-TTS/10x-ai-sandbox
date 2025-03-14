@@ -539,7 +539,7 @@
 							}}
 						>
 							<div
-								class="flex-1 flex flex-col relative w-full rounded-3xl px-1 bg-gray-600/5 dark:bg-gray-400/5 dark:text-gray-100"
+								class="flex-1 flex flex-col border border-gray-400 relative w-full rounded-3xl px-1 bg-gray-600/5 dark:bg-gray-400/5 dark:text-gray-100"
 								dir={$settings?.chatDirection ?? 'LTR'}
 							>
 								{#if files.length > 0}
@@ -1184,7 +1184,7 @@
 														<button
 															id="send-message-button"
 															class="{prompt !== ''
-																? 'bg-black text-white hover:bg-gray-900 dark:bg-white dark:text-black dark:hover:bg-gray-100 '
+																? 'gsa-blue text-white dark:bg-white dark:text-black outline-none '
 																: 'text-white bg-gray-200 dark:text-gray-900 dark:bg-gray-700 disabled'} transition rounded-full p-1.5 self-center"
 															type="submit"
 															disabled={prompt === ''}
@@ -1194,6 +1194,8 @@
 																viewBox="0 0 16 16"
 																fill="currentColor"
 																class="size-6"
+																role="img"
+																aria-label="send message"
 															>
 																<path
 																	fill-rule="evenodd"

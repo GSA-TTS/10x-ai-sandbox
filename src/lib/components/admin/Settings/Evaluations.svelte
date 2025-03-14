@@ -130,7 +130,7 @@
 								/>
 							{/each}
 						{:else}
-							<div class=" text-center text-xs text-gray-500">
+							<div class=" text-center text-xs text-gray-600">
 								{$i18n.t(
 									`Using the default arena model with all models. Click the plus button to add custom models.`
 								)}

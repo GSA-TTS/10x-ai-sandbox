@@ -239,7 +239,7 @@
 						</div>
 
 						{#if !showSystem}
-							<div class=" flex-1 text-gray-500 line-clamp-1">
+							<div class=" flex-1 text-gray-600 line-clamp-1">
 								{system}
 							</div>
 						{/if}
@@ -293,7 +293,7 @@
 			</div>
 
 			<div class="pb-3">
-				<div class="text-xs font-medium text-gray-500 px-2 py-1">
+				<div class="text-xs font-medium text-gray-600 px-2 py-1">
 					{selectedModelId}
 				</div>
 				<div class="border border-gray-50 dark:border-gray-850 w-full px-3 py-2.5 rounded-xl">

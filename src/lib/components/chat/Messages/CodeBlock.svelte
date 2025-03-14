@@ -381,12 +381,12 @@ __builtins__.input = input`);
 
 			{#if executing}
 				<div class="bg-[#202123] text-white px-4 py-4 rounded-b-lg">
-					<div class=" text-gray-500 text-xs mb-1">STDOUT/STDERR</div>
+					<div class=" text-gray-600 text-xs mb-1">STDOUT/STDERR</div>
 					<div class="text-sm">Running...</div>
 				</div>
 			{:else if stdout || stderr || result}
 				<div class="bg-[#202123] text-white px-4 py-4 rounded-b-lg">
-					<div class=" text-gray-500 text-xs mb-1">STDOUT/STDERR</div>
+					<div class=" text-gray-600 text-xs mb-1">STDOUT/STDERR</div>
 					<div class="text-sm">{stdout || stderr || result}</div>
 				</div>
 			{/if}

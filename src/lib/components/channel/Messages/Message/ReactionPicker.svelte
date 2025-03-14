@@ -124,14 +124,14 @@
 		<!-- Virtualized Emoji List -->
 		<div class="w-full flex justify-start h-96 overflow-y-auto px-3 pb-3 text-sm">
 			{#if emojiRows.length === 0}
-				<div class="text-center text-xs text-gray-500 dark:text-gray-400">No results</div>
+				<div class="text-center text-xs text-gray-600 dark:text-gray-400">No results</div>
 			{:else}
 				<div class="w-full flex ml-2">
 					<VirtualList rowHeight={ROW_HEIGHT} items={emojiRows} height={384} let:item>
 						<div class="w-full">
 							{#if item.length === 1 && item[0].type === 'group'}
 								<!-- Render group header -->
-								<div class="text-xs font-medium mb-2 text-gray-500 dark:text-gray-400">
+								<div class="text-xs font-medium mb-2 text-gray-600 dark:text-gray-400">
 									{item[0].label}
 								</div>
 							{:else}

@@ -44,7 +44,7 @@
 				class="px-0.5 py-1 min-w-fit rounded-lg lg:flex-none flex text-right transition {selectedTab ===
 				'leaderboard'
 					? ''
-					: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+					: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 				on:click={() => {
 					selectedTab = 'leaderboard';
 				}}
@@ -70,7 +70,7 @@
 					class="px-0.5 py-1 min-w-fit rounded-lg lg:flex-none flex text-right transition {selectedTab ===
 					'feedbacks'
 						? ''
-						: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
+						: ' text-gray-600 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 					on:click={() => {
 						selectedTab = 'feedbacks';
 					}}

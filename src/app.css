@@ -213,7 +213,7 @@ input[type='number'] {
 .ProseMirror p.is-editor-empty:first-child::before {
 	content: attr(data-placeholder);
 	float: left;
-	color: #adb5bd;
+	color: #898989;
 	pointer-events: none;
 
 	@apply line-clamp-1 absolute;
@@ -302,4 +302,13 @@ input[type='number'] {
 
 .hljs-strong {
 	font-weight: 700;
+}
+
+.gsa-blue {
+	background-color: #005087;
+}
+
+.gsa-blue:focus,
+.gsa-blue:hover {
+	background-color: #4d84aa;
 }

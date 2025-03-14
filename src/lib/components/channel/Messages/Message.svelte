@@ -163,7 +163,7 @@
 
 					{#if message.created_at}
 						<div
-							class="mt-1.5 flex flex-shrink-0 items-center text-xs self-center invisible group-hover:visible text-gray-500 font-medium first-letter:capitalize"
+							class="mt-1.5 flex flex-shrink-0 items-center text-xs self-center invisible group-hover:visible text-gray-600 font-medium first-letter:capitalize"
 						>
 							<Tooltip
 								content={dayjs(message.created_at / 1000000).format('dddd, DD MMMM YYYY HH:mm')}
@@ -267,7 +267,7 @@
 						<Markdown
 							id={message.id}
 							content={message.content}
-						/>{#if message.created_at !== message.updated_at}<span class="text-gray-500 text-[10px]"
+						/>{#if message.created_at !== message.updated_at}<span class="text-gray-600 text-[10px]"
 								>(edited)</span
 							>{/if}
 					</div>
@@ -303,7 +303,7 @@
 											{/if}
 
 											{#if reaction.user_ids.length > 0}
-												<div class="text-xs font-medium text-gray-500 dark:text-gray-400">
+												<div class="text-xs font-medium text-gray-600 dark:text-gray-400">
 													{reaction.user_ids?.length}
 												</div>
 											{/if}
@@ -318,7 +318,7 @@
 								>
 									<Tooltip content={$i18n.t('Add Reaction')}>
 										<div
-											class="flex items-center gap-1.5 bg-gray-500/10 hover:outline hover:outline-gray-700/30 dark:hover:outline-gray-300/30 hover:outline-1 transition rounded-xl px-1 py-1 cursor-pointer text-gray-500 dark:text-gray-400"
+											class="flex items-center gap-1.5 bg-gray-500/10 hover:outline hover:outline-gray-700/30 dark:hover:outline-gray-300/30 hover:outline-1 transition rounded-xl px-1 py-1 cursor-pointer text-gray-600 dark:text-gray-400"
 										>
 											<FaceSmile />
 										</div>
@@ -331,7 +331,7 @@
 					{#if !thread && message.reply_count > 0}
 						<div class="flex items-center gap-1.5 -mt-0.5 mb-1.5">
 							<button
-								class="flex items-center text-xs py-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition"
+								class="flex items-center text-xs py-1 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition"
 								on:click={() => {
 									onThread(message.id);
 								}}

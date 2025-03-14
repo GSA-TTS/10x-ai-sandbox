@@ -336,7 +336,7 @@
 						<div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
 							{$i18n.t('Include `--api` flag when running stable-diffusion-webui')}
 							<a
-								class=" text-gray-300 font-medium"
+								class=" text-gray-600 font-medium"
 								href="https://github.com/AUTOMATIC1111/stable-diffusion-webui/discussions/3734"
 								target="_blank"
 							>
@@ -358,7 +358,7 @@
 						<div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
 							{$i18n.t('Include `--api-auth` flag when running stable-diffusion-webui')}
 							<a
-								class=" text-gray-300 font-medium"
+								class=" text-gray-600 font-medium"
 								href="https://github.com/AUTOMATIC1111/stable-diffusion-webui/discussions/13993"
 								target="_blank"
 							>

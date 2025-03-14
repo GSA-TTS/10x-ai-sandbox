@@ -653,7 +653,7 @@
 					<div class="flex w-full px-1">
 						<input
 							type="text"
-							class="text-left text-xs w-full text-gray-500 bg-transparent outline-none"
+							class="text-left text-xs w-full text-gray-600 bg-transparent outline-none"
 							bind:value={knowledge.description}
 							placeholder="Knowledge Description"
 							on:input={() => {
@@ -855,7 +855,7 @@
 								/>
 							</div>
 						{:else}
-							<div class="my-3 flex flex-col justify-center text-center text-gray-500 text-xs">
+							<div class="my-3 flex flex-col justify-center text-center text-gray-600 text-xs">
 								<div>
 									{$i18n.t('No content found')}
 								</div>

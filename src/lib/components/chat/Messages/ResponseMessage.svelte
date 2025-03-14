@@ -561,7 +561,7 @@
 											<div
 												class="{status?.done === false
 													? 'shimmer'
-													: ''} text-gray-500 dark:text-gray-500 text-base line-clamp-1 text-wrap"
+													: ''} text-gray-600 dark:text-gray-500 text-base line-clamp-1 text-wrap"
 											>
 												{$i18n.t(`Searching Knowledge for "{{searchQuery}}"`, {
 													searchQuery: status.query
@@ -573,7 +573,7 @@
 											<div
 												class="{status?.done === false
 													? 'shimmer'
-													: ''} text-gray-500 dark:text-gray-500 text-base line-clamp-1 text-wrap"
+													: ''} text-gray-600 dark:text-gray-500 text-base line-clamp-1 text-wrap"
 											>
 												<!-- $i18n.t(`Searching "{{searchQuery}}"`) -->
 												{#if status?.description.includes('{{searchQuery}}')}

@@ -100,7 +100,7 @@
 			deleteHandler(deletePrompt);
 		}}
 	>
-		<div class=" text-sm text-gray-500">
+		<div class=" text-sm text-gray-600">
 			{$i18n.t('This will delete')} <span class="  font-semibold">{deletePrompt.command}</span>.
 		</div>
 	</DeleteConfirmDialog>
@@ -110,7 +110,7 @@
 			<div class="flex md:self-center text-xl font-medium px-0.5 items-center">
 				{$i18n.t('Prompts')}
 				<div class="flex self-center w-[1px] h-6 mx-2.5 bg-gray-50 dark:bg-gray-850" />
-				<span class="text-lg font-medium text-gray-500 dark:text-gray-300"
+				<span class="text-lg font-medium text-gray-600 dark:text-gray-300"
 					>{filteredItems.length}</span
 				>
 			</div>
@@ -159,7 +159,7 @@
 								className="flex shrink-0"
 								placement="top-start"
 							>
-								<div class="shrink-0 text-gray-500">
+								<div class="shrink-0 text-gray-600">
 									{$i18n.t('By {{name}}', {
 										name: capitalizeFirstLetter(
 											prompt?.user?.name ?? prompt?.user?.email ?? $i18n.t('Deleted User')

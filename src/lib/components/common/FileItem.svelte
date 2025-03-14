@@ -83,7 +83,7 @@
 				{name}
 			</div>
 
-			<div class=" flex justify-between text-gray-500 text-xs line-clamp-1">
+			<div class=" flex justify-between text-gray-600 text-xs line-clamp-1">
 				{#if type === 'file'}
 					{$i18n.t('File')}
 				{:else if type === 'doc'}
@@ -108,7 +108,7 @@
 						</div>
 					{/if}
 					<div class="font-medium line-clamp-1 flex-1">{name}</div>
-					<div class="text-gray-500 text-xs capitalize shrink-0">{formatFileSize(size)}</div>
+					<div class="text-gray-600 text-xs capitalize shrink-0">{formatFileSize(size)}</div>
 				</div>
 			</div>
 		</Tooltip>

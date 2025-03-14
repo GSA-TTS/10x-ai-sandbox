@@ -199,10 +199,10 @@
 				</div>
 			</div>
 			{#if $i18n.language === 'en-US'}
-				<div class="mb-2 text-xs text-gray-400 dark:text-gray-500">
+				<div class="mb-2 text-xs text-gray-600 dark:text-gray-400">
 					Couldn't find your language?
 					<a
-						class=" text-gray-300 font-medium underline"
+						class=" text-gray-600 font-medium underline"
 						href="https://github.com/open-webui/open-webui/blob/main/docs/CONTRIBUTING.md#-translations-and-internationalization"
 						target="_blank"
 					>
@@ -247,7 +247,7 @@
 			<div class="flex justify-between items-center text-sm">
 				<div class="  font-medium">{$i18n.t('Advanced Parameters')}</div>
 				<button
-					class=" text-xs font-medium text-gray-500"
+					class=" text-xs font-medium text-gray-600"
 					type="button"
 					on:click={() => {
 						showAdvanced = !showAdvanced;

@@ -34,7 +34,7 @@
 					{#if data?.message?.error}
 						<div class="text-red-500 line-clamp-2 text-xs mt-0.5">{data.message.error.content}</div>
 					{:else}
-						<div class="text-gray-500 line-clamp-2 text-xs mt-0.5">{data.message.content}</div>
+						<div class="text-gray-600 line-clamp-2 text-xs mt-0.5">{data.message.content}</div>
 					{/if}
 				</div>
 			</div>
@@ -71,7 +71,7 @@
 							{data.message.error.content}
 						</div>
 					{:else}
-						<div class="text-gray-500 line-clamp-2 text-xs mt-0.5">{data.message.content}</div>
+						<div class="text-gray-600 line-clamp-2 text-xs mt-0.5">{data.message.content}</div>
 					{/if}
 				</div>
 			</div>

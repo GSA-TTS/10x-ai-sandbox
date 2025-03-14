@@ -191,7 +191,7 @@
 		<div class="flex md:self-center text-xl items-center font-medium px-0.5">
 			{$i18n.t('Functions')}
 			<div class="flex self-center w-[1px] h-6 mx-2.5 bg-gray-50 dark:bg-gray-850" />
-			<span class="text-base font-lg text-gray-500 dark:text-gray-300">{filteredItems.length}</span>
+			<span class="text-base font-lg text-gray-600 dark:text-gray-300">{filteredItems.length}</span>
 		</div>
 	</div>
 
@@ -250,7 +250,7 @@
 						</div>
 
 						<div class="flex gap-1.5 px-1">
-							<div class=" text-gray-500 text-xs font-medium flex-shrink-0">{func.id}</div>
+							<div class=" text-gray-600 text-xs font-medium flex-shrink-0">{func.id}</div>
 
 							<div class=" text-xs overflow-hidden text-ellipsis line-clamp-1">
 								{func.meta.description}
@@ -369,7 +369,7 @@
 	{/each}
 </div>
 
-<!-- <div class=" text-gray-500 text-xs mt-1 mb-2">
+<!-- <div class=" text-gray-600 text-xs mt-1 mb-2">
 	ⓘ {$i18n.t(
 		'Admins have access to all tools at all times; users need tools assigned per model in the workspace.'
 	)}
@@ -484,7 +484,7 @@
 		deleteHandler(selectedFunction);
 	}}
 >
-	<div class=" text-sm text-gray-500">
+	<div class=" text-sm text-gray-600">
 		{$i18n.t('This will delete')} <span class="  font-semibold">{selectedFunction.name}</span>.
 	</div>
 </DeleteConfirmDialog>
@@ -523,7 +523,7 @@
 		reader.readAsText(importFiles[0]);
 	}}
 >
-	<div class="text-sm text-gray-500">
+	<div class="text-sm text-gray-600">
 		<div class=" bg-yellow-500/20 text-yellow-700 dark:text-yellow-200 rounded-lg px-4 py-3">
 			<div>Please carefully review the following warnings:</div>
 

@@ -648,7 +648,7 @@
 								<div class="mt-2 mb-1 text-xs text-gray-400 dark:text-gray-500">
 									{$i18n.t('To access the available model names for downloading,')}
 									<a
-										class=" text-gray-500 dark:text-gray-300 font-medium underline"
+										class=" text-gray-600 dark:text-gray-300 font-medium underline"
 										href="https://ollama.com/library"
 										target="_blank">{$i18n.t('click here.')}</a
 									>
@@ -831,7 +831,7 @@
 								<div class="flex justify-between items-center text-xs">
 									<div class=" text-sm font-medium">{$i18n.t('Experimental')}</div>
 									<button
-										class=" text-xs font-medium text-gray-500"
+										class=" text-xs font-medium text-gray-600"
 										type="button"
 										on:click={() => {
 											showExperimentalOllama = !showExperimentalOllama;
@@ -989,7 +989,7 @@
 									<div class=" mt-1 text-xs text-gray-400 dark:text-gray-500">
 										{$i18n.t('To access the GGUF models available for downloading,')}
 										<a
-											class=" text-gray-500 dark:text-gray-300 font-medium underline"
+											class=" text-gray-600 dark:text-gray-300 font-medium underline"
 											href="https://huggingface.co/models?search=gguf"
 											target="_blank">{$i18n.t('click here.')}</a
 										>

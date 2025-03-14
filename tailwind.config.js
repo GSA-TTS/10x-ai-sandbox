@@ -6,6 +6,7 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
+			/* comment out customized colors 
 			colors: {
 				gray: {
 					50: '#f9f9f9',
@@ -22,6 +23,7 @@ export default {
 					950: 'var(--color-gray-950, #0d0d0d)'
 				}
 			},
+			*/
 			typography: {
 				DEFAULT: {
 					css: {

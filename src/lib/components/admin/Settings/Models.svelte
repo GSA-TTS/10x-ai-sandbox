@@ -146,7 +146,7 @@
 				<div class="flex items-center md:self-center text-xl font-medium px-0.5">
 					{$i18n.t('Models')}
 					<div class="flex self-center w-[1px] h-6 mx-2.5 bg-gray-50 dark:bg-gray-850" />
-					<span class="text-lg font-medium text-gray-500 dark:text-gray-300"
+					<span class="text-lg font-medium text-gray-600 dark:text-gray-300"
 						>{filteredModels.length}</span
 					>
 				</div>
@@ -208,7 +208,7 @@
 								</div>
 							</div>
 
-							<div class=" flex-1 self-center {(model?.is_active ?? true) ? '' : 'text-gray-500'}">
+							<div class=" flex-1 self-center {(model?.is_active ?? true) ? '' : 'text-gray-600'}">
 								<Tooltip
 									content={marked.parse(
 										!!model?.meta?.description
@@ -222,7 +222,7 @@
 								>
 									<div class="  font-semibold line-clamp-1">{model.name}</div>
 								</Tooltip>
-								<div class=" text-xs overflow-hidden text-ellipsis line-clamp-1 text-gray-500">
+								<div class=" text-xs overflow-hidden text-ellipsis line-clamp-1 text-gray-600">
 									<span class=" line-clamp-1">
 										{!!model?.meta?.description
 											? model?.meta?.description
@@ -274,7 +274,7 @@
 				{/each}
 			{:else}
 				<div class="flex flex-col items-center justify-center w-full h-20">
-					<div class="text-gray-500 dark:text-gray-400 text-xs">
+					<div class="text-gray-600 dark:text-gray-400 text-xs">
 						{$i18n.t('No models found')}
 					</div>
 				</div>

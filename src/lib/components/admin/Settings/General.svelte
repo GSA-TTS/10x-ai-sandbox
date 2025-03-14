@@ -145,7 +145,7 @@
 								<a
 									href="https://docs.openwebui.com/getting-started/advanced-topics/api-endpoints"
 									target="_blank"
-									class=" text-gray-300 font-medium underline"
+									class=" text-gray-600 font-medium underline"
 								>
 									{$i18n.t('To learn more about available endpoints, visit our documentation.')}
 								</a>
@@ -217,7 +217,7 @@
 
 					<div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
 						{$i18n.t('Valid time units:')}
-						<span class=" text-gray-300 font-medium"
+						<span class=" text-gray-600 font-medium"
 							>{$i18n.t("'s', 'm', 'h', 'd', 'w' or '-1' for no expiration.")}</span
 						>
 					</div>
@@ -391,7 +391,7 @@
 						</div>
 						<div class="text-xs text-gray-400 dark:text-gray-500">
 							<a
-								class=" text-gray-300 font-medium underline"
+								class=" text-gray-600 font-medium underline"
 								href="https://ldap.com/ldap-filters/"
 								target="_blank"
 							>

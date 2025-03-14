@@ -129,7 +129,7 @@
 		{$i18n.t('Users')}
 		<div class="flex self-center w-[1px] h-6 mx-2.5 bg-gray-50 dark:bg-gray-850" />
 
-		<span class="text-lg font-medium text-gray-500 dark:text-gray-300">{users.length}</span>
+		<span class="text-lg font-medium text-gray-600 dark:text-gray-300">{users.length}</span>
 	</div>
 
 	<div class="flex gap-1">
@@ -175,7 +175,7 @@
 
 <div class="scrollbar-hidden relative whitespace-nowrap overflow-x-auto max-w-full rounded pt-0.5">
 	<table
-		class="w-full text-sm text-left text-gray-500 dark:text-gray-400 table-auto max-w-full rounded"
+		class="w-full text-sm text-left text-gray-600 dark:text-gray-400 table-auto max-w-full rounded"
 	>
 		<thead
 			class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-850 dark:text-gray-400 -translate-y-0.5"
@@ -448,7 +448,7 @@
 	</table>
 </div>
 
-<div class=" text-gray-500 text-xs mt-1.5 text-right">
+<div class=" text-gray-600 text-xs mt-1.5 text-right">
 	ⓘ {$i18n.t("Click on the user role button to change a user's role.")}
 </div>
 

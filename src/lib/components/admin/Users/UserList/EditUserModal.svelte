@@ -70,7 +70,7 @@
 						<div>
 							<div class=" self-center capitalize font-semibold">{selectedUser.name}</div>
 
-							<div class="text-xs text-gray-500">
+							<div class="text-xs text-gray-600">
 								{$i18n.t('Created at')}
 								{dayjs(selectedUser.created_at * 1000).format($i18n.t('MMMM DD, YYYY'))}
 							</div>
@@ -81,7 +81,7 @@
 
 					<div class=" flex flex-col space-y-1.5">
 						<div class="flex flex-col w-full">
-							<div class=" mb-1 text-xs text-gray-500">{$i18n.t('Email')}</div>
+							<div class=" mb-1 text-xs text-gray-600">{$i18n.t('Email')}</div>
 
 							<div class="flex-1">
 								<input
@@ -96,7 +96,7 @@
 						</div>
 
 						<div class="flex flex-col w-full">
-							<div class=" mb-1 text-xs text-gray-500">{$i18n.t('Name')}</div>
+							<div class=" mb-1 text-xs text-gray-600">{$i18n.t('Name')}</div>
 
 							<div class="flex-1">
 								<input
@@ -110,7 +110,7 @@
 						</div>
 
 						<div class="flex flex-col w-full">
-							<div class=" mb-1 text-xs text-gray-500">{$i18n.t('New Password')}</div>
+							<div class=" mb-1 text-xs text-gray-600">{$i18n.t('New Password')}</div>
 
 							<div class="flex-1">
 								<input

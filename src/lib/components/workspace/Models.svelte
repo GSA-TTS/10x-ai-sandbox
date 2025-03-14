@@ -201,7 +201,7 @@
 			<div class="flex items-center md:self-center text-xl font-medium px-0.5">
 				{$i18n.t('Models')}
 				<div class="flex self-center w-[1px] h-6 mx-2.5 bg-gray-50 dark:bg-gray-850" />
-				<span class="text-lg font-medium text-gray-500 dark:text-gray-300"
+				<span class="text-lg font-medium text-gray-600 dark:text-gray-300"
 					>{filteredModels.length}</span
 				>
 			</div>
@@ -255,7 +255,7 @@
 						class=" flex flex-1 cursor-pointer w-full"
 						href={`/?models=${encodeURIComponent(model.id)}`}
 					>
-						<div class=" flex-1 self-center {model.is_active ? '' : 'text-gray-500'}">
+						<div class=" flex-1 self-center {model.is_active ? '' : 'text-gray-600'}">
 							<Tooltip
 								content={marked.parse(model?.meta?.description ?? model.id)}
 								className=" w-fit"
@@ -284,7 +284,7 @@
 							className="flex shrink-0"
 							placement="top-start"
 						>
-							<div class="shrink-0 text-gray-500">
+							<div class="shrink-0 text-gray-600">
 								{$i18n.t('By {{name}}', {
 									name: capitalizeFirstLetter(
 										model?.user?.name ?? model?.user?.email ?? $i18n.t('Deleted User')

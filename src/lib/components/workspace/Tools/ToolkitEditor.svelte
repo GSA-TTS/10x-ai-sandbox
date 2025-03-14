@@ -242,7 +242,7 @@ class Tools:
 
 					<div class=" flex gap-2 px-1 items-center">
 						{#if edit}
-							<div class="text-sm text-gray-500 flex-shrink-0">
+							<div class="text-sm text-gray-600 flex-shrink-0">
 								{id}
 							</div>
 						{:else}
@@ -293,7 +293,7 @@ class Tools:
 
 				<div class="pb-3 flex justify-between">
 					<div class="flex-1 pr-3">
-						<div class="text-xs text-gray-500 line-clamp-2">
+						<div class="text-xs text-gray-600 line-clamp-2">
 							<span class=" font-semibold dark:text-gray-200">{$i18n.t('Warning:')}</span>
 							{$i18n.t('Tools are a function calling system with arbitrary code execution')} <br />—
 							<span class=" font-medium dark:text-gray-400"
@@ -320,7 +320,7 @@ class Tools:
 		submitHandler();
 	}}
 >
-	<div class="text-sm text-gray-500">
+	<div class="text-sm text-gray-600">
 		<div class=" bg-yellow-500/20 text-yellow-700 dark:text-yellow-200 rounded-lg px-4 py-3">
 			<div>{$i18n.t('Please carefully review the following warnings:')}</div>
 
