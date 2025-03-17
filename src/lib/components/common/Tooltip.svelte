@@ -46,10 +46,7 @@
 	});
 </script>
 
-<div
-	bind:this={tooltipElement}
-	aria-label={DOMPurify.sanitize(content).length ? DOMPurify.sanitize(content) : null}
-	class={className}
->
+<!-- removing aria-label from tooltips because the way OpenwebUI uses them isn't how tooltips should be used -->
+<div bind:this={tooltipElement} class={className}>
 	<slot />
 </div>
