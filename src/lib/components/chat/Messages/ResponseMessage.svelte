@@ -791,6 +791,7 @@
 									{#if $user.role === 'user' ? ($user?.permissions?.chat?.edit ?? true) : true}
 										<Tooltip content={$i18n.t('Edit')} placement="bottom">
 											<button
+												aria-label={$i18n.t('Edit')}
 												class="{isLastMessage
 													? 'visible'
 													: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition"
@@ -820,6 +821,7 @@
 
 								<Tooltip content={$i18n.t('Copy')} placement="bottom">
 									<button
+										aria-label={$i18n.t('Copy')}
 										class="{isLastMessage
 											? 'visible'
 											: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition copy-response-button"
@@ -847,6 +849,7 @@
 
 								<Tooltip content={$i18n.t('Read Aloud')} placement="bottom">
 									<button
+										aria-label={$i18n.t('Read Aloud')}
 										id="speak-button-{message.id}"
 										class="{isLastMessage
 											? 'visible'
@@ -929,6 +932,7 @@
 								{#if $config?.features.enable_image_generation && !readOnly}
 									<Tooltip content={$i18n.t('Generate Image')} placement="bottom">
 										<button
+											aria-label={$i18n.t('Generate Image')}
 											class="{isLastMessage
 												? 'visible'
 												: 'invisible group-hover:visible'}  p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition"
@@ -1038,6 +1042,7 @@
 									{#if $config?.features.enable_message_rating ?? true}
 										<Tooltip content={$i18n.t('Good Response')} placement="bottom">
 											<button
+												aria-label={$i18n.t('Good Response')}
 												class="{isLastMessage
 													? 'visible'
 													: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg {(
@@ -1075,6 +1080,7 @@
 
 										<Tooltip content={$i18n.t('Bad Response')} placement="bottom">
 											<button
+												aria-label={$i18n.t('Bad Response')}
 												class="{isLastMessage
 													? 'visible'
 													: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg {(
@@ -1114,6 +1120,7 @@
 									{#if isLastMessage}
 										<Tooltip content={$i18n.t('Continue Response')} placement="bottom">
 											<button
+												aria-label={$i18n.t('Continue Response')}
 												type="button"
 												id="continue-response-button"
 												class="{isLastMessage
@@ -1149,6 +1156,7 @@
 
 									<Tooltip content={$i18n.t('Regenerate')} placement="bottom">
 										<button
+											aria-label={$i18n.t('Regenerate')}
 											type="button"
 											class="{isLastMessage
 												? 'visible'
