@@ -39,7 +39,9 @@
 				<div class="mr-1 max-w-full">
 					<Selector
 						id={`${selectedModelIdx}`}
-						placeholder={selectedModel + ' is selected. ' + $i18n.t('Select a model')}
+						placeholder={($models.find((m) => m.id === selectedModel)?.name || 'no model') +
+							' is selected. ' +
+							$i18n.t('Select a model')}
 						items={$models.map((model) => ({
 							value: model.id,
 							label: model.name,
