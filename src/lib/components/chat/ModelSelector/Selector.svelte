@@ -299,7 +299,8 @@
 						on:click={() => {
 							value = item.value;
 							selectedModelIdx = index;
-
+							// SR announcement
+							document.getElementById('svelte-announcer').textContent = 'model selection changed';
 							show = false;
 						}}
 					>
