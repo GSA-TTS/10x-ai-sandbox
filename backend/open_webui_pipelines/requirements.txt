@@ -1,4 +1,4 @@
-aiohttp==3.9.5
+aiohttp==3.11.0b0
 boto3==1.34.110
 botocore==1.34.144
 fastapi==0.114.0
