@@ -218,6 +218,7 @@ type Config = {
 		enable_message_input_logo: boolean;
 		enable_prompt_suggestions: boolean;
 		enable_user_settings_menu: boolean;
+		enable_model_selector_search: boolean;
 	};
 	oauth: {
 		providers: {

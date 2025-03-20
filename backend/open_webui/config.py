@@ -976,6 +976,10 @@ ENABLE_USER_SETTINGS_MENU = (
     os.environ.get("ENABLE_USER_SETTINGS_MENU", "True").lower() == "true"
 )
 
+ENABLE_MODEL_SELECTOR_SEARCH = (
+    os.environ.get("ENABLE_MODEL_SELECTOR_SEARCH", "False").lower() == "true"
+)
+
 
 def validate_cors_origins(origins):
     for origin in origins:
