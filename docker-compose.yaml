@@ -1,12 +1,18 @@
-version: "3.8"
-
 services:
   app:
-    image: ow-app-image
+    build:
+      context: .
+      dockerfile: Dockerfile
     env_file:
       - .env
+    environment:
+      - DATABASE_URL="postgres://postgres:postgres@db:5432/postgres"
+      - WEBSOCKET_MANAGER="redis"
+      - WEBSOCKET_REDIS_URL="redis://redis:6379/0"
+    volumes:
+      - app-data:/app
     ports:
-      - "8081"
+      - "8080:8080"
     deploy:
       replicas: 5
       resources:
@@ -16,6 +22,9 @@ services:
         reservations:
           cpus: "0.2"
           memory: "600M"
+    depends_on:
+      - db
+      - redis
     networks:
       backend:
         aliases:
@@ -62,9 +71,31 @@ services:
         aliases:
           - db
 
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: "256M"
+        reservations:
+          cpus: "0.1"
+          memory: "128M"
+    networks:
+      backend:
+        aliases:
+          - redis
+
 networks:
   backend:
-    driver: overlay
+    driver: overlay # bridge for non-swarm mode
 
 volumes:
   db-data:
+  redis-data:
+  app-data:
