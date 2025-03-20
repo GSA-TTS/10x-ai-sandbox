@@ -218,6 +218,8 @@ type Config = {
 		enable_message_input_logo: boolean;
 		enable_prompt_suggestions: boolean;
 		enable_user_settings_menu: boolean;
+		enable_response_prompt_edit: boolean;
+		enable_response_continue: boolean;
 	};
 	oauth: {
 		providers: {
