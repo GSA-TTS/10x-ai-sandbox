@@ -14,6 +14,7 @@ from urllib.parse import urlencode, parse_qs, urlparse
 from pydantic import BaseModel
 from sqlalchemy import text
 import redis
+import jwt
 
 from typing import Optional
 from aiocache import cached
@@ -197,6 +198,7 @@ from open_webui.config import (
     ADMIN_EMAIL,
     SHOW_ADMIN_DETAILS,
     JWT_EXPIRES_IN,
+    JWT_REFRESH_EXPIRES_IN,
     ENABLE_ONBOARDING_PAGE,
     ENABLE_SIGNUP,
     ENABLE_LOGIN_FORM,
@@ -318,6 +320,7 @@ from open_webui.utils.auth import (
     decode_token,
     get_admin_user,
     get_verified_user,
+    refresh_jwt,
 )
 from open_webui.utils.oauth import oauth_manager
 from open_webui.utils.security_headers import SecurityHeadersMiddleware
@@ -423,6 +426,8 @@ app.state.config.ENABLE_API_KEY_ENDPOINT_RESTRICTIONS = (
 app.state.config.API_KEY_ALLOWED_ENDPOINTS = API_KEY_ALLOWED_ENDPOINTS
 
 app.state.config.JWT_EXPIRES_IN = JWT_EXPIRES_IN
+app.state.config.JWT_REFRESH_EXPIRES_IN = JWT_REFRESH_EXPIRES_IN
+
 
 app.state.config.SHOW_ADMIN_DETAILS = SHOW_ADMIN_DETAILS
 app.state.config.ADMIN_EMAIL = ADMIN_EMAIL
@@ -963,12 +968,14 @@ async def list_tasks_endpoint(user=Depends(get_verified_user)):
 
 
 @app.get("/api/config")
-async def get_app_config(request: Request):
+async def get_app_config(request: Request, response: Response):
     user = None
     if "token" in request.cookies:
         token = request.cookies.get("token")
         try:
             data = decode_token(token)
+        except jwt.ExpiredSignatureError:
+            data = refresh_jwt(request, response)
         except Exception as e:
             log.debug(e)
             raise HTTPException(
