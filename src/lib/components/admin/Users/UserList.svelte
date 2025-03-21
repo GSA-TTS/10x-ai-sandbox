@@ -10,7 +10,13 @@
 
 	import { toast } from 'svelte-sonner';
 
-	import { updateUserRole, getUsers, deleteUserById, searchUsers } from '$lib/apis/users';
+	import {
+		updateUserRole,
+		getUsers,
+		deleteUserById,
+		searchUsers,
+		getTotalUserCount
+	} from '$lib/apis/users';
 
 	import Pagination from '$lib/components/common/Pagination.svelte';
 	import ChatBubbles from '$lib/components/icons/ChatBubbles.svelte';
@@ -42,6 +48,11 @@
 
 	let showUserChatsModal = false;
 	let showEditUserModal = false;
+	let totalUserCount = 0;
+
+	onMount(async () => {
+		totalUserCount = await getTotalUserCount(localStorage.token);
+	});
 
 	const updateRoleHandler = async (id, role) => {
 		const res = await updateUserRole(localStorage.token, id, role).catch((error) => {
@@ -126,10 +137,12 @@
 
 <div class="mt-0.5 mb-2 gap-1 flex flex-col md:flex-row justify-between">
 	<div class="flex md:self-center text-lg font-medium px-0.5">
-		{$i18n.t('Users')}
+		{$i18n.t('Latest users')}
 		<div class="flex self-center w-[1px] h-6 mx-2.5 bg-gray-50 dark:bg-gray-850" />
 
-		<span class="text-lg font-medium text-gray-600 dark:text-gray-300">{users.length}</span>
+		<span class="text-lg font-medium text-gray-600 dark:text-gray-300"
+			>(out of {totalUserCount} total)</span
+		>
 	</div>
 
 	<div class="flex gap-1">

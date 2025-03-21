@@ -316,5 +316,9 @@ class UsersTable:
                 users = users.limit(limit)
             return [UserModel.model_validate(user) for user in users]
 
+    def get_total_users(self) -> int:
+        with get_db() as db:
+            return db.query(User).count()
+
 
 Users = UsersTable()

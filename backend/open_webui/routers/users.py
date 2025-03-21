@@ -55,6 +55,18 @@ async def search_users(
 
 
 ############################
+# Get total users
+############################
+
+
+@router.get("/count", response_model=int)
+async def get_total_users(
+    user=Depends(get_admin_user),
+):
+    return Users.get_total_users()
+
+
+############################
 # User Groups
 ############################
 
