@@ -1047,6 +1047,7 @@
 									<Tooltip content={$i18n.t('Read Aloud')} placement="bottom">
 										<button
 											id="speak-button-{message.id}"
+											aria-label={$i18n.t('Read Aloud')}
 											class="{isLastMessage
 												? 'visible'
 												: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition"
