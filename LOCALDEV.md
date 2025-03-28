@@ -123,6 +123,35 @@
    auto pr
    ```
 
+9. **Local e2e testing**:
+
+- The cypress tests in the open-webui repo are out of date and need some love. Here's how to get started. Make sure you've run `npm install` locally and then install cypress locally:
+
+`npx cypress install`
+
+- You can remove the local backend db and run the backend and Ollama however you want, as long as they're available at `:8080` and `:11434` respectively.
+
+<!-- Commenting out how to run in docker as this is currently broken:
+Here's how to run them via docker:
+
+```
+OPEN_WEBUI_PORT=8080 rm ./backend/data/webui.db || true && \
+            docker compose \
+            --file docker-compose.yaml \
+            --file docker-compose.api.yaml \
+            up --detach --build
+``` -->
+
+- If you have Ollama installed and running locally with at least one model, you can just run:
+
+`rm ./backend/data/webui.db || true && ./start.sh`
+
+- Once the app is available at 8080 and Ollama is available at 11434, you can run cypress with the helper script:
+
+`npm run cy:open`
+
+- Currently, signups must be enabled for tests to pass. To enable signups for testing, you must (1) set `ENABLE_SIGNUP` and `ENABLE_LOGIN_FORM` to `true`, and (2) turn on "Enable New Sign Ups" in the UI (Admin Panel > Settings > General). This is a workaround.
+
 ## Deploying to FCS
 
 Development and production deployments are running on FCS. FCS maintains its own Github private repo that mirrors the public repo. To deploy new code FCS:
