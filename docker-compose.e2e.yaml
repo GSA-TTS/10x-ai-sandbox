@@ -1,15 +1,63 @@
 services:
   app:
-    image: gsai-container
-    env_file:
-      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
+      - PUBLIC_DATADOG_APP_ID=1570fdb1-4af6-40bd-8afc-33962f7e4f75
+      - PUBLIC_DATADOG_CLIENT_TOKEN=pub4943adb8fbab823c0b0d2c75a8100771
+      - PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN=pub010cb3969c15a90f52d688046cb62a8e
+      - PUBLIC_DATADOG_SERVICE='gsai_rum'
+      - BYPASS_MODEL_ACCESS_CONTROL=True
+      - ENABLE_SIGNUP=true
+      - ENABLE_LOGIN_FORM=true
+      - WEBUI_AUTH=true
       - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - VECTOR_DB=pgvector
       - WEBSOCKET_MANAGER=redis
       - WEBSOCKET_REDIS_URL=redis://:@redis:6379/0
       - RATE_LIMIT_REDIS_URL=redis://redis:6379/0
       - REDIS_URL=redis://redis:6379/0
       - PORT=8081
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_API_BASE_URL=http://localhost:9099
+      - TENANT=GSAI
+      - ENVIRONMENT=development
+      - WEBUI_NAME="GSA Chat"
+      - BEDROCK_ENDPOINT_URL=${BEDROCK_ENDPOINT_URL}
+      - BEDROCK_ASSUME_ROLE=${BEDROCK_ASSUME_ROLE}
+      - BEDROCK_LLAMA3211B_ARN=${BEDROCK_LLAMA3211B_ARN}
+      - BEDROCK_CLAUDE_SONNET_35_ARN=${BEDROCK_CLAUDE_SONNET_35_ARN}
+      - BEDROCK_CLAUDE_SONNET_37_ARN=${BEDROCK_CLAUDE_SONNET_37_ARN}
+      - BEDROCK_CLAUDE_HAIKU_35_ARN=${BEDROCK_CLAUDE_HAIKU_35_ARN}
+      - COHERE_EMBED_MODEL_ID=cohere.embed-english-v3
+      - SCARF_NO_ANALYTICS=true
+      - DO_NOT_TRACK=true
+      - ANONYMIZED_TELEMETRY=false
+      - ENABLE_API_KEY=false
+      - DEFAULT_SHOW_VERSION_UPDATE=false
+      - ENABLE_ACTIVE_USERS_COUNT=false
+      - ENABLE_ADMIN_FEEDBACKS=false
+      - ENABLE_RECORD_VOICE_AND_CALL=false
+      - ENABLE_MORE_INPUTS=true
+      - ENABLE_CHAT_CONTROLS=true
+      - ALLOW_SIMULTANEOUS_MODELS=false
+      - ENABLE_DISCLAIMER=true
+      - ENABLE_SIDEBAR_SEARCH=false
+      - ENABLE_SIDEBAR_CREATE_FOLDER=false
+      - ENABLE_FLOATING_BUTTONS=false
+      - ENABLE_DELETE_BUTTON=false
+      - USER_PERMISSIONS_CHAT_DELETE=false
+      - DEFAULT_USER_ROLE=user
+      - ENABLE_SET_AS_DEFAULT_MODEL=false
+      - ENABLE_SIDEBAR_USER_PROFILE=false
+      - ENABLE_MESSAGE_INPUT_LOGO=false
+      - ENABLE_MODEL_SELECTOR_SEARCH=false
+      - ENABLE_PROMPT_SUGGESTIONS=false
+      - DEFAULT_SHOW_CHANGELOG=false
+      - ENABLE_USER_SETTINGS_MENU=false
+      - ENABLE_RESPONSE_PROMPT_EDIT=false
+      - ENABLE_RESPONSE_CONTINUE=false
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
       interval: 30s
