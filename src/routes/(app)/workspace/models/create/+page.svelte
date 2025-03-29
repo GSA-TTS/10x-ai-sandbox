@@ -26,7 +26,7 @@
 		}
 
 		if (modelInfo) {
-			const res = await createNewModel(localStorage.token, {
+			const res = await createNewModel({
 				...modelInfo,
 				meta: {
 					...modelInfo.meta,
@@ -42,7 +42,7 @@
 			});
 
 			if (res) {
-				await models.set(await getModels(localStorage.token));
+				await models.set(await getModels());
 				toast.success($i18n.t('Model created successfully!'));
 				await goto('/workspace/models');
 			}

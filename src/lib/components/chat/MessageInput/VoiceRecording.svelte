@@ -136,7 +136,7 @@
 		await tick();
 		const file = blobToFile(audioBlob, 'recording.wav');
 
-		const res = await transcribeAudio(localStorage.token, file).catch((error) => {
+		const res = await transcribeAudio(file).catch((error) => {
 			toast.error(error);
 			return null;
 		});

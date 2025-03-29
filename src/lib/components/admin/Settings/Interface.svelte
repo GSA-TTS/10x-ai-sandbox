@@ -38,23 +38,23 @@
 	let banners: Banner[] = [];
 
 	const updateInterfaceHandler = async () => {
-		taskConfig = await updateTaskConfig(localStorage.token, taskConfig);
+		taskConfig = await updateTaskConfig(taskConfig);
 
-		promptSuggestions = await setDefaultPromptSuggestions(localStorage.token, promptSuggestions);
+		promptSuggestions = await setDefaultPromptSuggestions(promptSuggestions);
 		await updateBanners();
 
 		await config.set(await getBackendConfig());
 	};
 
 	onMount(async () => {
-		taskConfig = await getTaskConfig(localStorage.token);
+		taskConfig = await getTaskConfig();
 
 		promptSuggestions = taskConfig.DEFAULT_PROMPT_SUGGESTIONS;
-		banners = await getBanners(localStorage.token);
+		banners = await getBanners();
 	});
 
 	const updateBanners = async () => {
-		_banners.set(await setBanners(localStorage.token, banners));
+		_banners.set(await setBanners(banners));
 	};
 </script>
 

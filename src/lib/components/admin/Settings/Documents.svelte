@@ -257,7 +257,7 @@
 <ResetUploadDirConfirmDialog
 	bind:show={showResetUploadDirConfirm}
 	on:confirm={async () => {
-		const res = await deleteAllFiles(localStorage.token).catch((error) => {
+		const res = await deleteAllFiles().catch((error) => {
 			toast.error(error);
 			return null;
 		});

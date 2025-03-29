@@ -51,19 +51,16 @@
 				}
 			}
 
-			const res = await updatePipelineValves(
-				localStorage.token,
-				pipeline.id,
-				valves,
-				selectedPipelinesUrlIdx
-			).catch((error) => {
-				toast.error(error);
-			});
+			const res = await updatePipelineValves(pipeline.id, valves, selectedPipelinesUrlIdx).catch(
+				(error) => {
+					toast.error(error);
+				}
+			);
 
 			if (res) {
 				toast.success($i18n.t('Valves updated successfully'));
 				setPipelines();
-				models.set(await getModels(localStorage.token));
+				models.set(await getModels());
 				saveHandler();
 			}
 		} else {
@@ -75,16 +72,8 @@
 		valves = null;
 		valves_spec = null;
 
-		valves_spec = await getPipelineValvesSpec(
-			localStorage.token,
-			pipelines[idx].id,
-			selectedPipelinesUrlIdx
-		);
-		valves = await getPipelineValves(
-			localStorage.token,
-			pipelines[idx].id,
-			selectedPipelinesUrlIdx
-		);
+		valves_spec = await getPipelineValvesSpec(pipelines[idx].id, selectedPipelinesUrlIdx);
+		valves = await getPipelineValves(pipelines[idx].id, selectedPipelinesUrlIdx);
 
 		for (const property in valves_spec.properties) {
 			if (valves_spec.properties[property]?.type === 'array') {
@@ -100,7 +89,7 @@
 
 		if (PIPELINES_LIST.length > 0) {
 			console.log(selectedPipelinesUrlIdx);
-			pipelines = await getPipelines(localStorage.token, selectedPipelinesUrlIdx);
+			pipelines = await getPipelines(selectedPipelinesUrlIdx);
 
 			if (pipelines.length > 0) {
 				selectedPipelineIdx = 0;
@@ -113,19 +102,17 @@
 
 	const addPipelineHandler = async () => {
 		downloading = true;
-		const res = await downloadPipeline(
-			localStorage.token,
-			pipelineDownloadUrl,
-			selectedPipelinesUrlIdx
-		).catch((error) => {
-			toast.error(error);
-			return null;
-		});
+		const res = await downloadPipeline(pipelineDownloadUrl, selectedPipelinesUrlIdx).catch(
+			(error) => {
+				toast.error(error);
+				return null;
+			}
+		);
 
 		if (res) {
 			toast.success($i18n.t('Pipeline downloaded successfully'));
 			setPipelines();
-			models.set(await getModels(localStorage.token));
+			models.set(await getModels());
 		}
 
 		downloading = false;
@@ -139,18 +126,16 @@
 
 			console.log(file);
 
-			const res = await uploadPipeline(localStorage.token, file, selectedPipelinesUrlIdx).catch(
-				(error) => {
-					console.log(error);
-					toast.error('Something went wrong :/');
-					return null;
-				}
-			);
+			const res = await uploadPipeline(file, selectedPipelinesUrlIdx).catch((error) => {
+				console.log(error);
+				toast.error('Something went wrong :/');
+				return null;
+			});
 
 			if (res) {
 				toast.success($i18n.t('Pipeline downloaded successfully'));
 				setPipelines();
-				models.set(await getModels(localStorage.token));
+				models.set(await getModels());
 			}
 		} else {
 			toast.error($i18n.t('No file selected'));
@@ -168,7 +153,6 @@
 
 	const deletePipelineHandler = async () => {
 		const res = await deletePipeline(
-			localStorage.token,
 			pipelines[selectedPipelineIdx].id,
 			selectedPipelinesUrlIdx
 		).catch((error) => {
@@ -179,12 +163,12 @@
 		if (res) {
 			toast.success($i18n.t('Pipeline deleted successfully'));
 			setPipelines();
-			models.set(await getModels(localStorage.token));
+			models.set(await getModels());
 		}
 	};
 
 	onMount(async () => {
-		PIPELINES_LIST = await getPipelinesList(localStorage.token);
+		PIPELINES_LIST = await getPipelinesList();
 		console.log(PIPELINES_LIST);
 
 		if (PIPELINES_LIST.length > 0) {

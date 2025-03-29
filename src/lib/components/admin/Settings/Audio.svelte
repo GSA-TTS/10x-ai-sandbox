@@ -86,7 +86,7 @@
 	};
 
 	const updateConfigHandler = async () => {
-		const res = await updateAudioConfig(localStorage.token, {
+		const res = await updateAudioConfig({
 			tts: {
 				OPENAI_API_BASE_URL: TTS_OPENAI_API_BASE_URL,
 				OPENAI_API_KEY: TTS_OPENAI_API_KEY,
@@ -120,7 +120,7 @@
 	};
 
 	onMount(async () => {
-		const res = await getAudioConfig(localStorage.token);
+		const res = await getAudioConfig();
 
 		if (res) {
 			console.log(res);

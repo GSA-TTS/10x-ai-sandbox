@@ -159,7 +159,9 @@
 			<DropdownMenu.Item
 				class="flex rounded-md py-2 px-3 w-full hover:bg-gray-50 dark:hover:bg-gray-800 transition"
 				on:click={async () => {
-					await userSignOut();
+					// Signing out of Oauth providers can fail
+					// catch this error, but continue with signing out.
+					await userSignOut().catch((e) => console.log('Error signing out: ', e));
 					localStorage.removeItem('token');
 					location.href = '/auth';
 					show = false;

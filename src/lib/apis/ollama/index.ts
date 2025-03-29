@@ -1,70 +1,18 @@
 import { OLLAMA_API_BASE_URL } from '$lib/constants';
+import { apiFetch } from '$lib/utils/apiClient';
 
-export const verifyOllamaConnection = async (
-	token: string = '',
-	url: string = '',
-	key: string = ''
-) => {
-	let error = null;
-
-	const res = await fetch(`${OLLAMA_API_BASE_URL}/verify`, {
+export const verifyOllamaConnection = async (url: string = '', key: string = '') => {
+	return await apiFetch(`${OLLAMA_API_BASE_URL}/verify`, {
 		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			Authorization: `Bearer ${token}`,
-			'Content-Type': 'application/json'
-		},
 		body: JSON.stringify({
 			url,
 			key
 		})
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.catch((err) => {
-			error = `Ollama: ${err?.error?.message ?? 'Network Problem'}`;
-			return [];
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+	});
 };
 
-export const getOllamaConfig = async (token: string = '') => {
-	let error = null;
-
-	const res = await fetch(`${OLLAMA_API_BASE_URL}/config`, {
-		method: 'GET',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			...(token && { authorization: `Bearer ${token}` })
-		}
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.catch((err) => {
-			console.log(err);
-			if ('detail' in err) {
-				error = err.detail;
-			} else {
-				error = 'Server connection failed';
-			}
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+export const getOllamaConfig = async () => {
+	return await apiFetch(`${OLLAMA_API_BASE_URL}/config`, { method: 'GET' });
 };
 
 type OllamaConfig = {
@@ -73,168 +21,61 @@ type OllamaConfig = {
 	OLLAMA_API_CONFIGS: object;
 };
 
-export const updateOllamaConfig = async (token: string = '', config: OllamaConfig) => {
-	let error = null;
-
-	const res = await fetch(`${OLLAMA_API_BASE_URL}/config/update`, {
+export const updateOllamaConfig = async (config: OllamaConfig) => {
+	return await apiFetch(`${OLLAMA_API_BASE_URL}/config/update`, {
 		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			...(token && { authorization: `Bearer ${token}` })
-		},
 		body: JSON.stringify({
 			...config
 		})
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.catch((err) => {
-			console.log(err);
-			if ('detail' in err) {
-				error = err.detail;
-			} else {
-				error = 'Server connection failed';
-			}
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+	});
 };
 
-export const getOllamaUrls = async (token: string = '') => {
-	let error = null;
+interface OllamaUrlResult {
+	OLLAMA_BASE_URLS: any;
+}
 
-	const res = await fetch(`${OLLAMA_API_BASE_URL}/urls`, {
-		method: 'GET',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			...(token && { authorization: `Bearer ${token}` })
-		}
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.catch((err) => {
-			console.log(err);
-			if ('detail' in err) {
-				error = err.detail;
-			} else {
-				error = 'Server connection failed';
-			}
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
+export const getOllamaUrls = async () => {
+	const res = await apiFetch<OllamaUrlResult>(`${OLLAMA_API_BASE_URL}/urls`, { method: 'GET' });
 
 	return res.OLLAMA_BASE_URLS;
 };
 
-export const updateOllamaUrls = async (token: string = '', urls: string[]) => {
-	let error = null;
-
-	const res = await fetch(`${OLLAMA_API_BASE_URL}/urls/update`, {
+export const updateOllamaUrls = async (urls: string[]) => {
+	const res = await apiFetch<OllamaUrlResult>(`${OLLAMA_API_BASE_URL}/urls/update`, {
 		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			...(token && { authorization: `Bearer ${token}` })
-		},
 		body: JSON.stringify({
 			urls: urls
 		})
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.catch((err) => {
-			console.log(err);
-			if ('detail' in err) {
-				error = err.detail;
-			} else {
-				error = 'Server connection failed';
-			}
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
+	});
 
 	return res.OLLAMA_BASE_URLS;
 };
 
-export const getOllamaVersion = async (token: string, urlIdx?: number) => {
-	let error = null;
+interface OllamaVersionResult {
+	version: number;
+}
 
-	const res = await fetch(`${OLLAMA_API_BASE_URL}/api/version${urlIdx ? `/${urlIdx}` : ''}`, {
-		method: 'GET',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			...(token && { authorization: `Bearer ${token}` })
+export const getOllamaVersion = async (urlIdx?: number) => {
+	const res = await apiFetch<OllamaVersionResult>(
+		`${OLLAMA_API_BASE_URL}/api/version${urlIdx ? `/${urlIdx}` : ''}`,
+		{
+			method: 'GET'
 		}
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.catch((err) => {
-			console.log(err);
-			if ('detail' in err) {
-				error = err.detail;
-			} else {
-				error = 'Server connection failed';
-			}
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
+	);
 	return res?.version ?? false;
 };
 
-export const getOllamaModels = async (token: string = '', urlIdx: null | number = null) => {
-	let error = null;
+interface OllamaModelsResult {
+	models: any[];
+}
 
-	const res = await fetch(`${OLLAMA_API_BASE_URL}/api/tags${urlIdx !== null ? `/${urlIdx}` : ''}`, {
-		method: 'GET',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			...(token && { authorization: `Bearer ${token}` })
+export const getOllamaModels = async (urlIdx: null | number = null) => {
+	const res = await apiFetch<OllamaModelsResult>(
+		`${OLLAMA_API_BASE_URL}/api/tags${urlIdx !== null ? `/${urlIdx}` : ''}`,
+		{
+			method: 'GET'
 		}
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.catch((err) => {
-			console.log(err);
-			if ('detail' in err) {
-				error = err.detail;
-			} else {
-				error = 'Server connection failed';
-			}
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
+	);
 
 	return (res?.models ?? [])
 		.map((model) => ({ id: model.model, name: model.name ?? model.model, ...model }))
@@ -243,307 +84,153 @@ export const getOllamaModels = async (token: string = '', urlIdx: null | number 
 		});
 };
 
-export const generatePrompt = async (token: string = '', model: string, conversation: string) => {
-	let error = null;
-
+export const generatePrompt = async (model: string, conversation: string) => {
 	if (conversation === '') {
 		conversation = '[no existing conversation]';
 	}
 
-	const res = await fetch(`${OLLAMA_API_BASE_URL}/api/generate`, {
-		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`
-		},
-		body: JSON.stringify({
-			model: model,
-			prompt: `Conversation:
+	return await apiFetch(
+		`${OLLAMA_API_BASE_URL}/api/generate`,
+		{
+			method: 'POST',
+			body: JSON.stringify({
+				model: model,
+				prompt: `Conversation:
 			${conversation}
 
 			As USER in the conversation above, your task is to continue the conversation. Remember, Your responses should be crafted as if you're a human conversing in a natural, realistic manner, keeping in mind the context and flow of the dialogue. Please generate a fitting response to the last message in the conversation, or if there is no existing conversation, initiate one as a normal person would.
 			
 			Response:
 			`
-		})
-	}).catch((err) => {
-		console.log(err);
-		if ('detail' in err) {
-			error = err.detail;
-		}
-		return null;
-	});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
-};
-
-export const generateEmbeddings = async (token: string = '', model: string, text: string) => {
-	let error = null;
-
-	const res = await fetch(`${OLLAMA_API_BASE_URL}/api/embeddings`, {
-		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`
+			})
 		},
-		body: JSON.stringify({
-			model: model,
-			prompt: text
-		})
-	}).catch((err) => {
-		error = err;
-		return null;
-	});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+		false
+	);
 };
 
-export const generateTextCompletion = async (token: string = '', model: string, text: string) => {
-	let error = null;
-
-	const res = await fetch(`${OLLAMA_API_BASE_URL}/api/generate`, {
-		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`
+export const generateEmbeddings = async (model: string, text: string) => {
+	return await apiFetch(
+		`${OLLAMA_API_BASE_URL}/api/embeddings`,
+		{
+			method: 'POST',
+			body: JSON.stringify({
+				model: model,
+				prompt: text
+			})
 		},
-		body: JSON.stringify({
-			model: model,
-			prompt: text,
-			stream: true
-		})
-	}).catch((err) => {
-		error = err;
-		return null;
-	});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+		false
+	);
 };
 
-export const generateChatCompletion = async (token: string = '', body: object) => {
+export const generateTextCompletion = async (model: string, text: string) => {
+	return await apiFetch(
+		`${OLLAMA_API_BASE_URL}/api/generate`,
+		{
+			method: 'POST',
+			body: JSON.stringify({
+				model: model,
+				prompt: text,
+				stream: true
+			})
+		},
+		false
+	);
+};
+
+export const generateChatCompletion = async (
+	body: object
+): Promise<[Response, AbortController]> => {
 	let controller = new AbortController();
-	let error = null;
 
-	const res = await fetch(`${OLLAMA_API_BASE_URL}/api/chat`, {
-		signal: controller.signal,
-		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`
+	const res = await apiFetch<Response>(
+		`${OLLAMA_API_BASE_URL}/api/chat`,
+		{
+			signal: controller.signal,
+			method: 'POST',
+			body: JSON.stringify(body)
 		},
-		body: JSON.stringify(body)
-	}).catch((err) => {
-		error = err;
-		return null;
-	});
-
-	if (error) {
-		throw error;
-	}
+		false
+	);
 
 	return [res, controller];
 };
 
 export const createModel = async (
-	token: string,
 	tagName: string,
 	content: string,
 	urlIdx: string | null = null
 ) => {
-	let error = null;
-
-	const res = await fetch(
+	return await apiFetch(
 		`${OLLAMA_API_BASE_URL}/api/create${urlIdx !== null ? `/${urlIdx}` : ''}`,
 		{
 			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`
-			},
 			body: JSON.stringify({
 				name: tagName,
 				modelfile: content
 			})
-		}
-	).catch((err) => {
-		error = err;
-		return null;
-	});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
-};
-
-export const deleteModel = async (token: string, tagName: string, urlIdx: string | null = null) => {
-	let error = null;
-
-	const res = await fetch(
-		`${OLLAMA_API_BASE_URL}/api/delete${urlIdx !== null ? `/${urlIdx}` : ''}`,
-		{
-			method: 'DELETE',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`
-			},
-			body: JSON.stringify({
-				name: tagName
-			})
-		}
-	)
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.then((json) => {
-			console.log(json);
-			return true;
-		})
-		.catch((err) => {
-			console.log(err);
-			error = err;
-
-			if ('detail' in err) {
-				error = err.detail;
-			}
-
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
-};
-
-export const pullModel = async (token: string, tagName: string, urlIdx: number | null = null) => {
-	let error = null;
-	const controller = new AbortController();
-
-	const res = await fetch(`${OLLAMA_API_BASE_URL}/api/pull${urlIdx !== null ? `/${urlIdx}` : ''}`, {
-		signal: controller.signal,
-		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`
 		},
+		false
+	);
+};
+
+export const deleteModel = async (tagName: string, urlIdx: string | null = null) => {
+	return await apiFetch(`${OLLAMA_API_BASE_URL}/api/delete${urlIdx !== null ? `/${urlIdx}` : ''}`, {
+		method: 'DELETE',
 		body: JSON.stringify({
 			name: tagName
 		})
-	}).catch((err) => {
-		console.log(err);
-		error = err;
-
-		if ('detail' in err) {
-			error = err.detail;
-		}
-
-		return null;
 	});
-	if (error) {
-		throw error;
-	}
-	return [res, controller];
 };
 
-export const downloadModel = async (
-	token: string,
-	download_url: string,
-	urlIdx: string | null = null
-) => {
-	let error = null;
+export const pullModel = async (
+	tagName: string,
+	urlIdx: number | null = null
+): Promise<[Response, AbortController]> => {
+	const controller = new AbortController();
 
-	const res = await fetch(
-		`${OLLAMA_API_BASE_URL}/models/download${urlIdx !== null ? `/${urlIdx}` : ''}`,
+	const res = await apiFetch<Response>(
+		`${OLLAMA_API_BASE_URL}/api/pull${urlIdx !== null ? `/${urlIdx}` : ''}`,
 		{
+			signal: controller.signal,
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`
+				'Content-Type': 'application/json'
 			},
+
+			body: JSON.stringify({
+				name: tagName
+			})
+		},
+		false
+	);
+
+	return [res, controller];
+};
+
+export const downloadModel = async (download_url: string, urlIdx: string | null = null) => {
+	return await apiFetch(
+		`${OLLAMA_API_BASE_URL}/models/download${urlIdx !== null ? `/${urlIdx}` : ''}`,
+		{
+			method: 'POST',
 			body: JSON.stringify({
 				url: download_url
 			})
-		}
-	).catch((err) => {
-		console.log(err);
-		error = err;
-
-		if ('detail' in err) {
-			error = err.detail;
-		}
-
-		return null;
-	});
-	if (error) {
-		throw error;
-	}
-	return res;
+		},
+		false
+	);
 };
 
-export const uploadModel = async (token: string, file: File, urlIdx: string | null = null) => {
-	let error = null;
-
+export const uploadModel = async (file: File, urlIdx: string | null = null) => {
 	const formData = new FormData();
 	formData.append('file', file);
 
-	const res = await fetch(
+	return await apiFetch(
 		`${OLLAMA_API_BASE_URL}/models/upload${urlIdx !== null ? `/${urlIdx}` : ''}`,
 		{
 			method: 'POST',
-			headers: {
-				Authorization: `Bearer ${token}`
-			},
 			body: formData
-		}
-	).catch((err) => {
-		console.log(err);
-		error = err;
-
-		if ('detail' in err) {
-			error = err.detail;
-		}
-
-		return null;
-	});
-	if (error) {
-		throw error;
-	}
-	return res;
+		},
+		false
+	);
 };
-
-// export const pullModel = async (token: string, tagName: string) => {
-// 	return await fetch(`${OLLAMA_API_BASE_URL}/pull`, {
-// 		method: 'POST',
-// 		headers: {
-// 			'Content-Type': 'text/event-stream',
-// 			Authorization: `Bearer ${token}`
-// 		},
-// 		body: JSON.stringify({
-// 			name: tagName
-// 		})
-// 	});
-// };

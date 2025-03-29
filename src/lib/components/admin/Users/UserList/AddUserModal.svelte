@@ -42,15 +42,11 @@
 		if (tab === '') {
 			loading = true;
 
-			const res = await addUser(
-				localStorage.token,
-				_user.name,
-				_user.email,
-				_user.password,
-				_user.role
-			).catch((error) => {
-				toast.error(error);
-			});
+			const res = await addUser(_user.name, _user.email, _user.password, _user.role).catch(
+				(error) => {
+					toast.error(error);
+				}
+			);
 
 			if (res) {
 				stopLoading();
@@ -79,7 +75,6 @@
 								['admin', 'user', 'pending'].includes(columns[3].toLowerCase())
 							) {
 								const res = await addUser(
-									localStorage.token,
 									columns[0],
 									columns[1],
 									columns[2],

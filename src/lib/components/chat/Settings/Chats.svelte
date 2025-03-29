@@ -56,19 +56,19 @@
 			console.log(chat);
 
 			if (chat.chat) {
-				await createNewChat(localStorage.token, chat.chat);
+				await createNewChat(chat.chat);
 			} else {
-				await createNewChat(localStorage.token, chat);
+				await createNewChat(chat);
 			}
 		}
 
 		currentChatPage.set(1);
-		await chats.set(await getChatList(localStorage.token, $currentChatPage));
+		await chats.set(await getChatList($currentChatPage));
 		scrollPaginationEnabled.set(true);
 	};
 
 	const exportChats = async () => {
-		let blob = new Blob([JSON.stringify(await getAllChats(localStorage.token))], {
+		let blob = new Blob([JSON.stringify(await getAllChats())], {
 			type: 'application/json'
 		});
 		saveAs(blob, `chat-export-${Date.now()}.json`);
@@ -76,23 +76,23 @@
 
 	const archiveAllChatsHandler = async () => {
 		await goto('/');
-		await archiveAllChats(localStorage.token).catch((error) => {
+		await archiveAllChats().catch((error) => {
 			toast.error(error);
 		});
 
 		currentChatPage.set(1);
-		await chats.set(await getChatList(localStorage.token, $currentChatPage));
+		await chats.set(await getChatList($currentChatPage));
 		scrollPaginationEnabled.set(true);
 	};
 
 	const deleteAllChatsHandler = async () => {
 		await goto('/');
-		await deleteAllChats(localStorage.token).catch((error) => {
+		await deleteAllChats().catch((error) => {
 			toast.error(error);
 		});
 
 		currentChatPage.set(1);
-		await chats.set(await getChatList(localStorage.token, $currentChatPage));
+		await chats.set(await getChatList($currentChatPage));
 		scrollPaginationEnabled.set(true);
 	};
 </script>

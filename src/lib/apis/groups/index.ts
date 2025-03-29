@@ -1,162 +1,34 @@
 import { WEBUI_API_BASE_URL } from '$lib/constants';
+import { apiFetch } from '$lib/utils/apiClient';
 
-export const createNewGroup = async (token: string, group: object) => {
-	let error = null;
-
-	const res = await fetch(`${WEBUI_API_BASE_URL}/groups/create`, {
+export const createNewGroup = async (group: object) => {
+	return await apiFetch(`${WEBUI_API_BASE_URL}/groups/create`, {
 		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
-		},
 		body: JSON.stringify({
 			...group
 		})
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.catch((err) => {
-			error = err.detail;
-			console.log(err);
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+	});
 };
 
-export const getGroups = async (token: string = '') => {
-	let error = null;
-
-	const res = await fetch(`${WEBUI_API_BASE_URL}/groups/`, {
-		method: 'GET',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
-		}
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.then((json) => {
-			return json;
-		})
-		.catch((err) => {
-			error = err.detail;
-			console.log(err);
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+export const getGroups = async () => {
+	return await apiFetch(`${WEBUI_API_BASE_URL}/groups/`, { method: 'GET' });
 };
 
-export const getGroupById = async (token: string, id: string) => {
-	let error = null;
-
-	const res = await fetch(`${WEBUI_API_BASE_URL}/groups/id/${id}`, {
-		method: 'GET',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
-		}
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.then((json) => {
-			return json;
-		})
-		.catch((err) => {
-			error = err.detail;
-
-			console.log(err);
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+export const getGroupById = async (id: string) => {
+	return await apiFetch(`${WEBUI_API_BASE_URL}/groups/id/${id}`, { method: 'GET' });
 };
 
-export const updateGroupById = async (token: string, id: string, group: object) => {
-	let error = null;
-
-	const res = await fetch(`${WEBUI_API_BASE_URL}/groups/id/${id}/update`, {
+export const updateGroupById = async (id: string, group: object) => {
+	return await apiFetch(`${WEBUI_API_BASE_URL}/groups/id/${id}/update`, {
 		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
-		},
 		body: JSON.stringify({
 			...group
 		})
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.then((json) => {
-			return json;
-		})
-		.catch((err) => {
-			error = err.detail;
-
-			console.log(err);
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+	});
 };
 
-export const deleteGroupById = async (token: string, id: string) => {
-	let error = null;
-
-	const res = await fetch(`${WEBUI_API_BASE_URL}/groups/id/${id}/delete`, {
-		method: 'DELETE',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
-		}
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.then((json) => {
-			return json;
-		})
-		.catch((err) => {
-			error = err.detail;
-
-			console.log(err);
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+export const deleteGroupById = async (id: string) => {
+	return await apiFetch(`${WEBUI_API_BASE_URL}/groups/id/${id}/delete`, {
+		method: 'DELETE'
+	});
 };

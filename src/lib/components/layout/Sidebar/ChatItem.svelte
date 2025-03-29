@@ -58,7 +58,7 @@
 	const loadChat = async () => {
 		if (!chat) {
 			draggable = false;
-			chat = await getChatById(localStorage.token, id);
+			chat = await getChatById(id);
 			draggable = true;
 		}
 	};
@@ -72,7 +72,7 @@
 		if (title === '') {
 			toast.error($i18n.t('Title cannot be an empty string.'));
 		} else {
-			await updateChatById(localStorage.token, id, {
+			await updateChatById(id, {
 				title: title
 			});
 
@@ -81,13 +81,13 @@
 			}
 
 			currentChatPage.set(1);
-			await chats.set(await getChatList(localStorage.token, $currentChatPage));
-			await pinnedChats.set(await getPinnedChatList(localStorage.token));
+			await chats.set(await getChatList($currentChatPage));
+			await pinnedChats.set(await getPinnedChatList());
 		}
 	};
 
 	const cloneChatHandler = async (id) => {
-		const res = await cloneChatById(localStorage.token, id).catch((error) => {
+		const res = await cloneChatById(id).catch((error) => {
 			toast.error(error);
 			return null;
 		});
@@ -96,19 +96,19 @@
 			goto(`/c/${res.id}`);
 
 			currentChatPage.set(1);
-			await chats.set(await getChatList(localStorage.token, $currentChatPage));
-			await pinnedChats.set(await getPinnedChatList(localStorage.token));
+			await chats.set(await getChatList($currentChatPage));
+			await pinnedChats.set(await getPinnedChatList());
 		}
 	};
 
 	const deleteChatHandler = async (id) => {
-		const res = await deleteChatById(localStorage.token, id).catch((error) => {
+		const res = await deleteChatById(id).catch((error) => {
 			toast.error(error);
 			return null;
 		});
 
 		if (res) {
-			tags.set(await getAllTags(localStorage.token));
+			tags.set(await getAllTags());
 			if ($chatId === id) {
 				await goto('/');
 
@@ -121,7 +121,7 @@
 	};
 
 	const archiveChatHandler = async (id) => {
-		await archiveChatById(localStorage.token, id);
+		await archiveChatById(id);
 		dispatch('change');
 	};
 

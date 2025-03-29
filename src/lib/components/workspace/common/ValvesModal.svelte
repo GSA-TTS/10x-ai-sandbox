@@ -43,11 +43,11 @@
 			let res = null;
 
 			if (type === 'tool') {
-				res = await updateToolValvesById(localStorage.token, id, valves).catch((error) => {
+				res = await updateToolValvesById(id, valves).catch((error) => {
 					toast.error(error);
 				});
 			} else if (type === 'function') {
-				res = await updateFunctionValvesById(localStorage.token, id, valves).catch((error) => {
+				res = await updateFunctionValvesById(id, valves).catch((error) => {
 					toast.error(error);
 				});
 			}
@@ -67,11 +67,11 @@
 		valvesSpec = null;
 
 		if (type === 'tool') {
-			valves = await getToolValvesById(localStorage.token, id);
-			valvesSpec = await getToolValvesSpecById(localStorage.token, id);
+			valves = await getToolValvesById(id);
+			valvesSpec = await getToolValvesSpecById(id);
 		} else if (type === 'function') {
-			valves = await getFunctionValvesById(localStorage.token, id);
-			valvesSpec = await getFunctionValvesSpecById(localStorage.token, id);
+			valves = await getFunctionValvesById(id);
+			valvesSpec = await getFunctionValvesSpecById(id);
 		}
 
 		if (!valves) {

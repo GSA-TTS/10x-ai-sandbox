@@ -49,12 +49,12 @@
 		typingUsers = [];
 		typingUsersTimeout = {};
 
-		channel = await getChannelById(localStorage.token, id).catch((error) => {
+		channel = await getChannelById(id).catch((error) => {
 			return null;
 		});
 
 		if (channel) {
-			messages = await getChannelMessages(localStorage.token, id, 0);
+			messages = await getChannelMessages(id, 0);
 
 			if (messages) {
 				scrollToBottom();
@@ -140,12 +140,10 @@
 			return;
 		}
 
-		const res = await sendMessage(localStorage.token, id, { content: content, data: data }).catch(
-			(error) => {
-				toast.error(error);
-				return null;
-			}
-		);
+		const res = await sendMessage(id, { content: content, data: data }).catch((error) => {
+			toast.error(error);
+			return null;
+		});
 
 		if (res) {
 			messagesContainerElement.scrollTop = messagesContainerElement.scrollHeight;
@@ -227,11 +225,7 @@
 									threadId = id;
 								}}
 								onLoad={async () => {
-									const newMessages = await getChannelMessages(
-										localStorage.token,
-										id,
-										messages.length
-									);
+									const newMessages = await getChannelMessages(id, messages.length);
 
 									messages = [...messages, ...newMessages];
 

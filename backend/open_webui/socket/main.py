@@ -146,7 +146,10 @@ async def usage(sid, data):
 async def connect(sid, environ, auth):
     user = None
     if auth and "token" in auth:
-        data = decode_token(auth["token"])
+        try:
+            data = decode_token(auth["token"])
+        except Exception:
+            return
 
         if data is not None and "id" in data:
             user = Users.get_user_by_id(data["id"])
@@ -169,8 +172,10 @@ async def user_join(sid, data):
     auth = data["auth"] if "auth" in data else None
     if not auth or "token" not in auth:
         return
-
-    data = decode_token(auth["token"])
+    try:
+        data = decode_token(auth["token"])
+    except Exception:
+        return
     if data is None or "id" not in data:
         return
 
@@ -201,8 +206,10 @@ async def join_channel(sid, data):
     auth = data["auth"] if "auth" in data else None
     if not auth or "token" not in auth:
         return
-
-    data = decode_token(auth["token"])
+    try:
+        data = decode_token(auth["token"])
+    except Exception:
+        return
     if data is None or "id" not in data:
         return
 

@@ -64,18 +64,18 @@
 	let showDefaultPermissionsModal = false;
 
 	const setGroups = async () => {
-		groups = await getGroups(localStorage.token);
+		groups = await getGroups();
 	};
 
 	const addGroupHandler = async (group) => {
-		const res = await createNewGroup(localStorage.token, group).catch((error) => {
+		const res = await createNewGroup(group).catch((error) => {
 			toast.error(error);
 			return null;
 		});
 
 		if (res) {
 			toast.success($i18n.t('Group created successfully'));
-			groups = await getGroups(localStorage.token);
+			groups = await getGroups();
 		}
 	};
 

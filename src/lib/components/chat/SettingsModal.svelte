@@ -315,7 +315,7 @@
 	};
 
 	const getModels = async () => {
-		return await _getModels(localStorage.token);
+		return await _getModels();
 	};
 
 	let selectedTab = 'general';

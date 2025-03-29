@@ -55,7 +55,7 @@
 	//////////////////////
 
 	const deleteFeedbackHandler = async (feedbackId: string) => {
-		const response = await deleteFeedbackById(localStorage.token, feedbackId).catch((err) => {
+		const response = await deleteFeedbackById(feedbackId).catch((err) => {
 			toast.error(err);
 			return null;
 		});
@@ -92,7 +92,7 @@
 	};
 
 	const exportHandler = async () => {
-		const _feedbacks = await exportAllFeedbacks(localStorage.token).catch((err) => {
+		const _feedbacks = await exportAllFeedbacks().catch((err) => {
 			toast.error(err);
 			return null;
 		});

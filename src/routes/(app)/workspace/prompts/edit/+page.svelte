@@ -14,14 +14,14 @@
 	let prompt = null;
 	const onSubmit = async (_prompt) => {
 		console.log(_prompt);
-		const prompt = await updatePromptByCommand(localStorage.token, _prompt).catch((error) => {
+		const prompt = await updatePromptByCommand(_prompt).catch((error) => {
 			toast.error(error);
 			return null;
 		});
 
 		if (prompt) {
 			toast.success($i18n.t('Prompt updated successfully'));
-			await prompts.set(await getPrompts(localStorage.token));
+			await prompts.set(await getPrompts());
 			await goto('/workspace/prompts');
 		}
 	};
@@ -29,10 +29,7 @@
 	onMount(async () => {
 		const command = $page.url.searchParams.get('command');
 		if (command) {
-			const _prompt = await getPromptByCommand(
-				localStorage.token,
-				command.replace(/\//g, '')
-			).catch((error) => {
+			const _prompt = await getPromptByCommand(command.replace(/\//g, '')).catch((error) => {
 				toast.error(error);
 				return null;
 			});

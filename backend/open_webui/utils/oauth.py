@@ -35,6 +35,7 @@ from open_webui.config import (
     OAUTH_ALLOWED_DOMAINS,
     WEBHOOK_URL,
     JWT_EXPIRES_IN,
+    JWT_REFRESH_EXPIRES_IN,
     AppConfig,
 )
 from open_webui.constants import ERROR_MESSAGES
@@ -63,6 +64,7 @@ auth_manager_config.OAUTH_NONCE_CLAIM = OAUTH_NONCE_CLAIM
 auth_manager_config.OAUTH_ALLOWED_DOMAINS = OAUTH_ALLOWED_DOMAINS
 auth_manager_config.WEBHOOK_URL = WEBHOOK_URL
 auth_manager_config.JWT_EXPIRES_IN = JWT_EXPIRES_IN
+auth_manager_config.JWT_REFRESH_EXPIRES_IN = JWT_REFRESH_EXPIRES_IN
 
 
 class OAuthManager:
@@ -221,7 +223,8 @@ class OAuthManager:
         except Exception as e:
             log.warning(f"OAuth callback error: {e}")
             raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_CRED)
-        user_data: UserInfo = token["userinfo"]
+
+        user_data: UserInfo = token.get("userinfo")
         if not user_data:
             user_data: UserInfo = await client.userinfo(token=token)
         if not user_data:
@@ -334,6 +337,10 @@ class OAuthManager:
             data={"id": user.id},
             expires_delta=parse_duration(auth_manager_config.JWT_EXPIRES_IN),
         )
+        jwt_refresh_token = create_token(
+            data={"id": user.id},
+            expires_delta=parse_duration(auth_manager_config.JWT_REFRESH_EXPIRES_IN),
+        )
 
         if auth_manager_config.ENABLE_OAUTH_GROUP_MANAGEMENT:
             self.update_user_groups(
@@ -342,11 +349,19 @@ class OAuthManager:
                 default_permissions=request.app.state.config.USER_PERMISSIONS,
             )
 
-        # Set the cookie token
+        # Set a cookie with the JWT token
         response.set_cookie(
             key="token",
             value=jwt_token,
-            httponly=True,  # Ensures the cookie is not accessible via JavaScript
+            httponly=True,
+            samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
+            secure=WEBUI_SESSION_COOKIE_SECURE,
+        )
+        # Set a cookie with a refresh token
+        response.set_cookie(
+            key="refresh_token",
+            value=jwt_refresh_token,
+            httponly=True,
             samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
             secure=WEBUI_SESSION_COOKIE_SECURE,
         )
@@ -360,8 +375,10 @@ class OAuthManager:
                 samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
                 secure=WEBUI_SESSION_COOKIE_SECURE,
             )
-        # Redirect back to the frontend with the JWT token
-        redirect_url = f"{request.base_url}auth#token={jwt_token}"
+        # Redirect back to the frontend
+        # api calls should now work since the token
+        # is available in the cookie
+        redirect_url = request.base_url
         return RedirectResponse(url=redirect_url, headers=response.headers)
 
 

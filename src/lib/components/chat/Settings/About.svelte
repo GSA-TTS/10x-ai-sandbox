@@ -34,7 +34,7 @@
 	};
 
 	onMount(async () => {
-		ollamaVersion = await getOllamaVersion(localStorage.token).catch((error) => {
+		ollamaVersion = await getOllamaVersion().catch((error) => {
 			return '';
 		});
 

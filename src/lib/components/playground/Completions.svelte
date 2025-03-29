@@ -41,7 +41,6 @@
 		const model = $models.find((model) => model.id === selectedModelId);
 
 		const [res, controller] = await generateOpenAIChatCompletion(
-			localStorage.token,
 			{
 				model: model.id,
 				stream: true,

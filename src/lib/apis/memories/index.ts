@@ -1,186 +1,41 @@
 import { WEBUI_API_BASE_URL } from '$lib/constants';
+import { apiFetch } from '$lib/utils/apiClient';
 
-export const getMemories = async (token: string) => {
-	let error = null;
-
-	const res = await fetch(`${WEBUI_API_BASE_URL}/memories/`, {
-		method: 'GET',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
-		}
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.catch((err) => {
-			error = err.detail;
-			console.log(err);
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+export const getMemories = async () => {
+	return await apiFetch(`${WEBUI_API_BASE_URL}/memories/`, { method: 'GET' });
 };
 
-export const addNewMemory = async (token: string, content: string) => {
-	let error = null;
-
-	const res = await fetch(`${WEBUI_API_BASE_URL}/memories/add`, {
+export const addNewMemory = async (content: string) => {
+	return await apiFetch(`${WEBUI_API_BASE_URL}/memories/add`, {
 		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
-		},
 		body: JSON.stringify({
 			content: content
 		})
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.catch((err) => {
-			error = err.detail;
-			console.log(err);
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+	});
 };
 
-export const updateMemoryById = async (token: string, id: string, content: string) => {
-	let error = null;
-
-	const res = await fetch(`${WEBUI_API_BASE_URL}/memories/${id}/update`, {
+export const updateMemoryById = async (id: string, content: string) => {
+	return await apiFetch(`${WEBUI_API_BASE_URL}/memories/${id}/update`, {
 		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
-		},
 		body: JSON.stringify({
 			content: content
 		})
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.catch((err) => {
-			error = err.detail;
-			console.log(err);
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+	});
 };
 
-export const queryMemory = async (token: string, content: string) => {
-	let error = null;
-
-	const res = await fetch(`${WEBUI_API_BASE_URL}/memories/query`, {
+export const queryMemory = async (content: string) => {
+	return await apiFetch(`${WEBUI_API_BASE_URL}/memories/query`, {
 		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
-		},
 		body: JSON.stringify({
 			content: content
 		})
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.catch((err) => {
-			error = err.detail;
-			console.log(err);
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+	});
 };
 
-export const deleteMemoryById = async (token: string, id: string) => {
-	let error = null;
-
-	const res = await fetch(`${WEBUI_API_BASE_URL}/memories/${id}`, {
-		method: 'DELETE',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
-		}
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.then((json) => {
-			return json;
-		})
-		.catch((err) => {
-			error = err.detail;
-
-			console.log(err);
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+export const deleteMemoryById = async (id: string) => {
+	return await apiFetch(`${WEBUI_API_BASE_URL}/memories/${id}`, { method: 'DELETE' });
 };
 
-export const deleteMemoriesByUserId = async (token: string) => {
-	let error = null;
-
-	const res = await fetch(`${WEBUI_API_BASE_URL}/memories/delete/user`, {
-		method: 'DELETE',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			authorization: `Bearer ${token}`
-		}
-	})
-		.then(async (res) => {
-			if (!res.ok) throw await res.json();
-			return res.json();
-		})
-		.then((json) => {
-			return json;
-		})
-		.catch((err) => {
-			error = err.detail;
-
-			console.log(err);
-			return null;
-		});
-
-	if (error) {
-		throw error;
-	}
-
-	return res;
+export const deleteMemoriesByUserId = async () => {
+	return await apiFetch(`${WEBUI_API_BASE_URL}/memories/delete/user`, { method: 'DELETE' });
 };

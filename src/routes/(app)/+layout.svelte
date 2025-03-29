@@ -96,9 +96,9 @@
 				settings.set(localStorageSettings);
 			}
 
-			models.set(await getModels(localStorage.token));
-			banners.set(await getBanners(localStorage.token));
-			tools.set(await getTools(localStorage.token));
+			models.set(await getModels());
+			banners.set(await getBanners());
+			tools.set(await getTools());
 
 			document.addEventListener('keydown', async function (event) {
 				const isCtrlPressed = event.ctrlKey || event.metaKey; // metaKey is for Cmd key on Mac

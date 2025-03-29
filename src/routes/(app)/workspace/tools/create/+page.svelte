@@ -45,7 +45,7 @@
 
 		if (res) {
 			toast.success($i18n.t('Tool created successfully'));
-			tools.set(await getTools(localStorage.token));
+			tools.set(await getTools());
 
 			await goto('/workspace/tools');
 		}
