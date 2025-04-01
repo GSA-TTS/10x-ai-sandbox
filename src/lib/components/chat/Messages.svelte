@@ -251,7 +251,7 @@
 					childrenIds: [],
 					files: undefined,
 					content: content,
-					timestamp: Math.floor(Date.now() / 1000) // Unix epoch
+					timestamp: Date.now() // Unix epoch
 				};
 
 				history.messages[responseMessageId] = responseMessage;
