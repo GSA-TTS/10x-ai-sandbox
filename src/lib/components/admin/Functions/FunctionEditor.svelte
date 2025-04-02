@@ -411,7 +411,7 @@ class Pipe:
 		submitHandler();
 	}}
 >
-	<div class="text-sm text-gray-600">
+	<div class="text-sm text-gray-600 dark:text-gray-500">
 		<div class=" bg-yellow-500/20 text-yellow-700 dark:text-yellow-200 rounded-lg px-4 py-3">
 			<div>{$i18n.t('Please carefully review the following warnings:')}</div>
 

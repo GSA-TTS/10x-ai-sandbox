@@ -154,7 +154,7 @@
 						{/each}
 					{:else}
 						<div class="flex items-center justify-center">
-							<div class="text-gray-600 text-xs text-center py-2 px-10">
+							<div class="text-gray-600 dark:text-gray-500 text-xs text-center py-2 px-10">
 								{$i18n.t('No groups with access, add a group to grant access')}
 							</div>
 						</div>

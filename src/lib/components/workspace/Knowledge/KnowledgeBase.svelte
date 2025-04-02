@@ -721,7 +721,7 @@
 						</div>
 					{:else}
 						<div class="h-full flex w-full">
-							<div class="m-auto text-xs text-center text-gray-200 dark:text-gray-700">
+							<div class="m-auto text-xs text-center text-gray-200 dark:text-gray-500">
 								{$i18n.t('Drag and drop a file to upload or select a file to view')}
 							</div>
 						</div>
@@ -855,7 +855,9 @@
 								/>
 							</div>
 						{:else}
-							<div class="my-3 flex flex-col justify-center text-center text-gray-600 text-xs">
+							<div
+								class="my-3 flex flex-col justify-center text-center text-gray-600 dark:text-gray-500 text-xs"
+							>
 								<div>
 									{$i18n.t('No content found')}
 								</div>

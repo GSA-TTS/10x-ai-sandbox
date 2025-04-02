@@ -255,7 +255,11 @@
 						class=" flex flex-1 cursor-pointer w-full"
 						href={`/?models=${encodeURIComponent(model.id)}`}
 					>
-						<div class=" flex-1 self-center {model.is_active ? '' : 'text-gray-600'}">
+						<div
+							class=" flex-1 self-center {model.is_active
+								? ''
+								: 'text-gray-600 dark:text-gray-500'}"
+						>
 							<Tooltip
 								content={marked.parse(model?.meta?.description ?? model.id)}
 								className=" w-fit"
@@ -284,7 +288,7 @@
 							className="flex shrink-0"
 							placement="top-start"
 						>
-							<div class="shrink-0 text-gray-600">
+							<div class="shrink-0 text-gray-600 dark:text-gray-500">
 								{$i18n.t('By {{name}}', {
 									name: capitalizeFirstLetter(
 										model?.user?.name ?? model?.user?.email ?? $i18n.t('Deleted User')

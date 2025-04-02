@@ -12,7 +12,7 @@
 
 <div class="flex gap-2">
 	<div class="flex flex-col w-full">
-		<div class=" mb-0.5 text-xs text-gray-600">{$i18n.t('Name')}</div>
+		<div class=" mb-0.5 text-xs text-gray-600 dark:text-gray-500">{$i18n.t('Name')}</div>
 
 		<div class="flex-1">
 			<input
@@ -28,12 +28,12 @@
 </div>
 
 <!-- <div class="flex flex-col w-full mt-2">
-	<div class=" mb-1 text-xs text-gray-600">{$i18n.t('Color')}</div>
+	<div class=" mb-1 text-xs text-gray-600 dark:text-gray-500">{$i18n.t('Color')}</div>
 
 	<div class="flex-1">
 		<Tooltip content={$i18n.t('Hex Color - Leave empty for default color')} placement="top-start">
 			<div class="flex gap-0.5">
-				<div class="text-gray-600">#</div>
+				<div class="text-gray-600 dark:text-gray-500">#</div>
 
 				<input
 					class="w-full text-sm bg-transparent placeholder:text-gray-300 dark:placeholder:text-gray-700 outline-none"
@@ -48,7 +48,7 @@
 </div> -->
 
 <div class="flex flex-col w-full mt-2">
-	<div class=" mb-1 text-xs text-gray-600">{$i18n.t('Description')}</div>
+	<div class=" mb-1 text-xs text-gray-600 dark:text-gray-500">{$i18n.t('Description')}</div>
 
 	<div class="flex-1">
 		<Textarea

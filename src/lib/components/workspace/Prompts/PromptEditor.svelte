@@ -113,7 +113,7 @@
 						</div>
 					</div>
 
-					<div class="flex gap-0.5 items-center text-xs text-gray-600">
+					<div class="flex gap-0.5 items-center text-xs text-gray-600 dark:text-gray-500">
 						<div class="">/</div>
 						<input
 							class=" w-full bg-transparent outline-none"

@@ -226,7 +226,9 @@
 						</div>
 						<div class="flex gap-2">
 							<div class="flex flex-col w-full">
-								<div class=" mb-0.5 text-xs text-gray-600">{$i18n.t('Name')}</div>
+								<div class=" mb-0.5 text-xs text-gray-600 dark:text-gray-500">
+									{$i18n.t('Name')}
+								</div>
 
 								<div class="flex-1">
 									<input
@@ -241,7 +243,7 @@
 							</div>
 
 							<div class="flex flex-col w-full">
-								<div class=" mb-0.5 text-xs text-gray-600">{$i18n.t('ID')}</div>
+								<div class=" mb-0.5 text-xs text-gray-600 dark:text-gray-500">{$i18n.t('ID')}</div>
 
 								<div class="flex-1">
 									<input
@@ -258,7 +260,9 @@
 						</div>
 
 						<div class="flex flex-col w-full mt-2">
-							<div class=" mb-1 text-xs text-gray-600">{$i18n.t('Description')}</div>
+							<div class=" mb-1 text-xs text-gray-600 dark:text-gray-500">
+								{$i18n.t('Description')}
+							</div>
 
 							<div class="flex-1">
 								<input
@@ -283,7 +287,7 @@
 
 						<div class="flex flex-col w-full">
 							<div class="mb-1 flex justify-between">
-								<div class="text-xs text-gray-600">{$i18n.t('Models')}</div>
+								<div class="text-xs text-gray-600 dark:text-gray-500">{$i18n.t('Models')}</div>
 
 								<div>
 									<button
@@ -323,7 +327,7 @@
 									{/each}
 								</div>
 							{:else}
-								<div class="text-gray-600 text-xs text-center py-2">
+								<div class="text-gray-600 dark:text-gray-500 text-xs text-center py-2">
 									{$i18n.t('Leave empty to include all models or select specific models')}
 								</div>
 							{/if}

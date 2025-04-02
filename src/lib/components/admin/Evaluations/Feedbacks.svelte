@@ -249,7 +249,7 @@
 
 {#if feedbacks.length > 0}
 	<div class=" flex flex-col justify-end w-full text-right gap-1">
-		<div class="line-clamp-1 text-gray-600 text-xs">
+		<div class="line-clamp-1 text-gray-600 dark:text-gray-500 text-xs">
 			{$i18n.t('Help us create the best community leaderboard by sharing your feedback history!')}
 		</div>
 

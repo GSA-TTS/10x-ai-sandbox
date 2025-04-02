@@ -317,7 +317,7 @@
 						<div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
 							{$i18n.t('Trouble accessing Ollama?')}
 							<a
-								class=" text-gray-600 font-medium underline"
+								class=" text-gray-600 dark:text-gray-500 font-medium underline"
 								href="https://github.com/open-webui/open-webui#troubleshooting"
 								target="_blank"
 							>

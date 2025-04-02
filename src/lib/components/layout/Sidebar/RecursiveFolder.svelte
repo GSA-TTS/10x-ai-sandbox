@@ -380,7 +380,7 @@
 					editHandler();
 				}}
 			>
-				<div class="text-gray-600 dark:text-gray-600">
+				<div class="text-gray-600 dark:text-gray-500">
 					{#if open}
 						<ChevronDown className=" size-3" strokeWidth="2.5" />
 					{:else}

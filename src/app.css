@@ -1,6 +1,8 @@
 :root {
 	--gsa-blue: #005087;
 	--gsa-blue-hover: #4d84aa;
+	--gsa-light-blue-hover: #77ccff;
+	--gray-550: #949494;
 }
 
 @font-face {
@@ -319,4 +321,16 @@ input[type='number'] {
 .bg-gsa-blue:focus,
 .bg-gsa-blue:hover {
 	background-color: var(--gsa-blue-hover);
+}
+
+.bg-gray-550 {
+	background-color: var(--gray-550);
+}
+
+button.outline-gsa-blue:focus {
+	outline-color: var(--gsa-blue);
+}
+
+.dark button.outline-gsa-blue:focus {
+	outline-color: var(--gsa-light-blue-hover);
 }

@@ -146,7 +146,7 @@
 					<div class="px-1">
 						<div class="flex gap-2">
 							<div class="flex flex-col w-full">
-								<div class=" mb-0.5 text-xs text-gray-600">{$i18n.t('URL')}</div>
+								<div class=" mb-0.5 text-xs text-gray-600 dark:text-gray-500">{$i18n.t('URL')}</div>
 
 								<div class="flex-1">
 									<input
@@ -192,7 +192,7 @@
 
 						<div class="flex gap-2 mt-2">
 							<div class="flex flex-col w-full">
-								<div class=" mb-0.5 text-xs text-gray-600">{$i18n.t('Key')}</div>
+								<div class=" mb-0.5 text-xs text-gray-600 dark:text-gray-500">{$i18n.t('Key')}</div>
 
 								<div class="flex-1">
 									<SensitiveInput
@@ -205,7 +205,9 @@
 							</div>
 
 							<div class="flex flex-col w-full">
-								<div class=" mb-1 text-xs text-gray-600">{$i18n.t('Prefix ID')}</div>
+								<div class=" mb-1 text-xs text-gray-600 dark:text-gray-500">
+									{$i18n.t('Prefix ID')}
+								</div>
 
 								<div class="flex-1">
 									<Tooltip
@@ -229,7 +231,7 @@
 
 						<div class="flex flex-col w-full">
 							<div class="mb-1 flex justify-between">
-								<div class="text-xs text-gray-600">{$i18n.t('Model IDs')}</div>
+								<div class="text-xs text-gray-600 dark:text-gray-500">{$i18n.t('Model IDs')}</div>
 							</div>
 
 							{#if modelIds.length > 0}
@@ -253,7 +255,7 @@
 									{/each}
 								</div>
 							{:else}
-								<div class="text-gray-600 text-xs text-center py-2 px-10">
+								<div class="text-gray-600 dark:text-gray-500 text-xs text-center py-2 px-10">
 									{#if ollama}
 										{$i18n.t('Leave empty to include all models from "{{URL}}/api/tags" endpoint', {
 											URL: url
@@ -273,7 +275,7 @@
 							<input
 								class="w-full py-1 text-sm rounded-lg bg-transparent {modelId
 									? ''
-									: 'text-gray-600'} placeholder:text-gray-300 dark:placeholder:text-gray-700 outline-none"
+									: 'text-gray-600 dark:text-gray-500 '} placeholder:text-gray-300 dark:placeholder:text-gray-700 outline-none"
 								bind:value={modelId}
 								placeholder={$i18n.t('Add a model ID')}
 							/>

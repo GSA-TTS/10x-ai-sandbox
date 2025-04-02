@@ -443,7 +443,7 @@
 						<div class="flex-1">
 							<div>
 								<input
-									class="text-xs w-full bg-transparent text-gray-600 outline-none"
+									class="text-xs w-full bg-transparent text-gray-600 dark:text-gray-500 outline-none"
 									placeholder={$i18n.t('Model ID')}
 									bind:value={id}
 									disabled={edit}
@@ -715,7 +715,7 @@
 						<Capabilities bind:capabilities />
 					</div>
 
-					<div class="my-2 text-gray-600 dark:text-gray-700">
+					<div class="my-2 text-gray-600 dark:text-gray-500">
 						<div class="flex w-full justify-between mb-2">
 							<div class=" self-center text-sm font-semibold">{$i18n.t('JSON Preview')}</div>
 

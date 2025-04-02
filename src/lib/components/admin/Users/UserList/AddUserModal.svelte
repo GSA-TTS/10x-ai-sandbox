@@ -255,7 +255,7 @@
 										'Ensure your CSV file includes 4 columns in this order: Name, Email, Password, Role.'
 									)}
 									<a
-										class="underline dark:text-gray-700"
+										class="underline dark:text-gray-500"
 										href="{WEBUI_BASE_URL}/static/user-import.csv"
 									>
 										{$i18n.t('Click here to download user import template file.')}

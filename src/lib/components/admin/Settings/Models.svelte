@@ -208,7 +208,11 @@
 								</div>
 							</div>
 
-							<div class=" flex-1 self-center {(model?.is_active ?? true) ? '' : 'text-gray-600'}">
+							<div
+								class=" flex-1 self-center {(model?.is_active ?? true)
+									? ''
+									: 'text-gray-600 dark:text-gray-500'}"
+							>
 								<Tooltip
 									content={marked.parse(
 										!!model?.meta?.description
@@ -222,7 +226,9 @@
 								>
 									<div class="  font-semibold line-clamp-1">{model.name}</div>
 								</Tooltip>
-								<div class=" text-xs overflow-hidden text-ellipsis line-clamp-1 text-gray-600">
+								<div
+									class=" text-xs overflow-hidden text-ellipsis line-clamp-1 text-gray-600 dark:text-gray-500"
+								>
 									<span class=" line-clamp-1">
 										{!!model?.meta?.description
 											? model?.meta?.description

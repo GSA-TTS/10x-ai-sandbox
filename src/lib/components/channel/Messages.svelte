@@ -72,7 +72,7 @@
 					<div class="flex flex-col gap-1.5 pb-5 pt-10">
 						<div class="text-2xl font-medium capitalize">{channel.name}</div>
 
-						<div class=" text-gray-600">
+						<div class=" text-gray-600 dark:text-gray-500">
 							This channel was created on {dayjs(channel.created_at / 1000000).format(
 								'MMMM D, YYYY'
 							)}. This is the very beginning of the {channel.name}
