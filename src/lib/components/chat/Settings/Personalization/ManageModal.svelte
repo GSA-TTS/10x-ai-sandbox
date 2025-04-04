@@ -26,7 +26,7 @@
 
 	$: if (show && memories.length === 0 && loading) {
 		(async () => {
-			memories = await getMemories(localStorage.token);
+			memories = await getMemories();
 			loading = false;
 		})();
 	}
@@ -105,17 +105,14 @@
 														<button
 															class="self-center w-fit text-sm px-2 py-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl"
 															on:click={async () => {
-																const res = await deleteMemoryById(
-																	localStorage.token,
-																	memory.id
-																).catch((error) => {
+																const res = await deleteMemoryById(memory.id).catch((error) => {
 																	toast.error(error);
 																	return null;
 																});
 
 																if (res) {
 																	toast.success($i18n.t('Memory deleted successfully'));
-																	memories = await getMemories(localStorage.token);
+																	memories = await getMemories();
 																}
 															}}
 														>
@@ -161,7 +158,7 @@
 				<button
 					class=" px-3.5 py-1.5 font-medium text-red-500 hover:bg-black/5 dark:hover:bg-white/5 outline outline-1 outline-red-300 dark:outline-red-800 rounded-3xl"
 					on:click={async () => {
-						const res = await deleteMemoriesByUserId(localStorage.token).catch((error) => {
+						const res = await deleteMemoriesByUserId().catch((error) => {
 							toast.error(error);
 							return null;
 						});
@@ -180,7 +177,7 @@
 <AddMemoryModal
 	bind:show={showAddMemoryModal}
 	on:save={async () => {
-		memories = await getMemories(localStorage.token);
+		memories = await getMemories();
 	}}
 />
 
@@ -188,6 +185,6 @@
 	bind:show={showEditMemoryModal}
 	memory={selectedMemory}
 	on:save={async () => {
-		memories = await getMemories(localStorage.token);
+		memories = await getMemories();
 	}}
 />

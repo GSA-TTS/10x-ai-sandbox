@@ -40,7 +40,7 @@
 
 	const updateLdapServerHandler = async () => {
 		if (!ENABLE_LDAP) return;
-		const res = await updateLdapServer(localStorage.token, LDAP_SERVER).catch((error) => {
+		const res = await updateLdapServer(LDAP_SERVER).catch((error) => {
 			toast.error(error);
 			return null;
 		});
@@ -50,8 +50,8 @@
 	};
 
 	const updateHandler = async () => {
-		webhookUrl = await updateWebhookUrl(localStorage.token, webhookUrl);
-		const res = await updateAdminConfig(localStorage.token, adminConfig);
+		webhookUrl = await updateWebhookUrl(webhookUrl);
+		const res = await updateAdminConfig(adminConfig);
 		await updateLdapServerHandler();
 
 		if (res) {
@@ -64,18 +64,18 @@
 	onMount(async () => {
 		await Promise.all([
 			(async () => {
-				adminConfig = await getAdminConfig(localStorage.token);
+				adminConfig = await getAdminConfig();
 			})(),
 
 			(async () => {
-				webhookUrl = await getWebhookUrl(localStorage.token);
+				webhookUrl = await getWebhookUrl();
 			})(),
 			(async () => {
-				LDAP_SERVER = await getLdapServer(localStorage.token);
+				LDAP_SERVER = await getLdapServer();
 			})()
 		]);
 
-		const ldapConfig = await getLdapConfig(localStorage.token);
+		const ldapConfig = await getLdapConfig();
 		ENABLE_LDAP = ldapConfig.ENABLE_LDAP;
 	});
 </script>
@@ -215,6 +215,34 @@
 						/>
 					</div>
 
+					<hr class=" border-gray-50 dark:border-gray-850 my-2" />
+
+					<div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
+						{$i18n.t('Valid time units:')}
+						<span class=" text-gray-300 font-medium"
+							>{$i18n.t("'s', 'm', 'h', 'd', 'w' or '-1' for no expiration.")}</span
+						>
+					</div>
+				</div>
+
+				<hr class=" border-gray-50 dark:border-gray-850 my-2" />
+
+				<div class=" w-full justify-between">
+					<div class="flex w-full justify-between">
+						<div class=" self-center text-xs font-medium">
+							{$i18n.t('Refresh Token Expiration')}
+						</div>
+					</div>
+
+					<div class="flex mt-2 space-x-2">
+						<input
+							class="w-full rounded-lg py-2 px-4 text-sm bg-gray-50 dark:text-gray-300 dark:bg-gray-850 outline-none"
+							type="text"
+							placeholder={`e.g.) "30m","1h", "10d". `}
+							bind:value={adminConfig.JWT_REFRESH_EXPIRES_IN}
+						/>
+					</div>
+
 					<div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
 						{$i18n.t('Valid time units:')}
 						<span class=" text-gray-600 dark:text-gray-500 font-medium"
@@ -263,7 +291,7 @@
 						<Switch
 							bind:state={ENABLE_LDAP}
 							on:change={async () => {
-								updateLdapConfig(localStorage.token, ENABLE_LDAP);
+								updateLdapConfig(ENABLE_LDAP);
 							}}
 						/>
 					</div>

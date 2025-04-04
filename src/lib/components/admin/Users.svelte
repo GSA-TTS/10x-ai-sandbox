@@ -22,14 +22,14 @@
 	}
 
 	const getUsersHandler = async () => {
-		users = await getUsers(localStorage.token, limit);
+		users = await getUsers(limit);
 	};
 
 	onMount(async () => {
 		if ($user?.role !== 'admin') {
 			await goto('/');
 		} else {
-			users = await getUsers(localStorage.token, limit);
+			users = await getUsers(limit);
 		}
 		loaded = true;
 

@@ -25,18 +25,13 @@
 			return;
 		}
 
-		const res = await createNewKnowledge(
-			localStorage.token,
-			name,
-			description,
-			accessControl
-		).catch((e) => {
+		const res = await createNewKnowledge(name, description, accessControl).catch((e) => {
 			toast.error(e);
 		});
 
 		if (res) {
 			toast.success($i18n.t('Knowledge created successfully.'));
-			knowledge.set(await getKnowledgeBases(localStorage.token));
+			knowledge.set(await getKnowledgeBases());
 			goto(`/workspace/knowledge/${res.id}`);
 		}
 

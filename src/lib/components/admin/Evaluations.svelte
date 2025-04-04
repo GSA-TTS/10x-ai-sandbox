@@ -17,7 +17,7 @@
 
 	onMount(async () => {
 		if (enable_admin_feedbacks) {
-			feedbacks = await getAllFeedbacks(localStorage.token);
+			feedbacks = await getAllFeedbacks();
 		}
 		loaded = true;
 

@@ -9,7 +9,6 @@ from open_webui.models.auths import (
     AddUserForm,
     ApiKey,
     Auths,
-    Token,
     LdapForm,
     SigninForm,
     SigninResponse,
@@ -64,8 +63,7 @@ log.setLevel(SRC_LOG_LEVELS["MAIN"])
 ############################
 
 
-class SessionUserResponse(Token, UserResponse):
-    expires_at: Optional[int] = None
+class SessionUserResponse(UserResponse):
     permissions: Optional[dict] = None
 
 
@@ -73,40 +71,11 @@ class SessionUserResponse(Token, UserResponse):
 async def get_session_user(
     request: Request, response: Response, user=Depends(get_current_user)
 ):
-    expires_delta = parse_duration(request.app.state.config.JWT_EXPIRES_IN)
-    expires_at = None
-    if expires_delta:
-        expires_at = int(time.time()) + int(expires_delta.total_seconds())
-
-    token = create_token(
-        data={"id": user.id},
-        expires_delta=expires_delta,
-    )
-
-    datetime_expires_at = (
-        datetime.datetime.fromtimestamp(expires_at, datetime.timezone.utc)
-        if expires_at
-        else None
-    )
-
-    # Set the cookie token
-    response.set_cookie(
-        key="token",
-        value=token,
-        expires=datetime_expires_at,
-        httponly=True,  # Ensures the cookie is not accessible via JavaScript
-        samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
-        secure=WEBUI_SESSION_COOKIE_SECURE,
-    )
-
     user_permissions = get_permissions(
         user.id, request.app.state.config.USER_PERMISSIONS
     )
 
     return {
-        "token": token,
-        "token_type": "Bearer",
-        "expires_at": expires_at,
         "id": user.id,
         "email": user.email,
         "name": user.name,
@@ -327,7 +296,7 @@ async def signin(request: Request, response: Response, form_data: SigninForm):
                 ),
             )
         user = Auths.authenticate_user_by_trusted_header(trusted_email)
-    elif WEBUI_AUTH == False:
+    elif not WEBUI_AUTH:
         admin_email = "admin@localhost"
         admin_password = "admin"  # pragma: allowlist secret
 
@@ -365,12 +334,25 @@ async def signin(request: Request, response: Response, form_data: SigninForm):
             else None
         )
 
+        jwt_refresh_token = create_token(
+            data={"id": user.id},
+            expires_delta=parse_duration(
+                request.app.state.config.JWT_REFRESH_EXPIRES_IN
+            ),
+        )
         # Set the cookie token
         response.set_cookie(
             key="token",
             value=token,
-            expires=datetime_expires_at,
-            httponly=True,  # Ensures the cookie is not accessible via JavaScript
+            httponly=True,
+            samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
+            secure=WEBUI_SESSION_COOKIE_SECURE,
+        )
+        # Set a cookie with a refresh token
+        response.set_cookie(
+            key="refresh_token",
+            value=jwt_refresh_token,
+            httponly=True,
             samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
             secure=WEBUI_SESSION_COOKIE_SECURE,
         )
@@ -380,9 +362,6 @@ async def signin(request: Request, response: Response, form_data: SigninForm):
         )
 
         return {
-            "token": token,
-            "token_type": "Bearer",
-            "expires_at": expires_at,
             "id": user.id,
             "email": user.email,
             "name": user.name,
@@ -454,6 +433,13 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
                 expires_delta=expires_delta,
             )
 
+            jwt_refresh_token = create_token(
+                data={"id": user.id},
+                expires_delta=parse_duration(
+                    request.app.state.config.JWT_REFRESH_EXPIRES_IN
+                ),
+            )
+
             datetime_expires_at = (
                 datetime.datetime.fromtimestamp(expires_at, datetime.timezone.utc)
                 if expires_at
@@ -466,6 +452,14 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
                 value=token,
                 expires=datetime_expires_at,
                 httponly=True,  # Ensures the cookie is not accessible via JavaScript
+                samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
+                secure=WEBUI_SESSION_COOKIE_SECURE,
+            )
+
+            response.set_cookie(
+                key="refresh_token",
+                value=jwt_refresh_token,
+                httponly=True,
                 samesite=WEBUI_SESSION_COOKIE_SAME_SITE,
                 secure=WEBUI_SESSION_COOKIE_SECURE,
             )
@@ -505,6 +499,7 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
 @router.get("/signout")
 async def signout(request: Request, response: Response):
     response.delete_cookie("token")
+    response.delete_cookie("refresh_token")
 
     if ENABLE_OAUTH_SIGNUP.value:
         oauth_id_token = request.cookies.get("oauth_id_token")
@@ -512,14 +507,20 @@ async def signout(request: Request, response: Response):
             try:
                 async with ClientSession() as session:
                     async with session.get(OPENID_PROVIDER_URL.value) as resp:
-                        if resp.status == 200:
+                        if resp.ok:
                             openid_data = await resp.json()
                             logout_url = openid_data.get("end_session_endpoint")
                             if logout_url:
                                 response.delete_cookie("oauth_id_token")
-                                return RedirectResponse(
+                                response = RedirectResponse(
                                     url=f"{logout_url}?id_token_hint={oauth_id_token}"
                                 )
+                                response.delete_cookie("token")
+                                response.delete_cookie("refresh_token")
+                                # TODO: since this is being called by fetch on the front end
+                                # the browser probably won't honor the redirect since
+                                # it is to a different domain
+                                return response
                         else:
                             raise HTTPException(
                                 status_code=resp.status,
@@ -557,10 +558,7 @@ async def add_user(form_data: AddUserForm, user=Depends(get_admin_user)):
         )
 
         if user:
-            token = create_token(data={"id": user.id})
             return {
-                "token": token,
-                "token_type": "Bearer",
                 "id": user.id,
                 "email": user.email,
                 "name": user.name,
@@ -621,6 +619,7 @@ async def get_admin_config(request: Request, user=Depends(get_admin_user)):
         "ENABLE_CHANNELS": request.app.state.config.ENABLE_CHANNELS,
         "DEFAULT_USER_ROLE": request.app.state.config.DEFAULT_USER_ROLE,
         "JWT_EXPIRES_IN": request.app.state.config.JWT_EXPIRES_IN,
+        "JWT_REFRESH_EXPIRES_IN": request.app.state.config.JWT_REFRESH_EXPIRES_IN,
         "ENABLE_COMMUNITY_SHARING": request.app.state.config.ENABLE_COMMUNITY_SHARING,
         "ENABLE_MESSAGE_RATING": request.app.state.config.ENABLE_MESSAGE_RATING,
     }
@@ -636,6 +635,7 @@ class AdminConfig(BaseModel):
     ENABLE_CHANNELS: bool
     DEFAULT_USER_ROLE: str
     JWT_EXPIRES_IN: str
+    JWT_REFRESH_EXPIRES_IN: str
     ENABLE_COMMUNITY_SHARING: bool
     ENABLE_MESSAGE_RATING: bool
 
@@ -654,6 +654,7 @@ async def update_admin_config(
         "ENABLE_CHANNELS": request.app.state.config.ENABLE_CHANNELS,
         "DEFAULT_USER_ROLE": request.app.state.config.DEFAULT_USER_ROLE,
         "JWT_EXPIRES_IN": request.app.state.config.JWT_EXPIRES_IN,
+        "JWT_REFRESH_EXPIRES_IN": request.app.state.config.JWT_REFRESH_EXPIRES_IN,
         "ENABLE_COMMUNITY_SHARING": request.app.state.config.ENABLE_COMMUNITY_SHARING,
         "ENABLE_MESSAGE_RATING": request.app.state.config.ENABLE_MESSAGE_RATING,
     }
@@ -681,6 +682,11 @@ async def update_admin_config(
     if re.match(pattern, form_data.JWT_EXPIRES_IN):
         request.app.state.config.JWT_EXPIRES_IN = form_data.JWT_EXPIRES_IN
 
+    if re.match(pattern, form_data.JWT_REFRESH_EXPIRES_IN):
+        request.app.state.config.JWT_REFRESH_EXPIRES_IN = (
+            form_data.JWT_REFRESH_EXPIRES_IN
+        )
+
     request.app.state.config.ENABLE_COMMUNITY_SHARING = (
         form_data.ENABLE_COMMUNITY_SHARING
     )
@@ -700,6 +706,7 @@ async def update_admin_config(
         "ENABLE_CHANNELS": request.app.state.config.ENABLE_CHANNELS,
         "DEFAULT_USER_ROLE": request.app.state.config.DEFAULT_USER_ROLE,
         "JWT_EXPIRES_IN": request.app.state.config.JWT_EXPIRES_IN,
+        "JWT_REFRESH_EXPIRES_IN": request.app.state.config.JWT_REFRESH_EXPIRES_IN,
         "ENABLE_COMMUNITY_SHARING": request.app.state.config.ENABLE_COMMUNITY_SHARING,
         "ENABLE_MESSAGE_RATING": request.app.state.config.ENABLE_MESSAGE_RATING,
     }

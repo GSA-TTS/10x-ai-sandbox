@@ -106,7 +106,7 @@
 		console.log('Update embedding model attempt:', embeddingModel);
 
 		updateEmbeddingModelLoading = true;
-		const res = await updateEmbeddingConfig(localStorage.token, {
+		const res = await updateEmbeddingConfig({
 			embedding_engine: embeddingEngine,
 			embedding_model: embeddingModel,
 			embedding_batch_size: embeddingBatchSize,
@@ -139,7 +139,7 @@
 		console.log('Update reranking model attempt:', rerankingModel);
 
 		updateRerankingModelLoading = true;
-		const res = await updateRerankingConfig(localStorage.token, {
+		const res = await updateRerankingConfig({
 			reranking_model: rerankingModel
 		}).catch(async (error) => {
 			toast.error(error);
@@ -175,7 +175,7 @@
 			toast.error($i18n.t('Tika Server URL required.'));
 			return;
 		}
-		const res = await updateRAGConfig(localStorage.token, {
+		const res = await updateRAGConfig({
 			pdf_extract_images: pdfExtractImages,
 			enable_google_drive_integration: enableGoogleDriveIntegration,
 			file: {
@@ -193,13 +193,13 @@
 			}
 		});
 
-		await updateQuerySettings(localStorage.token, querySettings);
+		await updateQuerySettings(querySettings);
 
 		dispatch('save');
 	};
 
 	const setEmbeddingConfig = async () => {
-		const embeddingConfig = await getEmbeddingConfig(localStorage.token);
+		const embeddingConfig = await getEmbeddingConfig();
 
 		if (embeddingConfig) {
 			embeddingEngine = embeddingConfig.embedding_engine;
@@ -215,7 +215,7 @@
 	};
 
 	const setRerankingConfig = async () => {
-		const rerankingConfig = await getRerankingConfig(localStorage.token);
+		const rerankingConfig = await getRerankingConfig();
 
 		if (rerankingConfig) {
 			rerankingModel = rerankingConfig.reranking_model;
@@ -224,16 +224,16 @@
 
 	const toggleHybridSearch = async () => {
 		querySettings.hybrid = !querySettings.hybrid;
-		querySettings = await updateQuerySettings(localStorage.token, querySettings);
+		querySettings = await updateQuerySettings(querySettings);
 	};
 
 	onMount(async () => {
 		await setEmbeddingConfig();
 		await setRerankingConfig();
 
-		querySettings = await getQuerySettings(localStorage.token);
+		querySettings = await getQuerySettings();
 
-		const res = await getRAGConfig(localStorage.token);
+		const res = await getRAGConfig();
 
 		if (res) {
 			pdfExtractImages = res.pdf_extract_images;
@@ -257,7 +257,7 @@
 <ResetUploadDirConfirmDialog
 	bind:show={showResetUploadDirConfirm}
 	on:confirm={async () => {
-		const res = await deleteAllFiles(localStorage.token).catch((error) => {
+		const res = await deleteAllFiles().catch((error) => {
 			toast.error(error);
 			return null;
 		});
@@ -271,7 +271,7 @@
 <ResetVectorDBConfirmDialog
 	bind:show={showResetConfirm}
 	on:confirm={() => {
-		const res = resetVectorDB(localStorage.token).catch((error) => {
+		const res = resetVectorDB().catch((error) => {
 			toast.error(error);
 			return null;
 		});

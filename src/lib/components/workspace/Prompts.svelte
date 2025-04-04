@@ -71,13 +71,13 @@
 
 	const deleteHandler = async (prompt) => {
 		const command = prompt.command;
-		await deletePromptByCommand(localStorage.token, command);
+		await deletePromptByCommand(command);
 		await init();
 	};
 
 	const init = async () => {
-		prompts = await getPromptList(localStorage.token);
-		await _prompts.set(await getPrompts(localStorage.token));
+		prompts = await getPromptList();
+		await _prompts.set(await getPrompts());
 	};
 
 	onMount(async () => {
@@ -239,7 +239,7 @@
 							console.log(savedPrompts);
 
 							for (const prompt of savedPrompts) {
-								await createNewPrompt(localStorage.token, {
+								await createNewPrompt({
 									command:
 										prompt.command.charAt(0) === '/' ? prompt.command.slice(1) : prompt.command,
 									title: prompt.title,
@@ -250,8 +250,8 @@
 								});
 							}
 
-							prompts = await getPromptList(localStorage.token);
-							await _prompts.set(await getPrompts(localStorage.token));
+							prompts = await getPromptList();
+							await _prompts.set(await getPrompts());
 
 							importFiles = [];
 							promptsImportInputElement.value = '';

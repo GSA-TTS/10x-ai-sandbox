@@ -311,11 +311,11 @@
 		console.log(updated);
 		await settings.set({ ...$settings, ...updated });
 		await models.set(await getModels());
-		await updateUserSettings(localStorage.token, { ui: $settings });
+		await updateUserSettings({ ui: $settings });
 	};
 
 	const getModels = async () => {
-		return await _getModels(localStorage.token);
+		return await _getModels();
 	};
 
 	let selectedTab = 'general';

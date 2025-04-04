@@ -27,24 +27,24 @@
 	let showUnarchiveAllConfirmDialog = false;
 
 	const unarchiveChatHandler = async (chatId) => {
-		const res = await archiveChatById(localStorage.token, chatId).catch((error) => {
+		const res = await archiveChatById(chatId).catch((error) => {
 			toast.error(error);
 		});
 
-		chats = await getArchivedChatList(localStorage.token);
+		chats = await getArchivedChatList();
 		dispatch('change');
 	};
 
 	const deleteChatHandler = async (chatId) => {
-		const res = await deleteChatById(localStorage.token, chatId).catch((error) => {
+		const res = await deleteChatById(chatId).catch((error) => {
 			toast.error(error);
 		});
 
-		chats = await getArchivedChatList(localStorage.token);
+		chats = await getArchivedChatList();
 	};
 
 	const exportChatsHandler = async () => {
-		const chats = await getAllArchivedChats(localStorage.token);
+		const chats = await getAllArchivedChats();
 		let blob = new Blob([JSON.stringify(chats)], {
 			type: 'application/json'
 		});
@@ -53,14 +53,14 @@
 
 	const unarchiveAllHandler = async () => {
 		for (const chat of chats) {
-			await archiveChatById(localStorage.token, chat.id);
+			await archiveChatById(chat.id);
 		}
-		chats = await getArchivedChatList(localStorage.token);
+		chats = await getArchivedChatList();
 	};
 
 	$: if (show) {
 		(async () => {
-			chats = await getArchivedChatList(localStorage.token);
+			chats = await getArchivedChatList();
 		})();
 	}
 

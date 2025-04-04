@@ -38,11 +38,6 @@ class AuthModel(BaseModel):
 ####################
 
 
-class Token(BaseModel):
-    token: str
-    token_type: str
-
-
 class ApiKey(BaseModel):
     api_key: Optional[str] = None
 
@@ -55,7 +50,7 @@ class UserResponse(BaseModel):
     profile_image_url: str
 
 
-class SigninResponse(Token, UserResponse):
+class SigninResponse(UserResponse):
     pass
 
 

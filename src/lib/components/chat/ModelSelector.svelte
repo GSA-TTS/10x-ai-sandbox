@@ -20,7 +20,7 @@
 			return;
 		}
 		settings.set({ ...$settings, models: selectedModels });
-		await updateUserSettings(localStorage.token, { ui: $settings });
+		await updateUserSettings({ ui: $settings });
 
 		toast.success($i18n.t('Default model updated'));
 	};

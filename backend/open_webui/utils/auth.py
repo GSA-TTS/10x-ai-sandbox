@@ -9,6 +9,7 @@ from open_webui.models.users import Users
 
 from open_webui.constants import ERROR_MESSAGES
 from open_webui.env import WEBUI_SECRET_KEY
+from open_webui.utils.misc import parse_duration
 
 from fastapi import Depends, HTTPException, Request, Response, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -50,11 +51,7 @@ def create_token(data: dict, expires_delta: Union[timedelta, None] = None) -> st
 
 
 def decode_token(token: str) -> Optional[dict]:
-    try:
-        decoded = jwt.decode(token, SESSION_SECRET, algorithms=[ALGORITHM])
-        return decoded
-    except Exception:
-        return None
+    return jwt.decode(token, SESSION_SECRET, algorithms=[ALGORITHM])
 
 
 def extract_token_from_auth_header(auth_header: str):
@@ -74,47 +71,79 @@ def get_http_authorization_cred(auth_header: str):
         raise ValueError(ERROR_MESSAGES.INVALID_TOKEN)
 
 
+def refresh_jwt(request: Request, response: Response):
+    """
+    Checks the refresh token from the request cookie. If it's not expired, get data
+    and set a fresh jwt on the cookie and return the data.
+    """
+    refresh_token = request.cookies.get("refresh_token")
+    if refresh_token is None:
+        raise HTTPException(status_code=403, detail=ERROR_MESSAGES.UNAUTHORIZED)
+    try:
+        data = jwt.decode(refresh_token, SESSION_SECRET, algorithms=[ALGORITHM])
+    except Exception as e:
+        # an invalid or expired refresh cookie leaves us no
+        # choice by to send 401.
+        raise e
+
+    claim = {"id": data["id"]}
+    expires_delta = parse_duration(request.app.state.config.JWT_EXPIRES_IN)
+    new_token = create_token(claim, expires_delta)
+    response.set_cookie(key="token", value=new_token, httponly=True)
+    return data
+
+
 def get_current_user(
     request: Request,
+    response: Response,
     auth_token: HTTPAuthorizationCredentials = Depends(bearer_security),
 ):
-    token = None
-
+    # handle potential API token in authorization header:
     if auth_token is not None:
-        token = auth_token.credentials
+        api_key = auth_token.credentials
 
-    if token is None and "token" in request.cookies:
-        token = request.cookies.get("token")
-
-    if token is None:
-        raise HTTPException(status_code=403, detail="Not authenticated")
-
-    # auth by api key
-    if token.startswith("sk-"):
-        if not request.state.enable_api_key:
-            raise HTTPException(
-                status.HTTP_403_FORBIDDEN, detail=ERROR_MESSAGES.API_KEY_NOT_ALLOWED
-            )
-
-        if request.app.state.config.ENABLE_API_KEY_ENDPOINT_RESTRICTIONS:
-            allowed_paths = [
-                path.strip()
-                for path in str(request.app.state.config.API_KEY_ALLOWED_PATHS).split(
-                    ","
-                )
-            ]
-
-            if request.url.path not in allowed_paths:
+        # ignore any bearer tokens that don't start with 'sk-'
+        if api_key is not None and api_key.startswith("sk-"):
+            if not request.state.enable_api_key:
                 raise HTTPException(
                     status.HTTP_403_FORBIDDEN, detail=ERROR_MESSAGES.API_KEY_NOT_ALLOWED
                 )
 
-        return get_current_user_by_api_key(token)
+            if request.app.state.config.ENABLE_API_KEY_ENDPOINT_RESTRICTIONS:
+                allowed_paths = [
+                    path.strip()
+                    for path in str(
+                        request.app.state.config.API_KEY_ALLOWED_PATHS
+                    ).split(",")
+                ]
 
-    # auth by jwt token
+                if request.url.path not in allowed_paths:
+                    raise HTTPException(
+                        status.HTTP_403_FORBIDDEN,
+                        detail=ERROR_MESSAGES.API_KEY_NOT_ALLOWED,
+                    )
+
+            return get_current_user_by_api_key(api_key)
+
+    # auth using jwt token in cookie
+    token = request.cookies.get("token")
+
+    if token is None:
+        raise HTTPException(status_code=403, detail="Not authenticated")
+
     try:
-        data = decode_token(token)
-    except Exception as e:
+        data = jwt.decode(token, SESSION_SECRET, algorithms=[ALGORITHM])
+    except jwt.ExpiredSignatureError:
+        try:
+            data = refresh_jwt(request, response)
+        except Exception:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token",
+            )
+    except Exception:
+        # Only generate a new token when the old one is valid, but expired.
+        # Any other failure should not be allowed
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token",

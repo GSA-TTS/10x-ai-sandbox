@@ -60,7 +60,7 @@
 	);
 
 	const shareHandler = async (tool) => {
-		const item = await getToolById(localStorage.token, tool.id).catch((error) => {
+		const item = await getToolById(tool.id).catch((error) => {
 			toast.error(error);
 			return null;
 		});
@@ -87,7 +87,7 @@
 	};
 
 	const cloneHandler = async (tool) => {
-		const _tool = await getToolById(localStorage.token, tool.id).catch((error) => {
+		const _tool = await getToolById(tool.id).catch((error) => {
 			toast.error(error);
 			return null;
 		});
@@ -103,7 +103,7 @@
 	};
 
 	const exportHandler = async (tool) => {
-		const _tool = await getToolById(localStorage.token, tool.id).catch((error) => {
+		const _tool = await getToolById(tool.id).catch((error) => {
 			toast.error(error);
 			return null;
 		});
@@ -117,7 +117,7 @@
 	};
 
 	const deleteHandler = async (tool) => {
-		const res = await deleteToolById(localStorage.token, tool.id).catch((error) => {
+		const res = await deleteToolById(tool.id).catch((error) => {
 			toast.error(error);
 			return null;
 		});
@@ -130,8 +130,8 @@
 	};
 
 	const init = async () => {
-		tools = await getToolList(localStorage.token);
-		_tools.set(await getTools(localStorage.token));
+		tools = await getToolList();
+		_tools.set(await getTools());
 	};
 
 	onMount(async () => {
@@ -404,7 +404,7 @@
 				<button
 					class="flex text-xs items-center space-x-1 px-3 py-1.5 rounded-xl bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-200 transition"
 					on:click={async () => {
-						const _tools = await exportTools(localStorage.token).catch((error) => {
+						const _tools = await exportTools().catch((error) => {
 							toast.error(error);
 							return null;
 						});
@@ -489,14 +489,14 @@
 				console.log(_tools);
 
 				for (const tool of _tools) {
-					const res = await createNewTool(localStorage.token, tool).catch((error) => {
+					const res = await createNewTool(tool).catch((error) => {
 						toast.error(error);
 						return null;
 					});
 				}
 
 				toast.success($i18n.t('Tool imported successfully'));
-				tools.set(await getTools(localStorage.token));
+				tools.set(await getTools());
 			};
 
 			reader.readAsText(importFiles[0]);

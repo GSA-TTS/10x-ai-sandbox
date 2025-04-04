@@ -77,7 +77,7 @@
 				// IndexedDB Not Found
 			}
 
-			const userSettings = await getUserSettings(localStorage.token).catch((error) => {
+			const userSettings = await getUserSettings().catch((error) => {
 				console.error(error);
 				return null;
 			});
@@ -96,9 +96,9 @@
 				settings.set(localStorageSettings);
 			}
 
-			models.set(await getModels(localStorage.token));
-			banners.set(await getBanners(localStorage.token));
-			tools.set(await getTools(localStorage.token));
+			models.set(await getModels());
+			banners.set(await getBanners());
+			tools.set(await getTools());
 
 			document.addEventListener('keydown', async function (event) {
 				const isCtrlPressed = event.ctrlKey || event.metaKey; // metaKey is for Cmd key on Mac
@@ -218,7 +218,7 @@
 	});
 
 	const checkForVersionUpdates = async () => {
-		version = await getVersionUpdates(localStorage.token).catch((error) => {
+		version = await getVersionUpdates().catch((error) => {
 			return {
 				current: WEBUI_VERSION,
 				latest: WEBUI_VERSION

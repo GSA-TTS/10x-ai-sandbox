@@ -51,11 +51,11 @@
 	const getUserValves = async () => {
 		loading = true;
 		if (tab === 'tools') {
-			valves = await getToolUserValvesById(localStorage.token, selectedId);
-			valvesSpec = await getToolUserValvesSpecById(localStorage.token, selectedId);
+			valves = await getToolUserValvesById(selectedId);
+			valvesSpec = await getToolUserValvesSpecById(selectedId);
 		} else if (tab === 'functions') {
-			valves = await getFunctionUserValvesById(localStorage.token, selectedId);
-			valvesSpec = await getFunctionUserValvesSpecById(localStorage.token, selectedId);
+			valves = await getFunctionUserValvesById(selectedId);
+			valvesSpec = await getFunctionUserValvesSpecById(selectedId);
 		}
 
 		if (valvesSpec) {
@@ -80,23 +80,17 @@
 			}
 
 			if (tab === 'tools') {
-				const res = await updateToolUserValvesById(localStorage.token, selectedId, valves).catch(
-					(error) => {
-						toast.error(error);
-						return null;
-					}
-				);
+				const res = await updateToolUserValvesById(selectedId, valves).catch((error) => {
+					toast.error(error);
+					return null;
+				});
 
 				if (res) {
 					toast.success($i18n.t('Valves updated'));
 					valves = res;
 				}
 			} else if (tab === 'functions') {
-				const res = await updateFunctionUserValvesById(
-					localStorage.token,
-					selectedId,
-					valves
-				).catch((error) => {
+				const res = await updateFunctionUserValvesById(selectedId, valves).catch((error) => {
 					toast.error(error);
 					return null;
 				});
@@ -125,10 +119,10 @@
 		loading = true;
 
 		if ($functions === null) {
-			functions.set(await getFunctions(localStorage.token));
+			functions.set(await getFunctions());
 		}
 		if ($tools === null) {
-			tools.set(await getTools(localStorage.token));
+			tools.set(await getTools());
 		}
 
 		loading = false;

@@ -7,7 +7,7 @@
 	onMount(async () => {
 		await Promise.all([
 			(async () => {
-				models.set(await getModels(localStorage.token));
+				models.set(await getModels());
 			})()
 		]);
 	});

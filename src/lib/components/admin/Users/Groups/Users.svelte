@@ -15,7 +15,7 @@
 	let filteredUsers = [];
 
 	const submitSearchHandler = async () => {
-		const res = await searchUsers(localStorage.token, query).catch((error) => {
+		const res = await searchUsers(query).catch((error) => {
 			toast.error(error);
 			return null;
 		});

@@ -51,32 +51,32 @@
 	let totalUserCount = 0;
 
 	onMount(async () => {
-		totalUserCount = await getTotalUserCount(localStorage.token);
+		totalUserCount = await getTotalUserCount();
 	});
 
 	const updateRoleHandler = async (id, role) => {
-		const res = await updateUserRole(localStorage.token, id, role).catch((error) => {
+		const res = await updateUserRole(id, role).catch((error) => {
 			toast.error(error);
 			return null;
 		});
 
 		if (res) {
-			users = await getUsers(localStorage.token, limit);
+			users = await getUsers(limit);
 		}
 	};
 
 	const deleteUserHandler = async (id) => {
-		const res = await deleteUserById(localStorage.token, id).catch((error) => {
+		const res = await deleteUserById(id).catch((error) => {
 			toast.error(error);
 			return null;
 		});
 		if (res) {
-			users = await getUsers(localStorage.token, limit);
+			users = await getUsers(limit);
 		}
 	};
 
 	const submitSearchHandler = async () => {
-		const res = await searchUsers(localStorage.token, search).catch((error) => {
+		const res = await searchUsers(search).catch((error) => {
 			toast.error(error);
 			return null;
 		});
@@ -122,7 +122,7 @@
 		{selectedUser}
 		sessionUser={$user}
 		on:save={async () => {
-			users = await getUsers(localStorage.token);
+			users = await getUsers();
 		}}
 	/>
 {/key}
@@ -130,7 +130,7 @@
 <AddUserModal
 	bind:show={showAddUserModal}
 	on:save={async () => {
-		users = await getUsers(localStorage.token);
+		users = await getUsers();
 	}}
 />
 <UserChatsModal bind:show={showUserChatsModal} user={selectedUser} />

@@ -108,7 +108,7 @@
 				on:click={async () => {
 					localStorage.version = $config.version;
 					await settings.set({ ...$settings, ...{ version: $config.version } });
-					await updateUserSettings(localStorage.token, { ui: $settings });
+					await updateUserSettings({ ui: $settings });
 					show = false;
 				}}
 				class="px-3.5 py-1.5 text-sm font-medium bg-black hover:bg-gray-900 text-white dark:bg-white dark:text-black dark:hover:bg-gray-100 transition rounded-full"

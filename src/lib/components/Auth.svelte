@@ -35,7 +35,6 @@
 	const setSessionUser = async (sessionUser) => {
 		if (sessionUser) {
 			console.log(sessionUser);
-			toast.success($i18n.t(`You're now logged in.`));
 			if (sessionUser.token) {
 				localStorage.token = sessionUser.token;
 			}
@@ -86,26 +85,16 @@
 	};
 
 	const checkOauthCallback = async () => {
-		if (!$page.url.hash) {
-			return;
-		}
-		const hash = $page.url.hash.substring(1);
-		if (!hash) {
-			return;
-		}
-		const params = new URLSearchParams(hash);
-		const token = params.get('token');
-		if (!token) {
-			return;
-		}
-		const sessionUser = await getSessionUser(token).catch((error) => {
-			toast.error(error);
+		// The backend should have set the cookie
+		// with a jwt by this point. So we can all
+		// getSession and the backend will find it.
+		const sessionUser = await getSessionUser().catch((error) => {
 			return null;
 		});
+
 		if (!sessionUser) {
 			return;
 		}
-		localStorage.token = token;
 		await setSessionUser(sessionUser);
 	};
 

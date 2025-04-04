@@ -16,7 +16,7 @@
 
 	async function acceptTerms() {
 		await settings.set({ ...$settings, ...{ acceptedTermsVersion: TERMS_VERSION } });
-		await updateUserSettings(localStorage.token, { ui: $settings });
+		await updateUserSettings({ ui: $settings });
 		show = false;
 	}
 </script>

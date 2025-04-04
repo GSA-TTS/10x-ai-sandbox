@@ -33,7 +33,7 @@
 	let youtubeProxyUrl = '';
 
 	const submitHandler = async () => {
-		const res = await updateRAGConfig(localStorage.token, {
+		const res = await updateRAGConfig({
 			web: webConfig,
 			youtube: {
 				language: youtubeLanguage.split(',').map((lang) => lang.trim()),
@@ -44,7 +44,7 @@
 	};
 
 	onMount(async () => {
-		const res = await getRAGConfig(localStorage.token);
+		const res = await getRAGConfig();
 
 		if (res) {
 			webConfig = res.web;

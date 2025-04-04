@@ -14,7 +14,7 @@
 	export let saveHandler: Function;
 
 	const exportAllUserChats = async () => {
-		let blob = new Blob([JSON.stringify(await getAllUserChats(localStorage.token))], {
+		let blob = new Blob([JSON.stringify(await getAllUserChats())], {
 			type: 'application/json'
 		});
 		saveAs(blob, `all-chats-export-${Date.now()}.json`);
@@ -45,11 +45,9 @@
 					const reader = new FileReader();
 
 					reader.onload = async (e) => {
-						const res = await importConfig(localStorage.token, JSON.parse(e.target.result)).catch(
-							(error) => {
-								toast.error(error);
-							}
-						);
+						const res = await importConfig(JSON.parse(e.target.result)).catch((error) => {
+							toast.error(error);
+						});
 
 						if (res) {
 							toast.success('Config imported successfully');
@@ -92,7 +90,7 @@
 				type="button"
 				class=" flex rounded-md py-2 px-3 w-full hover:bg-gray-200 dark:hover:bg-gray-800 transition"
 				on:click={async () => {
-					const config = await exportConfig(localStorage.token);
+					const config = await exportConfig();
 					const blob = new Blob([JSON.stringify(config)], {
 						type: 'application/json'
 					});
@@ -131,7 +129,7 @@
 						on:click={() => {
 							// exportAllUserChats();
 
-							downloadDatabase(localStorage.token).catch((error) => {
+							downloadDatabase().catch((error) => {
 								toast.error(error);
 							});
 						}}

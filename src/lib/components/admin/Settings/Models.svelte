@@ -63,8 +63,8 @@
 	};
 
 	const init = async () => {
-		workspaceModels = await getBaseModels(localStorage.token);
-		baseModels = await getModels(localStorage.token, true);
+		workspaceModels = await getBaseModels();
+		baseModels = await getModels(true);
 
 		models = baseModels.map((m) => {
 			const workspaceModel = workspaceModels.find((wm) => wm.id === m.id);
@@ -90,7 +90,7 @@
 		model.base_model_id = null;
 
 		if (workspaceModels.find((m) => m.id === model.id)) {
-			const res = await updateModelById(localStorage.token, model.id, model).catch((error) => {
+			const res = await updateModelById(model.id, model).catch((error) => {
 				return null;
 			});
 
@@ -98,7 +98,7 @@
 				toast.success($i18n.t('Model updated successfully'));
 			}
 		} else {
-			const res = await createNewModel(localStorage.token, model).catch((error) => {
+			const res = await createNewModel(model).catch((error) => {
 				return null;
 			});
 
@@ -107,13 +107,13 @@
 			}
 		}
 
-		_models.set(await getModels(localStorage.token));
+		_models.set(await getModels());
 		await init();
 	};
 
 	const toggleModelHandler = async (model) => {
 		if (!Object.keys(model).includes('base_model_id')) {
-			await createNewModel(localStorage.token, {
+			await createNewModel({
 				id: model.id,
 				name: model.name,
 				base_model_id: null,
@@ -125,11 +125,11 @@
 				return null;
 			});
 		} else {
-			await toggleModelById(localStorage.token, model.id);
+			await toggleModelById(model.id);
 		}
 
 		await init();
-		_models.set(await getModels(localStorage.token));
+		_models.set(await getModels());
 	};
 
 	onMount(async () => {
@@ -319,7 +319,7 @@
 									}
 								}
 
-								await _models.set(await getModels(localStorage.token));
+								await _models.set(await getModels());
 								init();
 							};
 

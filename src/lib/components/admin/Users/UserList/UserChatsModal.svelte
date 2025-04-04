@@ -19,17 +19,17 @@
 	let chats = null;
 
 	const deleteChatHandler = async (chatId) => {
-		const res = await deleteChatById(localStorage.token, chatId).catch((error) => {
+		const res = await deleteChatById(chatId).catch((error) => {
 			toast.error(error);
 		});
 
-		chats = await getChatListByUserId(localStorage.token, user.id);
+		chats = await getChatListByUserId(user.id);
 	};
 
 	$: if (show) {
 		(async () => {
 			if (user.id) {
-				chats = await getChatListByUserId(localStorage.token, user.id);
+				chats = await getChatListByUserId(user.id);
 			}
 		})();
 	} else {

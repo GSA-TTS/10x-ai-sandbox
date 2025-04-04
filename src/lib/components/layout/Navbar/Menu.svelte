@@ -83,7 +83,7 @@
 
 	const downloadJSONExport = async () => {
 		if (chat.id) {
-			chat = await getChatById(localStorage.token, chat.id);
+			chat = await getChatById(chat.id);
 		}
 		let blob = new Blob([JSON.stringify([chat])], {
 			type: 'application/json'

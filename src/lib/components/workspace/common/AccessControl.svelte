@@ -17,7 +17,7 @@
 	let groups = [];
 
 	onMount(async () => {
-		groups = await getGroups(localStorage.token);
+		groups = await getGroups();
 
 		if (accessControl === null) {
 			accessControl = null;

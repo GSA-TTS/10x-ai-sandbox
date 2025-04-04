@@ -20,14 +20,14 @@
 	let showAddModel = false;
 
 	const submitHandler = async () => {
-		config = await updateConfig(localStorage.token, config).catch((err) => {
+		config = await updateConfig(config).catch((err) => {
 			toast.error(err);
 			return null;
 		});
 
 		if (config) {
 			toast.success('Settings saved successfully');
-			models.set(await getModels(localStorage.token));
+			models.set(await getModels());
 		}
 	};
 
@@ -36,7 +36,7 @@
 		config.EVALUATION_ARENA_MODELS = [...config.EVALUATION_ARENA_MODELS];
 
 		await submitHandler();
-		models.set(await getModels(localStorage.token));
+		models.set(await getModels());
 	};
 
 	const editModelHandler = async (model, modelIdx) => {
@@ -44,7 +44,7 @@
 		config.EVALUATION_ARENA_MODELS = [...config.EVALUATION_ARENA_MODELS];
 
 		await submitHandler();
-		models.set(await getModels(localStorage.token));
+		models.set(await getModels());
 	};
 
 	const deleteModelHandler = async (modelIdx) => {
@@ -53,12 +53,12 @@
 		);
 
 		await submitHandler();
-		models.set(await getModels(localStorage.token));
+		models.set(await getModels());
 	};
 
 	onMount(async () => {
 		if ($user.role === 'admin') {
-			config = await getConfig(localStorage.token).catch((err) => {
+			config = await getConfig().catch((err) => {
 				toast.error(err);
 				return null;
 			});

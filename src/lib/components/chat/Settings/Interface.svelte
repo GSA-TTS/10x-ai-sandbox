@@ -127,7 +127,7 @@
 			});
 
 			if (position) {
-				await updateUserInfo(localStorage.token, { location: position });
+				await updateUserInfo({ location: position });
 				toast.success($i18n.t('User location successfully retrieved.'));
 			} else {
 				userLocation = false;

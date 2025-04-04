@@ -1,7 +1,7 @@
 import { getRAGTemplate } from '$lib/apis/retrieval';
 
 export const RAGTemplate = async (token: string, context: string, query: string) => {
-	let template = await getRAGTemplate(token).catch(() => {
+	let template = await getRAGTemplate().catch(() => {
 		return `Use the following context as your learned knowledge, inside <context></context> XML tags.
 		<context>
 		  [context]
