@@ -17,6 +17,7 @@ from sqlalchemy.orm import declarative_base, scoped_session, sessionmaker
 from sqlalchemy.dialects.postgresql import JSONB, array
 from pgvector.sqlalchemy import Vector
 from sqlalchemy.ext.mutable import MutableDict
+from sqlalchemy.exc import OperationalError
 
 from open_webui.retrieval.vector.main import VectorItem, SearchResult, GetResult
 from open_webui.config import PGVECTOR_DB_URL
@@ -112,9 +113,13 @@ class PgvectorClient:
             print(
                 f"Inserted {len(new_items)} items into collection '{collection_name}'."
             )
+        except OperationalError as e:
+            self.session.rollback()
+            print(f"pgvectorclienterror error during insert: {e}")
+            raise
         except Exception as e:
             self.session.rollback()
-            print(f"Error during insert: {e}")
+            print(f"pgvectorclienterror error during insert: {e}")
             raise
 
     def upsert(self, collection_name: str, items: List[VectorItem]) -> None:
@@ -144,9 +149,13 @@ class PgvectorClient:
                     self.session.add(new_chunk)
             self.session.commit()
             print(f"Upserted {len(items)} items into collection '{collection_name}'.")
+        except OperationalError as e:
+            self.session.rollback()
+            print(f"pgvectorclienterror error during upsert: {e}")
+            raise
         except Exception as e:
             self.session.rollback()
-            print(f"Error during upsert: {e}")
+            print(f"pgvectorclienterror error during upsert: {e}")
             raise
 
     def search(
@@ -236,8 +245,13 @@ class PgvectorClient:
             return SearchResult(
                 ids=ids, distances=distances, documents=documents, metadatas=metadatas
             )
+        except OperationalError as e:
+            self.session.rollback()
+            print(f"pgvectorclienterror error during search: {e}")
+            raise
         except Exception as e:
-            print(f"Error during search: {e}")
+            self.session.rollback()
+            print(f"pgvectorclienterror error during search: {e}")
             return None
 
     def query(
@@ -268,8 +282,13 @@ class PgvectorClient:
                 documents=documents,
                 metadatas=metadatas,
             )
+        except OperationalError as e:
+            self.session.rollback()
+            print(f"pgvectorclienterror error during query: {e}")
+            raise
         except Exception as e:
-            print(f"Error during query: {e}")
+            self.session.rollback()
+            print(f"pgvectorclienterror error during query: {e}")
             return None
 
     def get(
@@ -292,8 +311,13 @@ class PgvectorClient:
             metadatas = [[result.vmetadata for result in results]]
 
             return GetResult(ids=ids, documents=documents, metadatas=metadatas)
+        except OperationalError as e:
+            self.session.rollback()
+            print(f"pgvectorclienterror error during get: {e}")
+            raise
         except Exception as e:
-            print(f"Error during get: {e}")
+            self.session.rollback()
+            print(f"pgvectorclienterror error during get: {e}")
             return None
 
     def delete(
@@ -316,9 +340,13 @@ class PgvectorClient:
             deleted = query.delete(synchronize_session=False)
             self.session.commit()
             print(f"Deleted {deleted} items from collection '{collection_name}'.")
+        except OperationalError as e:
+            self.session.rollback()
+            print(f"pgvectorclienterror error during delete: {e}")
+            raise
         except Exception as e:
             self.session.rollback()
-            print(f"Error during delete: {e}")
+            print(f"pgvectorclienterror error during delete: {e}")
             raise
 
     def reset(self) -> None:
@@ -328,9 +356,13 @@ class PgvectorClient:
             print(
                 f"Reset complete. Deleted {deleted} items from 'document_chunk' table."
             )
+        except OperationalError as e:
+            self.session.rollback()
+            print(f"pgvectorclienterror error during reset: {e}")
+            raise
         except Exception as e:
             self.session.rollback()
-            print(f"Error during reset: {e}")
+            print(f"pgvectorclienterror error during reset: {e}")
             raise
 
     def close(self) -> None:
@@ -345,10 +377,23 @@ class PgvectorClient:
                 is not None
             )
             return exists
+
+        except OperationalError as e:
+            self.session.rollback()
+            print(f"pgvectorclienterror error checking collection exists: {e}")
+            raise
         except Exception as e:
-            print(f"Error checking collection existence: {e}")
-            return False
+            print(f"pgvectorclienterror Error checking collection exists: {e}")
+            raise
 
     def delete_collection(self, collection_name: str) -> None:
-        self.delete(collection_name)
-        print(f"Collection '{collection_name}' deleted.")
+        try:
+            self.delete(collection_name)
+            print(f"Collection '{collection_name}' deleted.")
+        except OperationalError as e:
+            self.session.rollback()
+            print(f"pgvectorclienterror error deleting collection: {e}")
+            raise
+        except Exception as e:
+            print(f"pgvectorclienterror error deleting collection: {e}")
+            raise
