@@ -103,29 +103,7 @@ if os.path.exists(f"{DATA_DIR}/config.json"):
 
 DEFAULT_CONFIG = {
     "version": 0,
-    "ui": {
-        "default_locale": "",
-        "prompt_suggestions": [
-            {
-                "title": [
-                    "Help me with the FAR",
-                ],
-                "content": "Help me understand the Federal Acquisition Regulations; give me an overview of the FAR Parts and how they're used",
-            },
-            {
-                "title": [
-                    "Generate ideas for a report",
-                ],
-                "content": "Generate ideas for a report about historical preservation, specifically focused on federal buildings",
-            },
-            {
-                "title": [
-                    "Summarize the meeting notes",
-                ],
-                "content": "Summarize meeting notes and pull out key points and next steps. Remember to avoid putting personally identifiable information into the chat.",
-            },
-        ],
-    },
+    "ui": {},
 }
 
 
@@ -767,31 +745,22 @@ DEFAULT_PROMPT_SUGGESTIONS = PersistentConfig(
     "ui.prompt_suggestions",
     [
         {
-            "title": ["Help me study", "vocabulary for a college entrance exam"],
-            "content": "Help me study vocabulary: write a sentence for me to fill in the blank, and I'll try to pick the correct option.",
-        },
-        {
-            "title": ["Give me ideas", "for what to do with my kids' art"],
-            "content": "What are 5 creative things I could do with my kids' art? I don't want to throw them away, but it's also so much clutter.",
-        },
-        {
-            "title": ["Tell me a fun fact", "about the Roman Empire"],
-            "content": "Tell me a random fun fact about the Roman Empire",
-        },
-        {
-            "title": ["Show me a code snippet", "of a website's sticky header"],
-            "content": "Show me a code snippet of a website's sticky header in CSS and JavaScript.",
+            "title": [
+                "Help me with the FAR",
+            ],
+            "content": "Help me understand the Federal Acquisition Regulations; give me an overview of the FAR Parts and how they're used",
         },
         {
             "title": [
-                "Explain options trading",
-                "if I'm familiar with buying and selling stocks",
+                "Generate ideas for a report",
             ],
-            "content": "Explain options trading in simple terms if I'm familiar with buying and selling stocks.",
+            "content": "Generate ideas for a report about historical preservation, specifically focused on federal buildings",
         },
         {
-            "title": ["Overcome procrastination", "give me tips"],
-            "content": "Could you start by asking me about instances when I procrastinate the most and then give me some suggestions to overcome it?",
+            "title": [
+                "Summarize meeting notes",
+            ],
+            "content": "Summarize meeting notes and pull out key points and next steps. Remember to avoid putting personally identifiable information into the chat.",
         },
     ],
 )
