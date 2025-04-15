@@ -94,11 +94,49 @@ class PgvectorClient:
             )
         return vector
 
+    def _sanitize_metadata(self, metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """Remove NUL characters from metadata strings"""
+        if not metadata:
+            return {}
+
+        result = {}
+        for key, value in metadata.items():
+            if isinstance(value, str):
+                result[key] = value.replace("\x00", "")
+            elif isinstance(value, dict):
+                result[key] = self._sanitize_metadata(value)
+            elif isinstance(value, list):
+                result[key] = [
+                    (
+                        item.replace("\x00", "")
+                        if isinstance(item, str)
+                        else (
+                            self._sanitize_metadata(item)
+                            if isinstance(item, dict)
+                            else item
+                        )
+                    )
+                    for item in value
+                ]
+            else:
+                result[key] = value
+        return result
+
     def insert(self, collection_name: str, items: List[VectorItem]) -> None:
         try:
             new_items = []
             for item in items:
                 vector = self.adjust_vector_length(item["vector"])
+                # Sanitize text and metadata to remove NUL characters
+                item["text"] = (
+                    item["text"].replace("\x00", "") if item["text"] else None
+                )
+                item["metadata"] = (
+                    self._sanitize_metadata(item["metadata"])
+                    if item["metadata"]
+                    else None
+                )
+
                 new_chunk = DocumentChunk(
                     id=item["id"],
                     vector=vector,
@@ -121,6 +159,14 @@ class PgvectorClient:
         try:
             for item in items:
                 vector = self.adjust_vector_length(item["vector"])
+                item["text"] = (
+                    item["text"].replace("\x00", "") if item["text"] else None
+                )
+                item["metadata"] = (
+                    self._sanitize_metadata(item["metadata"])
+                    if item["metadata"]
+                    else None
+                )
                 existing = (
                     self.session.query(DocumentChunk)
                     .filter(DocumentChunk.id == item["id"])
