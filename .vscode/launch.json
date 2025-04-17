@@ -1,0 +1,15 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Python Debugger: FastAPI",
+			"type": "debugpy",
+			"cwd": "${workspaceFolder}/backend",
+			"envFile": "${workspaceFolder}/.env",
+			"request": "launch",
+			"module": "uvicorn",
+			"args": ["open_webui.main:app", "--reload"],
+			"jinja": true
+		}
+	]
+}

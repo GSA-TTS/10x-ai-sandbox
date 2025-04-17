@@ -121,6 +121,11 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -144,12 +149,13 @@ jobs:
         run: |
           uv pip install -r backend/requirements.txt
 
-      - name: Test backend with Postgres
+      - name: Test backend with Postgres+Redis
         env:
           WEBUI_SECRET_KEY: secret-key  # pragma: allowlist secret
           GLOBAL_LOG_LEVEL: debug
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres  # pragma: allowlist secret
           PGVECTOR_DB_URL: postgresql+psycopg2://postgres:postgres@localhost:5432/postgres # pragma: allowlist secret
+          REDIS_URL: redis://localhost:6379
           DATABASE_POOL_SIZE: 10
           DATABASE_POOL_MAX_OVERFLOW: 10
           DATABASE_POOL_TIMEOUT: 30

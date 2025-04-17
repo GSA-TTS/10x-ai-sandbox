@@ -400,3 +400,9 @@ OFFLINE_MODE = os.environ.get("OFFLINE_MODE", "false").lower() == "true"
 
 if OFFLINE_MODE:
     os.environ["HF_HUB_OFFLINE"] = "1"
+
+####################################
+# CONFIGURATION STORAGE
+####################################
+
+CONFIGURATION_REDIS_URL = REDIS_URL
