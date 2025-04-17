@@ -99,7 +99,7 @@ services:
     volumes:
       - app-data:/app
     deploy:
-      replicas: 1 # keep at 1 if db is fresh, then scale/redeploy after first success
+      replicas: 1 # keep at 1 if db is fresh, then scale/redeploy after first success...
       resources:
         reservations:
           cpus: "0.100"

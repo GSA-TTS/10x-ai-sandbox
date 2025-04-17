@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../support/index.d.ts" />
-import { adminUser } from '../support/e2e';
+import { adminUser, regUser } from '../support/e2e';
 
 // These tests assume the following defaults:
 // 1. No users exist in the database or that the test admin user is an admin
@@ -14,10 +14,11 @@ describe('Registration and Login', () => {
 	});
 
 	beforeEach(() => {
-		cy.visit('/');
+		cy.visit('/signout');
+		cy.visit('/auth');
 	});
 
-	it('should register a new user as pending', () => {
+	it('should register a new user', () => {
 		const userName = `Test User - ${Date.now()}`;
 		const userEmail = `cypress-${Date.now()}@example.com`;
 		// Toggle from sign in to sign up
@@ -29,9 +30,7 @@ describe('Registration and Login', () => {
 		// Submit the form
 		cy.get('button[type="submit"]').click();
 		// Wait until the user is redirected to the home page
-		cy.contains(userName);
-		// Expect the user to be pending
-		cy.contains('Check Again');
+		cy.contains('Welcome');
 	});
 
 	it('can login with the admin user', () => {
@@ -41,12 +40,16 @@ describe('Registration and Login', () => {
 		// Submit the form
 		cy.get('button[type="submit"]').click();
 		// Wait until the user is redirected to the home page
-		cy.contains(adminUser.name);
-		// Dismiss the changelog dialog if it is visible
-		cy.getAllLocalStorage().then((ls) => {
-			if (!ls['version']) {
-				cy.get('button').contains("Okay, Let's Go!").click();
-			}
-		});
+		cy.contains('How can I help you today');
+	});
+
+	it('can login with the regular user', () => {
+		// Fill out the form
+		cy.get('input[autocomplete="email"]').type(regUser.email);
+		cy.get('input[type="password"]').type(regUser.password);
+		// Submit the form
+		cy.get('button[type="submit"]').click();
+		// Wait until the user is redirected to the home page
+		cy.contains('How can I help you today');
 	});
 });

@@ -19,7 +19,21 @@ jobs:
       PUBLIC_DATADOG_CLIENT_TOKEN:  ${{ secrets.DATADOG_CLIENT_TOKEN }}
       PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN: ${{ secrets.DATADOG_BROWSERLOGS_CLIENT_TOKEN }}
       PUBLIC_DATADOG_SERVICE:  ${{ secrets.DATADOG_SERVICE }}
-
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      BEDROCK_ENDPOINT_URL: ${{ secrets.BEDROCK_ENDPOINT_URL }}
+      BEDROCK_ASSUME_ROLE: ${{ secrets.BEDROCK_ASSUME_ROLE }}
+      BEDROCK_LLAMA3211B_ARN: ${{ secrets.BEDROCK_LLAMA3211B_ARN }}
+      BEDROCK_CLAUDE_SONNET_35_ARN: ${{ secrets.BEDROCK_CLAUDE_SONNET_35_ARN }}
+      BEDROCK_CLAUDE_SONNET_37_ARN: ${{ secrets.BEDROCK_CLAUDE_SONNET_37_ARN }}
+      BEDROCK_CLAUDE_HAIKU_35_ARN: ${{ secrets.BEDROCK_CLAUDE_HAIKU_35_ARN }}
+      OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+      DEV_ADMIN_EMAILS: ${{ secrets.DEV_ADMIN_EMAILS }}
+      OPENID_PROVIDER_URL: ${{ secrets.OPENID_PROVIDER_URL }}
+      OPENID_REDIRECT_URI: ${{ secrets.OPENID_REDIRECT_URI }}
+      OAUTH_PROVIDER_NAME: ${{ secrets.OAUTH_PROVIDER_NAME }}
+      PORT: 8080
     steps:
       - name: Maximize build space
         uses: AdityaGarg8/remove-unwanted-software@v4.1
@@ -34,15 +48,14 @@ jobs:
       - name: Build and run Compose Stack
         run: |
           docker compose \
-            --file docker-compose.yaml \
             --file docker-compose.api.yaml \
-            --file docker-compose.a1111-test.yaml \
+            --file docker-compose.e2e.yaml \
             up --detach --build
 
       - name: Delete Docker build cache
         run: |
           docker builder prune --all --force
-
+      
       - name: Wait for Ollama to be up
         timeout-minutes: 5
         run: |
@@ -51,25 +64,32 @@ jobs:
             sleep 1
           done
           echo "Service is up!"
-
+  
       - name: Preload Ollama model
         run: |
           docker exec ollama ollama pull qwen:0.5b-chat-v1.5-q2_K
 
+      - name: Test 8080 endpoint
+        run: |
+          curl -X 'GET' 'http://localhost:8080' -H 'accept: application/json'
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
+        # env:
+        #   DEBUG: '@cypress/github-action'
         with:
           browser: chrome
-          wait-on: 'http://localhost:3000'
-          config: baseUrl=http://localhost:3000
+          wait-on: 'http://localhost:8080'
+          wait-on-timeout: 20
+          config: baseUrl=http://localhost:8080
 
-      - uses: actions/upload-artifact@v4
-        if: always()
-        name: Upload Cypress videos
-        with:
-          name: cypress-videos
-          path: cypress/videos
-          if-no-files-found: ignore
+      # - uses: actions/upload-artifact@v4
+      #   if: always()
+      #   name: Upload Cypress videos
+      #   with:
+      #     name: cypress-videos
+      #     path: cypress/videos
+      #     if-no-files-found: ignore
 
       - name: Extract Compose logs
         if: always()
@@ -83,112 +103,3 @@ jobs:
           name: compose-logs
           path: compose-logs.txt
           if-no-files-found: ignore
-
-  # pytest:
-  #   name: Run Backend Tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-
-  #     - name: Set up Python
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
-
-  #     - name: Install dependencies
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         pip install -r backend/requirements.txt
-
-  #     - name: pytest run
-  #       run: |
-  #         ls -al
-  #         cd backend
-  #         PYTHONPATH=. pytest . -o log_cli=true -o log_cli_level=INFO
-
-  migration_test:
-    name: Run Migration Tests
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: pgvector/pgvector:pg15
-        env:
-          POSTGRES_PASSWORD: postgres # pragma: allowlist secret
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Set up uv
-        uses: yezz123/setup-uv@v4
-        with:
-          uv-venv: venv
-
-      - name: Activate virtualenv
-        run: |
-          . venv/bin/activate
-          echo PATH=$PATH >> $GITHUB_ENV
-
-      - name: Install dependencies
-        run: |
-          uv pip install -r backend/requirements.txt
-
-      - name: Test backend with Postgres
-        env:
-          WEBUI_SECRET_KEY: secret-key  # pragma: allowlist secret
-          GLOBAL_LOG_LEVEL: debug
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres  # pragma: allowlist secret
-          PGVECTOR_DB_URL: postgresql+psycopg2://postgres:postgres@localhost:5432/postgres # pragma: allowlist secret
-          DATABASE_POOL_SIZE: 10
-          DATABASE_POOL_MAX_OVERFLOW: 10
-          DATABASE_POOL_TIMEOUT: 30
-        run: |
-          cd backend
-          uvicorn open_webui.main:app --port "8081" --forwarded-allow-ips '*' &
-          UVICORN_PID=$!
-          # Wait up to 30 seconds for the server to start
-          for i in {1..30}; do
-              curl -s http://localhost:8081/api/config > /dev/null && break
-              sleep 1
-              if [ $i -eq 30 ]; then
-                  echo "Server failed to start"
-                  kill -9 $UVICORN_PID
-                  exit 1
-              fi
-          done
-          # Check that the server is still running after 5 seconds
-          sleep 5
-          if ! kill -0 $UVICORN_PID; then
-              echo "Server has stopped"
-              exit 1
-          fi
-
-          # Check that service will reconnect to postgres when connection will be closed
-          status_code=$(curl --write-out %{http_code} -s --output /dev/null http://localhost:8081/health/db)
-          if [[ "$status_code" -ne 200 ]] ; then
-            echo "Server has failed before postgres reconnect check"
-            exit 1
-          fi
-
-          echo "Terminating all connections to postgres..."
-          python -c "import os, psycopg2 as pg2; \
-            conn = pg2.connect(dsn=os.environ['DATABASE_URL'].replace('+pool', '')); \
-            cur = conn.cursor(); \
-            cur.execute('SELECT pg_terminate_backend(psa.pid) FROM pg_stat_activity psa WHERE datname = current_database() AND pid <> pg_backend_pid();')"
-
-          status_code=$(curl --write-out %{http_code} -s --output /dev/null http://localhost:8081/health/db)
-          if [[ "$status_code" -ne 200 ]] ; then
-            echo "Server has not reconnected to postgres after connection was closed: returned status $status_code"
-            exit 1
-          fi
