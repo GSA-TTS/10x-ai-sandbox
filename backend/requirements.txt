@@ -35,7 +35,7 @@ APScheduler==3.10.4
 # AI libraries
 openai
 anthropic
-google-generativeai==0.7.2
+google-generativeai==0.8.4
 tiktoken
 
 langchain==0.3.7
@@ -89,6 +89,9 @@ pytube==15.0.0
 extract_msg
 pydub
 duckduckgo-search~=6.3.5
+
+## Vertex AI
+google-cloud-aiplatform==1.88.0
 
 ## Google Drive
 google-api-python-client
