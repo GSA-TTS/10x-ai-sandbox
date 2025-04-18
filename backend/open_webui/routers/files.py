@@ -19,7 +19,11 @@ from open_webui.routers.retrieval import process_file, ProcessFileForm
 
 from open_webui.config import UPLOAD_DIR
 from open_webui.env import SRC_LOG_LEVELS
-from open_webui.constants import ERROR_MESSAGES
+from open_webui.constants import (
+    ERROR_MESSAGES,
+    UPLOAD_ALLOWED_FILE_EXTENSIONS,
+    UPLOAD_ALLOWED_FILE_TYPES,
+)
 
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status, Request
@@ -47,6 +51,12 @@ def upload_file(
     try:
         unsanitized_filename = file.filename
         filename = os.path.basename(unsanitized_filename)
+        file_extension = os.path.splitext(filename)[1].lower().lstrip(".")
+        if not (
+            file.content_type in UPLOAD_ALLOWED_FILE_TYPES
+            and file_extension in UPLOAD_ALLOWED_FILE_EXTENSIONS
+        ):
+            raise HTTPException(status_code=400, detail=ERROR_MESSAGES.FILE_TYPE_ERROR)
 
         # replace filename with uuid
         id = str(uuid.uuid4())

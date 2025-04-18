@@ -99,6 +99,29 @@ export const PASTED_TEXT_CHARACTER_LIMIT = 1000;
 
 export const MAIN_CONTENT_ID = 'main-content';
 
+// below are used for upload files
+export const UPLOAD_ALLOWED_FILE_TYPES = [
+	'application/pdf',
+	'appliation/msword',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+	'text/plain',
+	'application/rtf',
+	'image/png',
+	'image/jpeg'
+];
+export const UPLOAD_ALLOWED_FILE_EXTENSIONS = [
+	'pdf',
+	'doc',
+	'docx',
+	'txt',
+	'rtf',
+	'png',
+	'jpg',
+	'jpeg'
+];
+
+export const FILE_TYPE_ERROR = 'Only PDF, DOC, DOCX, TXT, RTF, PNG and JPG file are allowed.';
+
 // Source: https://kit.svelte.dev/docs/modules#$env-static-public
 // This feature, akin to $env/static/private, exclusively incorporates environment variables
 // that are prefixed with config.kit.env.publicPrefix (usually set to PUBLIC_).

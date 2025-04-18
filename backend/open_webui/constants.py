@@ -102,6 +102,7 @@ class ERROR_MESSAGES(str, Enum):
         "Duplicate content detected. Please provide unique content to proceed."
     )
     FILE_NOT_PROCESSED = "Extracted content is not available for this file. Please ensure that the file is processed before proceeding."
+    FILE_TYPE_ERROR = "Only PDF, DOC, DOCX, TXT, RTF, PNG and JPG file are allowed."
 
 
 class TASKS(str, Enum):
@@ -116,3 +117,26 @@ class TASKS(str, Enum):
     AUTOCOMPLETE_GENERATION = "autocomplete_generation"
     FUNCTION_CALLING = "function_calling"
     MOA_RESPONSE_GENERATION = "moa_response_generation"
+
+
+UPLOAD_ALLOWED_FILE_TYPES = [
+    "application/pdf",
+    "appliation/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+    "application/rtf",
+    "image/png",
+    "image/jpeg",
+]
+
+
+UPLOAD_ALLOWED_FILE_EXTENSIONS = [
+    "pdf",
+    "doc",
+    "docx",
+    "txt",
+    "rtf",
+    "png",
+    "jpg",
+    "jpeg",
+]
