@@ -68,7 +68,17 @@
 
 						{#if document.source?.name}
 							<div class="text-sm dark:text-gray-400 flex items-center gap-2 w-fit">
-								{document?.metadata?.name ?? document.source.name}
+								<a
+									class="hover:text-gray-500 hover:dark:text-gray-100 underline flex-grow"
+									href={document?.metadata?.file_id
+										? `${WEBUI_API_BASE_URL}/files/${document?.metadata?.file_id}/content${document?.metadata?.page !== undefined ? `#page=${document.metadata.page + 1}` : ''}`
+										: document.source?.url?.includes('http')
+											? document.source.url
+											: `#`}
+									target="_blank"
+								>
+									{document?.metadata?.name ?? document.source.name}
+								</a>
 
 								{#if document?.metadata?.page}
 									<span class="text-xs text-gray-600 dark:text-gray-400">

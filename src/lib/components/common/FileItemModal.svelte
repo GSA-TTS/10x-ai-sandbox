@@ -32,7 +32,13 @@
 			<div class="flex items-start justify-between">
 				<div>
 					<div class=" font-medium text-lg dark:text-gray-100">
-						{item?.name ?? 'File'}
+						<a
+							href={item.url ? (item.type === 'file' ? `${item.url}/content` : `${item.url}`) : '#'}
+							target="_blank"
+							class="hover:underline line-clamp-1"
+						>
+							{item?.name ?? 'File'}
+						</a>
 					</div>
 				</div>
 

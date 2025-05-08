@@ -177,6 +177,7 @@
 							id={`${id}-${tokenIdx}-${itemIdx}`}
 							tokens={item.tokens}
 							top={token.loose}
+							{onSourceClick}
 						/>
 					</li>
 				{/each}
@@ -189,6 +190,7 @@
 							id={`${id}-${tokenIdx}-${itemIdx}`}
 							tokens={item.tokens}
 							top={token.loose}
+							{onSourceClick}
 						/>
 					</li>
 				{/each}
