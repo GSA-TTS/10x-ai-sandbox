@@ -3,11 +3,10 @@
 
 declare namespace Cypress {
 	interface Chainable {
-		login(email: string, password: string): Chainable<Element>;
-		register(name: string, email: string, password: string): Chainable<Element>;
-		registerAdmin(): Chainable<Element>;
-		loginAdmin(): Chainable<Element>;
-		uploadTestDocument(suffix: any): Chainable<Element>;
-		deleteTestDocument(suffix: any): Chainable<Element>;
+		login(email: string, password: string): Chainable<null>;
+		loginAdmin(): Chainable<null>;
+		loginUser(): Chainable<null>;
+		clearTCModal(): Chainable<null>;
+		seedUsers(): Chainable<null>;
 	}
 }

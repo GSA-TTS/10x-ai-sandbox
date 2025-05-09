@@ -2,10 +2,41 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../support/index.d.ts" />
 
+// When testing in a brand new environment, like in a CI run,
+// this user will be an admin by virtue of being the first user.
+// But that may not be the case when testing against another DB.
 export const adminUser = {
+	id: '7dd4db1a-1618-4c5b-8f07-88f5e5f99922',
 	name: 'Admin User',
-	email: 'admin@example.com',
-	password: 'password'
+	email: 'admin@example.com', // pragma: allowlist secret
+	password: 'adminpassword', // pragma: allowlist secret
+	role: 'admin'
+};
+
+export const regUser = {
+	id: 'e14e76c4-0561-45e2-8b79-c3ca2c8aebc6',
+	name: 'Regular User',
+	email: 'user@example.com', // pragma: allowlist secret
+	password: 'userpassword', // pragma: allowlist secret
+	role: 'user'
+};
+
+// TODO: gotta be a better way to do this
+// Based on https://docs.cypress.io/app/guides/conditional-testing#Conditionally-check-whether-an-element-has-certain-text
+export const clearTCModal = (timeout = 1000, attempts = 0) => {
+	if (attempts > timeout / 100) {
+		return; // modal never opened
+	}
+	cy.get('body').then(($body) => {
+		if ($body.text().includes('Welcome')) {
+			cy.log('TC MODAL FOUND');
+			cy.get('button').contains('Agree and continue').click();
+		} else {
+			cy.log('TC MODAL NOT FOUND');
+			cy.wait(100);
+			clearTCModal(timeout, ++attempts);
+		}
+	});
 };
 
 const login = (email: string, password: string) => {
@@ -22,18 +53,15 @@ const login = (email: string, password: string) => {
 			cy.get('input[type="password"]').type(password);
 			// Submit the form
 			cy.get('button[type="submit"]').click();
-			// Wait until the user is redirected to the home page
-			cy.get('#chat-search').should('exist');
-			// Get the current version to skip the changelog dialog
-			if (localStorage.getItem('version') === null) {
-				cy.get('button').contains("Okay, Let's Go!").click();
-			}
+			// Agree to terms and conditions if it pops up
+			clearTCModal();
+			cy.contains('How can I help you today', { timeout: 5_000 }).should('exist');
 		},
 		{
 			validate: () => {
 				cy.request({
 					method: 'GET',
-					url: '/api/v1/auths/',
+					url: '/api/v1/auths/signin',
 					headers: {
 						Authorization: 'Bearer ' + localStorage.getItem('token')
 					}
@@ -43,36 +71,34 @@ const login = (email: string, password: string) => {
 	);
 };
 
-const register = (name: string, email: string, password: string) => {
-	return cy
-		.request({
-			method: 'POST',
-			url: '/api/v1/auths/signup',
-			body: {
-				name: name,
-				email: email,
-				password: password
-			},
-			failOnStatusCode: false
-		})
-		.then((response) => {
-			expect(response.status).to.be.oneOf([200, 400]);
-		});
-};
-
-const registerAdmin = () => {
-	return register(adminUser.name, adminUser.email, adminUser.password);
-};
-
 const loginAdmin = () => {
 	return login(adminUser.email, adminUser.password);
 };
 
+const loginUser = () => {
+	return login(regUser.email, regUser.password);
+};
+
+const seedUsers = () => {
+	for (const user of [adminUser, regUser]) {
+		cy.task('runDatabaseQuery', {
+			sql: `DELETE FROM public."user" WHERE id = $1;`,
+			values: [user.id]
+		});
+		const now = Math.floor(Date.now() / 1000);
+		cy.task('runDatabaseQuery', {
+			sql: `INSERT INTO public."user" VALUES ($1, $2, $3, $4, '/user.png', NULL, $5, $6, $7, 'null', 'null', NULL);`,
+			values: [user.id, user.name, user.email, user.role, now, now, now]
+		});
+	}
+};
+
 Cypress.Commands.add('login', (email, password) => login(email, password));
-Cypress.Commands.add('register', (name, email, password) => register(name, email, password));
-Cypress.Commands.add('registerAdmin', () => registerAdmin());
 Cypress.Commands.add('loginAdmin', () => loginAdmin());
+Cypress.Commands.add('loginUser', () => loginUser());
+Cypress.Commands.add('clearTCModal', () => clearTCModal());
+Cypress.Commands.add('seedUsers', () => seedUsers());
 
 before(() => {
-	cy.registerAdmin();
+	cy.seedUsers();
 });

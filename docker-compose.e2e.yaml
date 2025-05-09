@@ -1,0 +1,181 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile # use this when not running in swarm
+    # env_file:
+    #   - .env.e2e
+    environment:
+      # vars that differ from .env
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - WEBSOCKET_MANAGER=redis
+      - WEBSOCKET_REDIS_URL=redis://:@redis:6379/0
+      - RATE_LIMIT_REDIS_URL=redis://redis:6379/0
+      - REDIS_URL=redis://redis:6379/0
+      - PORT=8081
+      # needed for e2e testing specifically
+      - BYPASS_MODEL_ACCESS_CONTROL=true
+      - WEBUI_AUTH=true
+      - ENABLE_SIGNUP=true
+      - ENABLE_LOGIN_FORM=true
+      # start of original .env
+      - PUBLIC_DATADOG_APP_ID=$PUBLIC_DATADOG_APP_ID
+      - PUBLIC_DATADOG_CLIENT_TOKEN=$PUBLIC_DATADOG_CLIENT_TOKEN
+      - PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN=$PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN
+      - PUBLIC_DATADOG_SERVICE=$PUBLIC_DATADOG_SERVICE
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - OAUTH_CLIENT_ID=$OAUTH_CLIENT_ID
+      - OPENAI_API_KEY=$OPENAI_API_KEY
+      - BEDROCK_ENDPOINT_URL=$BEDROCK_ENDPOINT_URL
+      - BEDROCK_ASSUME_ROLE=$BEDROCK_ASSUME_ROLE
+      - BEDROCK_LLAMA3211B_ARN=$BEDROCK_LLAMA3211B_ARN
+      - BEDROCK_CLAUDE_SONNET_35_ARN=$BEDROCK_CLAUDE_SONNET_35_ARN
+      - BEDROCK_CLAUDE_SONNET_37_ARN=$BEDROCK_CLAUDE_SONNET_37_ARN
+      - BEDROCK_CLAUDE_HAIKU_35_ARN=$BEDROCK_CLAUDE_HAIKU_35_ARN
+      - DEV_ADMIN_EMAILS=$DEV_ADMIN_EMAILS
+      - OPENID_REDIRECT_URI=$OPENID_REDIRECT_URI
+      - OAUTH_PROVIDER_NAME=$OAUTH_PROVIDER_NAME
+      - OPENID_PROVIDER_URL=$OPENID_PROVIDER_URL
+      - OAUTH_ACR_CLAIM=urn:acr.login.gov:auth-only
+      - OAUTH_EMAIL_CLAIM=email
+      - OAUTH_USERNAME_CLAIM=user_name
+      - OPENAI_API_BASE_URL=http://localhost:9099
+      - OAUTH_CLIENT_SECRET=foobar # not a real secret
+      - WEBUI_SECRET_KEY=not-a-secret-on-local-deploy
+      - TENANT=GSAI
+      - ENVIRONMENT=development
+      - VECTOR_DB=pgvector
+      - COHERE_EMBED_MODEL_ID=cohere.embed-english-v3
+      - WEBUI_NAME="GSA Chat"
+      - SCARF_NO_ANALYTICS=true
+      - DO_NOT_TRACK=true
+      - ANONYMIZED_TELEMETRY=false
+      - WEBUI_AUTH=true
+      - OAUTH_SCOPES="openid email profile"
+      - ENABLE_OAUTH_SIGNUP=true
+      - OAUTH_MERGE_ACCOUNTS_BY_EMAIL=true
+      - OAUTH_USE_PKCE=true
+      - OAUTH_NONCE_CLAIM=22
+      - ENABLE_API_KEY=false
+      - DATADOG_ENV=dev
+      - DEFAULT_SHOW_VERSION_UPDATE=false
+      - ENABLE_ACTIVE_USERS_COUNT=false
+      - ENABLE_ADMIN_FEEDBACKS=false
+      - ENABLE_RECORD_VOICE_AND_CALL=false
+      - ENABLE_MORE_INPUTS=true
+      - ENABLE_CHAT_CONTROLS=true
+      - ALLOW_SIMULTANEOUS_MODELS=false
+      - ENABLE_DISCLAIMER=true
+      - ENABLE_SIDEBAR_SEARCH=false
+      - ENABLE_SIDEBAR_CREATE_FOLDER=false
+      - ENABLE_FLOATING_BUTTONS=false
+      - ENABLE_DELETE_BUTTON=false
+      - USER_PERMISSIONS_CHAT_DELETE=false
+      - DEFAULT_USER_ROLE=user
+      - ENABLE_SET_AS_DEFAULT_MODEL=false
+      - ENABLE_SIDEBAR_USER_PROFILE=false
+      - ENABLE_MESSAGE_INPUT_LOGO=false
+      - ENABLE_MODEL_SELECTOR_SEARCH=false
+      - ENABLE_PROMPT_SUGGESTIONS=false
+      - DEFAULT_SHOW_CHANGELOG=false
+      - ENABLE_USER_SETTINGS_MENU=false
+      - ENABLE_RESPONSE_PROMPT_EDIT=false
+      - ENABLE_RESPONSE_CONTINUE=false
+      - RAG_EMBEDDING_ENGINE=openai
+      - DEFAULT_MODELS=bedrock_claude_haiku35_pipeline
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 20s
+      retries: 10
+      start_period: 15s
+    volumes:
+      - app-data:/app
+    deploy:
+      replicas: 1 # keep at 1 if db is fresh, then scale/redeploy after first success
+      resources:
+        reservations:
+          cpus: "0.100"
+          memory: "500M"
+        limits:
+          cpus: "1.000"
+          memory: "1500M"
+    depends_on:
+      - db
+      - redis
+    networks:
+      backend:
+        aliases:
+          - app
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: "256M"
+        reservations:
+          cpus: "0.1"
+          memory: "128M"
+    networks:
+      - backend
+
+  db:
+    image: pgvector/pgvector:pg15
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres # pragma: allowlist secret
+      POSTGRES_DB: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "1G"
+        reservations:
+          cpus: "0.3"
+          memory: "512M"
+    networks:
+      backend:
+        aliases:
+          - db
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    # volumes:
+    #   - redis-data:/data
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: "256M"
+        reservations:
+          cpus: "0.1"
+          memory: "128M"
+    networks:
+      backend:
+        aliases:
+          - redis
+
+networks:
+  backend: {}
+
+volumes:
+  app-data:
+  db-data:
+  # redis-data:
