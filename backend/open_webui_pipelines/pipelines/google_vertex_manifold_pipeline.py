@@ -1,20 +1,30 @@
 import os
 import json
-from typing import Iterator, List, Union
+from typing import Iterator, List, Union, Optional
 import base64
+import re
+import traceback
 
-import vertexai
-from google.oauth2 import service_account
 from pydantic import BaseModel, Field
-from vertexai.generative_models import (
+
+# Google Auth
+from google.oauth2 import service_account
+
+# Google GenAI SDK deps
+from google import genai
+from google.genai.types import (
     Content,
-    GenerationConfig,
-    GenerativeModel,
+    GenerateContentConfig,
+    GoogleSearch,
     HarmBlockThreshold,
     HarmCategory,
     Part,
     Image,
+    HttpOptions,
+    Tool,
 )
+
+from utils.pipelines.main import get_last_assistant_message
 
 
 class Pipeline:
@@ -70,16 +80,15 @@ class Pipeline:
             # },
             {"id": "gemini-2.5-pro-preview-03-25", "name": "Gemini 2.5 Pro"},
         ]
+        self.genai_client = None
+        self.credentials = None
 
     async def on_startup(self) -> None:
         """This function is called when the server is started."""
 
         print(f"on_startup:{__name__}")
-        credentials = None
         try:
-            # key_json = self.valves.VERTEX_API_KEY_JSON
-            # key_info = self.valves.VERTEX_API_KEY_DICT
-            credentials = service_account.Credentials.from_service_account_info(
+            self.credentials = service_account.Credentials.from_service_account_info(
                 self.valves.VERTEX_API_KEY_DICT,
                 scopes=["https://www.googleapis.com/auth/cloud-platform"],
             )
@@ -93,18 +102,25 @@ class Pipeline:
             print(f"Unexpected error initializing vertex AI client: {e}")
             raise
 
-        if credentials:
-            vertexai.init(
+        if self.credentials:
+            self.genai_client = genai.Client(
+                vertexai=True,
                 project=self.valves.GOOGLE_PROJECT_ID,
                 location=self.valves.GOOGLE_CLOUD_REGION,
-                credentials=credentials,
+                credentials=self.credentials,
+                http_options=HttpOptions(api_version="v1"),
             )
-            model = GenerativeModel("gemini-2.0-flash")
-            response = model.generate_content(
-                "Please respond with 'hi' and nothing else.", stream=False
+
+            response = self.genai_client.models.generate_content(
+                model="gemini-2.0-flash-001",
+                contents="Please respond with 'hi' and nothing else.",
+                config=GenerateContentConfig(
+                    temperature=0.0,
+                    top_p=1.0,
+                ),
             )
             if "hi" in response.text.lower():
-                print("Vertex AI client initialized successfully.")
+                print("GenAI Vertex client initialized successfully.")
 
     async def on_shutdown(self) -> None:
         """This function is called when the server is stopped."""
@@ -116,7 +132,7 @@ class Pipeline:
         try:
             key_json = self.valves.VERTEX_API_KEY_JSON
             key_info = json.loads(key_json)
-            credentials = service_account.Credentials.from_service_account_info(
+            self.credentials = service_account.Credentials.from_service_account_info(
                 key_info,
                 scopes=["https://www.googleapis.com/auth/cloud-platform"],
             )
@@ -127,27 +143,31 @@ class Pipeline:
             print("Error: VERTEX_API_KEY_JSON contains invalid JSON.")
             raise
 
-        vertexai.init(
+        self.genai_client = genai.Client(
+            vertexai=True,
             project=self.valves.GOOGLE_PROJECT_ID,
             location=self.valves.GOOGLE_CLOUD_REGION,
-            credentials=credentials,
+            credentials=self.credentials,
+            http_options=HttpOptions(api_version="v1"),
         )
 
     def pipe(
         self, user_message: str, model_id: str, messages: List[dict], body: dict
     ) -> Union[str, Iterator]:
         try:
-            credentials = service_account.Credentials.from_service_account_info(
+            self.credentials = service_account.Credentials.from_service_account_info(
                 self.valves.VERTEX_API_KEY_DICT,
                 scopes=["https://www.googleapis.com/auth/cloud-platform"],
             )
 
-            if credentials.expired:
-                print("Vertex credentials have expired")
-                vertexai.init(
+            if self.credentials.expired:
+                print("GenAI credentials have expired")
+                self.genai_client = genai.Client(
+                    vertexai=True,
                     project=self.valves.GOOGLE_PROJECT_ID,
                     location=self.valves.GOOGLE_CLOUD_REGION,
-                    credentials=credentials,
+                    credentials=self.credentials,
+                    http_options=HttpOptions(api_version="v1"),
                 )
 
             if not model_id.startswith("gemini-"):
@@ -159,23 +179,10 @@ class Pipeline:
                 (msg["content"] for msg in messages if msg["role"] == "system"), None
             )
 
-            model = GenerativeModel(
-                model_name=model_id,
-                system_instruction=system_message,
-            )
-
             if body.get("title", False):  # If chat title generation is requested
-                contents = [Content(role="user", parts=[Part.from_text(user_message)])]
+                contents = [Content(role="user", parts=[Part(text=user_message)])]
             else:
                 contents = self.build_conversation_history(messages)
-
-            generation_config = GenerationConfig(
-                temperature=body.get("temperature", 0.7),
-                top_p=body.get("top_p", 0.9),
-                top_k=body.get("top_k", 40),
-                max_output_tokens=body.get("max_tokens", 8192),
-                stop_sequences=body.get("stop", []),
-            )
 
             if self.valves.USE_PERMISSIVE_SAFETY:
                 safety_settings = {
@@ -187,26 +194,135 @@ class Pipeline:
             else:
                 safety_settings = body.get("safety_settings")
 
-            response = model.generate_content(
-                contents,
-                stream=body.get("stream", False),
-                generation_config=generation_config,
+            generation_config = GenerateContentConfig(
+                system_instruction=system_message,
+                temperature=body.get("temperature", 0.7),
+                top_p=body.get("top_p", 0.9),
+                top_k=body.get("top_k", 40),
+                max_output_tokens=body.get("max_tokens", 8192),
+                stop_sequences=body.get("stop", []),
                 safety_settings=safety_settings,
+                tools=[
+                    Tool(google_search=GoogleSearch()),
+                ],
             )
 
-            if body.get("stream", False):
-                return self.stream_response(response)
-            else:
-                return response.text
+            for chunk in self.genai_client.models.generate_content_stream(
+                model=model_id,
+                contents=contents,
+                config=generation_config,
+            ):
+                urls = []
+                text_index_pairs = []
+                for candidate in chunk.candidates:
+                    if candidate.grounding_metadata:
+                        if candidate.grounding_metadata.grounding_chunks:
+                            for i, grounding_chunk in enumerate(
+                                candidate.grounding_metadata.grounding_chunks
+                            ):
+                                web_uri = f"{grounding_chunk.web.uri}"
+                                # domain = f"{grounding_chunk.web.domain}"
+                                title = f"{grounding_chunk.web.title}"
+                                markdown_link = f"[{title}]({web_uri})"
+                                urls.append(markdown_link)
+                        if candidate.grounding_metadata.grounding_supports:
+                            for i, grounding_support in enumerate(
+                                candidate.grounding_metadata.grounding_supports
+                            ):
+                                text_index_pairs.append(
+                                    [
+                                        grounding_support.segment.text,
+                                        grounding_support.grounding_chunk_indices,
+                                    ]
+                                )
+
+                    str_chunk = chunk.text
+                    if text_index_pairs:
+                        for text, indices in text_index_pairs:
+                            md_links = ""
+                            for index in indices:
+                                if index < len(urls):
+                                    url = urls[index]
+                                    md_links += f", {url}" if md_links else f"{url}"
+
+                            # TODO: use something like <ws_cite title=title domain=domain url=url text=text />
+                            citation = f"\n<ws_text>{text}<ws_url>{md_links}</ws_url></ws_text>"
+                            str_chunk += citation
+                    yield str_chunk
 
         except Exception as e:
-            print(f"Error generating content: {e}")
+            print(f"Error generating content: {e}\n{traceback.print_exc()}")
             return f"An error occurred: {str(e)}"
+
+    async def outlet(self, body: dict, user: Optional[dict] = None) -> dict:
+        print(f"outlet:{__name__}")
+
+        messages = body["messages"]
+        assistant_message = get_last_assistant_message(messages)
+        new_assistant_message = None
+
+        if "<ws_text>" in assistant_message:
+            # find web search citations
+            pattern = re.compile(
+                r"<ws_text>(?P<text>.*?)<ws_url>(?P<url>.*?)</ws_url></ws_text>",
+                re.DOTALL,
+            )
+
+            pairs = [
+                (m.group("text"), m.group("url"))
+                for m in pattern.finditer(assistant_message)
+            ]
+
+            # remove web search citations from the assistant message
+            new_assistant_message = pattern.sub("", assistant_message)
+
+            sources = []
+            for text, url in pairs:
+                urls = url.split(", ")
+
+                inline_md_links = []
+                for url in urls:
+                    if url not in sources:
+                        sources.append(url)
+
+                    match = re.match(r"\[(?P<title>.*?)\]\((?P<uri>.*?)\)", url)
+                    if match:
+                        # title = match.group("title")
+                        web_uri = match.group("uri")
+                        idx = sources.index(url) + 1
+                        inline_md_link = f"[{idx}]({web_uri})"
+                        inline_md_links.append(inline_md_link)
+
+                # TODO: unwanted whitespaces after links are added by the md parser on front-end...
+                if inline_md_links:
+                    inline_md_links = ", ".join(inline_md_links)
+                    print(f"inline_md_links: |{inline_md_links}|")
+                else:
+                    inline_md_links = url
+
+                new_assistant_message = new_assistant_message.replace(
+                    text, f"{text} [{inline_md_links}]"
+                )
+                print(f"new_assistant_message: |{new_assistant_message}|")
+
+            new_assistant_message += f"\nSources:\n"
+            for i, url in enumerate(sources):
+                new_assistant_message += f"{i+1}. {url}\n"
+
+        if new_assistant_message:
+            assistant_message = new_assistant_message
+
+        for message in reversed(messages):
+            if message["role"] == "assistant":
+                message["content"] = assistant_message
+                break
+
+        body = {**body, "messages": messages}
+        return body
 
     def stream_response(self, response):
         for chunk in response:
             if chunk.text:
-                # print(f"===Chunk===\n{chunk.text}")
                 yield chunk.text
 
     def build_conversation_history(self, messages: List[dict]) -> List[Content]:
@@ -221,7 +337,7 @@ class Pipeline:
             if isinstance(message.get("content"), list):
                 for content in message["content"]:
                     if content["type"] == "text":
-                        parts.append(Part.from_text(content["text"]))
+                        parts.append(Part(text=content["text"]))
                     elif content["type"] == "image_url":
                         image_url = content["image_url"]["url"]
                         if image_url.startswith("data:image"):
@@ -232,7 +348,7 @@ class Pipeline:
                         else:
                             parts.append(Part.from_uri(image_url))
             else:
-                parts = [Part.from_text(message["content"])]
+                parts = [Part(text=message["content"])]
 
             role = "user" if message["role"] == "user" else "model"
             contents.append(Content(role=role, parts=parts))
