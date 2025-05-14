@@ -307,7 +307,6 @@ dist
 # cypress artifacts
 cypress/videos
 cypress/screenshots
-.vscode/settings.json
 
 # # github
 # # .github/
@@ -323,6 +322,5 @@ cypress/screenshots
 # update_ollama_models.sh
 # # Caddyfile.localhost
 # # hatch_build
-
 
 .routes-*
