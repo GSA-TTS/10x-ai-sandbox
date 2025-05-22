@@ -110,6 +110,15 @@ def process_pipeline_outlet_filter(request, payload, user, models):
 
     if "pipeline" in model:
         sorted_filters = [model] + sorted_filters
+    elif (
+        "info" in model
+        and "base_model_id" in model["info"]
+        and model["info"]["base_model_id"] in models
+    ):
+        base_model = models[model["info"]["base_model_id"]]
+        payload["model"] = model["info"]["base_model_id"]
+        if "pipeline" in base_model:
+            sorted_filters = [base_model] + sorted_filters
 
     for filter in sorted_filters:
         r = None
