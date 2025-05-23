@@ -89,9 +89,6 @@ class Pipeline:
         generic_error_msg = f"## Oops! 🤖💔\n\n ### GSA Chat is having some trouble.\n\nPlease try another model _or_ wait a minute and try again."  # noqa E501
         rate_limit_error_msg = f"## Oops! 🤖💔\n\n ### Looks like GSA Chat has hit a service limit.\n\nPlease try another model _or_ wait a minute and try again."  # noqa E501
 
-        ttft = None
-        request_init_time = time.time()
-
         try:
             r = self.bedrock_client.invoke_model_with_response_stream(
                 body=request,
@@ -103,16 +100,6 @@ class Pipeline:
                 if "generation" in chunk:
                     tokens = chunk["generation"]
                     yield tokens
-                    if ttft is None and tokens:
-                        ttft = time.time() - request_init_time
-                        ttft_log = {
-                            "pipeline_ttft_name": self.name,
-                            "pipeline_ttft": ttft * 1000,
-                            "pipeline_ttft_model_id": model_id,
-                            "pipeline_ttft_first_tokens": tokens,
-                        }
-                        json_ttft_log = json.dumps(ttft_log)
-                        logger.info(json_ttft_log)
 
         except self.bedrock_client.exceptions.AccessDeniedException as e:
             logger.error("Access Denied Exception:", e)
