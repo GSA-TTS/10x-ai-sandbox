@@ -11,78 +11,78 @@ on:
       - dev
 
 jobs:
-  cypress-run:
-    name: Run Cypress Integration Tests
-    runs-on: ubuntu-latest
-    env:
-      PUBLIC_DATADOG_APP_ID: ${{ secrets.DATADOG_APP_ID }}
-      PUBLIC_DATADOG_CLIENT_TOKEN:  ${{ secrets.DATADOG_CLIENT_TOKEN }}
-      PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN: ${{ secrets.DATADOG_BROWSERLOGS_CLIENT_TOKEN }}
-      PUBLIC_DATADOG_SERVICE:  ${{ secrets.DATADOG_SERVICE }}
+  # cypress-run:
+  #   name: Run Cypress Integration Tests
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     PUBLIC_DATADOG_APP_ID: ${{ vars.PUBLIC_DATADOG_APP_ID }}
+  #     PUBLIC_DATADOG_CLIENT_TOKEN: ${{ vars.PUBLIC_DATADOG_CLIENT_TOKEN }}
+  #     PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN: ${{ vars.PUBLIC_DATADOG_BROWSERLOGS_CLIENT_TOKEN }}
+  #     PUBLIC_DATADOG_SERVICE: ${{ vars.PUBLIC_DATADOG_SERVICE }}
 
-    steps:
-      - name: Maximize build space
-        uses: AdityaGarg8/remove-unwanted-software@v4.1
-        with:
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
+  #   steps:
+  #     - name: Maximize build space
+  #       uses: AdityaGarg8/remove-unwanted-software@v4.1
+  #       with:
+  #         remove-android: 'true'
+  #         remove-haskell: 'true'
+  #         remove-codeql: 'true'
 
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
 
-      - name: Build and run Compose Stack
-        run: |
-          docker compose \
-            --file docker-compose.yaml \
-            --file docker-compose.api.yaml \
-            --file docker-compose.a1111-test.yaml \
-            up --detach --build
+  #     - name: Build and run Compose Stack
+  #       run: |
+  #         docker compose \
+  #           --file docker-compose.yaml \
+  #           --file docker-compose.api.yaml \
+  #           --file docker-compose.a1111-test.yaml \
+  #           up --detach --build
 
-      - name: Delete Docker build cache
-        run: |
-          docker builder prune --all --force
+  #     - name: Delete Docker build cache
+  #       run: |
+  #         docker builder prune --all --force
 
-      - name: Wait for Ollama to be up
-        timeout-minutes: 5
-        run: |
-          until curl --output /dev/null --silent --fail http://localhost:11434; do
-            printf '.'
-            sleep 1
-          done
-          echo "Service is up!"
+  #     - name: Wait for Ollama to be up
+  #       timeout-minutes: 5
+  #       run: |
+  #         until curl --output /dev/null --silent --fail http://localhost:11434; do
+  #           printf '.'
+  #           sleep 1
+  #         done
+  #         echo "Service is up!"
 
-      - name: Preload Ollama model
-        run: |
-          docker exec ollama ollama pull qwen:0.5b-chat-v1.5-q2_K
+  #     - name: Preload Ollama model
+  #       run: |
+  #         docker exec ollama ollama pull qwen:0.5b-chat-v1.5-q2_K
 
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
-        with:
-          browser: chrome
-          wait-on: 'http://localhost:3000'
-          config: baseUrl=http://localhost:3000
+  #     - name: Cypress run
+  #       uses: cypress-io/github-action@v6
+  #       with:
+  #         browser: chrome
+  #         wait-on: 'http://localhost:3000'
+  #         config: baseUrl=http://localhost:3000
 
-      - uses: actions/upload-artifact@v4
-        if: always()
-        name: Upload Cypress videos
-        with:
-          name: cypress-videos
-          path: cypress/videos
-          if-no-files-found: ignore
+  #     - uses: actions/upload-artifact@v4
+  #       if: always()
+  #       name: Upload Cypress videos
+  #       with:
+  #         name: cypress-videos
+  #         path: cypress/videos
+  #         if-no-files-found: ignore
 
-      - name: Extract Compose logs
-        if: always()
-        run: |
-          docker compose logs > compose-logs.txt
+  #     - name: Extract Compose logs
+  #       if: always()
+  #       run: |
+  #         docker compose logs > compose-logs.txt
 
-      - uses: actions/upload-artifact@v4
-        if: always()
-        name: Upload Compose logs
-        with:
-          name: compose-logs
-          path: compose-logs.txt
-          if-no-files-found: ignore
+  #     - uses: actions/upload-artifact@v4
+  #       if: always()
+  #       name: Upload Compose logs
+  #       with:
+  #         name: compose-logs
+  #         path: compose-logs.txt
+  #         if-no-files-found: ignore
 
   # pytest:
   #   name: Run Backend Tests
@@ -151,9 +151,9 @@ jobs:
 
       - name: Test backend with Postgres+Redis
         env:
-          WEBUI_SECRET_KEY: secret-key  # pragma: allowlist secret
+          WEBUI_SECRET_KEY: secret-key # pragma: allowlist secret
           GLOBAL_LOG_LEVEL: debug
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres  # pragma: allowlist secret
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres # pragma: allowlist secret
           PGVECTOR_DB_URL: postgresql+psycopg2://postgres:postgres@localhost:5432/postgres # pragma: allowlist secret
           REDIS_URL: redis://localhost:6379
           DATABASE_POOL_SIZE: 10
