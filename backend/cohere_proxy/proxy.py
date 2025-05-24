@@ -18,25 +18,31 @@ model_id = os.getenv("COHERE_EMBED_MODEL_ID", "You forgot to set COHERE_EMBED_MO
 
 @app.post("/embeddings")
 async def proxy_embeddings(request: Request):
+    """Proxy endpoint for Cohere embeddings.
+    This endpoint receives a request with input text and an optional embed_type,
+    then forwards the request to the Cohere model on AWS Bedrock to get embeddings.
+    For semantic search, the input_type should be search_document when embedding for storage and search_query when embedding for search.
+
+    Args:
+        request (Request): The incoming request containing the input text, model and optional embed_type.
+
+    Returns:
+        _type_ Response: A JSON response body containing the embeddings and usage information.
+    """  # noqa E501
     try:
         body = await request.json()
 
         logger.debug(f"Cohere request body: {body}")
 
         body_input = body.get("input")
-        input_type = "search_query" if len(body_input) == 1 else "search_document"
+        input_type = body.get("embed_type", "search_query")
 
         tokens = 0
         for input in body_input:
             words = input.split(" ")
             tokens += len(words) / 0.75  # we can get accurate token count from tiktoken
 
-        body = json.dumps(
-            {
-                "texts": body_input,
-                "input_type": input_type,  # You can change this to 'search_query', 'classification', or 'clustering' based on your use case  # noqa E501
-            }
-        )
+        body = json.dumps({"texts": body_input, "input_type": input_type})
 
         response = bedrock_client.invoke_model(
             body=body,
