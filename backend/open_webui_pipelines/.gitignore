@@ -15,6 +15,7 @@ pipelines/*
 !pipelines/bedrock_claude_sonnet37_pipeline.py
 !pipelines/bedrock_llama32_11b_pipeline.py
 !pipelines/google_vertex_manifold_pipeline.py
+!pipelines/azure_openai_gpt4o_pipeline.py
 !pipelines/rate_limit_filter_pipeline.py
 
 .DS_Store
