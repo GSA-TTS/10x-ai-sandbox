@@ -478,9 +478,9 @@ class BannerModel(BaseModel):
 
 class WebUIConfig(Config):
     WEBUI_URL: str = Config.persistent("http://localhost:3000")
-    ENABLE_ONBOARDING_PAGE: bool = Config.persistent(False)
+    ENABLE_ONBOARDING_PAGE: bool = False
     ENABLE_SIGNUP: bool = Config.persistent(False if not WEBUI_AUTH else True)
-    ENABLE_LOGIN_FORM: bool = Config.persistent(True)
+    ENABLE_LOGIN_FORM: bool = True
     DEFAULT_LOCALE: str = Config.persistent("")
     DEFAULT_MODELS: Optional[str] = Config.persistent(None)
     DEFAULT_PROMPT_SUGGESTIONS: List[dict] = Config.persistent(
