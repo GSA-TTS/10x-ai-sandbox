@@ -263,6 +263,7 @@ def get_embedding_function(
     url,
     key,
     embedding_batch_size,
+    **kwargs,
 ):
     if embedding_engine == "":
         return lambda query: embedding_function.encode(query).tolist()
@@ -273,6 +274,7 @@ def get_embedding_function(
             text=query,
             url=url,
             key=key,
+            **kwargs,
         )
 
         def generate_multiple(query, func):
@@ -429,7 +431,11 @@ def get_model_path(model: str, update_model: bool = False):
 
 
 def generate_openai_batch_embeddings(
-    model: str, texts: list[str], url: str = "https://api.openai.com/v1", key: str = ""
+    model: str,
+    texts: list[str],
+    url: str = "https://api.openai.com/v1",
+    key: str = "",
+    **kwargs,
 ) -> Optional[list[list[float]]]:
     try:
         r = requests.post(
@@ -438,7 +444,13 @@ def generate_openai_batch_embeddings(
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {key}",
             },
-            json={"input": texts, "model": model},
+            json={
+                "input": texts,
+                "model": model,
+                "embed_type": kwargs.get(
+                    "embed_type", "search_query"
+                ),  # one of "search_query" or "search_document" is required for cohere
+            },
         )
         r.raise_for_status()
         data = r.json()
@@ -478,6 +490,9 @@ def generate_ollama_batch_embeddings(
 def generate_embeddings(engine: str, model: str, text: Union[str, list[str]], **kwargs):
     url = kwargs.get("url", "")
     key = kwargs.get("key", "")
+    embed_type = kwargs.get(
+        "embed_type", "search_query"
+    )  # one of "search_query" or "search_document" is required for cohere
 
     if engine == "ollama":
         if isinstance(text, list):
@@ -491,9 +506,13 @@ def generate_embeddings(engine: str, model: str, text: Union[str, list[str]], **
         return embeddings[0] if isinstance(text, str) else embeddings
     elif engine == "openai":
         if isinstance(text, list):
-            embeddings = generate_openai_batch_embeddings(model, text, url, key)
+            embeddings = generate_openai_batch_embeddings(
+                model, text, url, key, embed_type=embed_type
+            )
         else:
-            embeddings = generate_openai_batch_embeddings(model, [text], url, key)
+            embeddings = generate_openai_batch_embeddings(
+                model, [text], url, key, embed_type=embed_type
+            )
 
         return embeddings[0] if isinstance(text, str) else embeddings
 
