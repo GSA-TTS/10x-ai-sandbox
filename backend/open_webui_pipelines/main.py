@@ -3,18 +3,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.concurrency import run_in_threadpool
 
 
-from starlette.responses import StreamingResponse, Response
-from pydantic import BaseModel, ConfigDict
-from typing import List, Union, Generator, Iterator
+from starlette.responses import StreamingResponse
+from pydantic import BaseModel
+from typing import Generator, Iterator
 
 
-from utils.pipelines.auth import bearer_security, get_current_user
+from utils.pipelines.auth import get_current_user
 from utils.pipelines.main import get_last_user_message, stream_message_template
 from utils.pipelines.misc import convert_to_raw_url
 from utils.pipelines.custom_exceptions import RateLimitException
 
 from contextlib import asynccontextmanager
-from concurrent.futures import ThreadPoolExecutor
 from schemas import FilterForm, OpenAIChatCompletionForm
 from urllib.parse import urlparse
 
@@ -280,7 +279,7 @@ async def get_models():
                         if pipeline.get("type", "pipe") == "filter"
                         else {}
                     ),
-                    "valves": pipeline["valves"] != None,
+                    "valves": pipeline["valves"] is not None,
                 },
             }
             for pipeline in app.state.PIPELINES.values()
@@ -670,6 +669,8 @@ async def generate_openai_chat_completion(form_data: OpenAIChatCompletionForm):
         if form_data.stream:
 
             def stream_content():
+                ttft = None
+                request_init_time = time.time()
                 res = pipe(
                     user_message=user_message,
                     model_id=pipeline_id,
@@ -702,6 +703,16 @@ async def generate_openai_chat_completion(form_data: OpenAIChatCompletionForm):
                         else:
                             line = stream_message_template(form_data.model, line)
                             yield f"data: {json.dumps(line)}\n\n"
+                        if ttft is None and line:
+                            ttft = time.time() - request_init_time
+                            ttft_log = {
+                                "pipeline_ttft_name": pipeline_id,
+                                "pipeline_ttft": ttft * 1000,
+                                "pipeline_ttft_model_id": pipeline_id,
+                                "pipeline_ttft_first_tokens": line,
+                            }
+                            json_ttft_log = json.dumps(ttft_log)
+                            logger.info(json_ttft_log)
 
                 if isinstance(res, str) or isinstance(res, Generator):
                     finish_message = {
