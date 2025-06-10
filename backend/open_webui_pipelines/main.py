@@ -3,18 +3,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.concurrency import run_in_threadpool
 
 
-from starlette.responses import StreamingResponse, Response
-from pydantic import BaseModel, ConfigDict
-from typing import List, Union, Generator, Iterator
+from starlette.responses import StreamingResponse
+from pydantic import BaseModel
+from typing import Generator, Iterator
 
 
-from utils.pipelines.auth import bearer_security, get_current_user
+from utils.pipelines.auth import get_current_user
 from utils.pipelines.main import get_last_user_message, stream_message_template
 from utils.pipelines.misc import convert_to_raw_url
 from utils.pipelines.custom_exceptions import RateLimitException
 
 from contextlib import asynccontextmanager
-from concurrent.futures import ThreadPoolExecutor
 from schemas import FilterForm, OpenAIChatCompletionForm
 from urllib.parse import urlparse
 
@@ -280,7 +279,7 @@ async def get_models():
                         if pipeline.get("type", "pipe") == "filter"
                         else {}
                     ),
-                    "valves": pipeline["valves"] != None,
+                    "valves": pipeline["valves"] is not None,
                 },
             }
             for pipeline in app.state.PIPELINES.values()
@@ -574,7 +573,8 @@ async def filter_inlet(pipeline_id: str, form_data: FilterForm):
         pipeline = app.state.PIPELINES[form_data.body["model"]]
         if pipeline["type"] == "manifold":
             pipeline_id = pipeline_id.split(".")[0]
-    except:
+    except Exception as e:
+        logger.error(f"Error in filter_inlet {pipeline_id}: {e}")
         pass
 
     pipeline = PIPELINE_MODULES[pipeline_id]
@@ -619,14 +619,15 @@ async def filter_outlet(pipeline_id: str, form_data: FilterForm):
         pipeline = app.state.PIPELINES[form_data.body["model"]]
         if pipeline["type"] == "manifold":
             pipeline_id = pipeline_id.split(".")[0]
-    except:
+    except Exception as e:
+        logger.error(f"Error in filter_outlet {pipeline_id}: {e}")
         pass
 
     pipeline = PIPELINE_MODULES[pipeline_id]
 
     try:
         if hasattr(pipeline, "outlet"):
-            body = await pipeline.outlet(form_data.body, form_data.user)
+            body = await pipeline.outlet(form_data.body, user=form_data.user)
             return body
         else:
             return form_data.body
