@@ -1,5 +1,5 @@
 import json
-import logging
+import structlog
 import mimetypes
 import os
 import shutil
@@ -78,14 +78,12 @@ from open_webui.config import (
     config,
 )
 from open_webui.env import (
-    SRC_LOG_LEVELS,
     DEVICE_TYPE,
     DOCKER,
 )
 from open_webui.constants import ERROR_MESSAGES
 
-log = logging.getLogger(__name__)
-log.setLevel(SRC_LOG_LEVELS["RAG"])
+log = structlog.get_logger(__name__)
 
 ##########################################
 #
@@ -110,7 +108,7 @@ def get_ef(
                 trust_remote_code=config.RAG_EMBEDDING_MODEL_TRUST_REMOTE_CODE,
             )
         except Exception as e:
-            log.debug(f"Error loading SentenceTransformer: {e}")
+            log.exception("Error loading SentenceTransformer", exc_info=e)
 
     return ef
 
@@ -131,7 +129,7 @@ def get_rf(
                 )
 
             except Exception as e:
-                log.error(f"ColBERT: {e}")
+                log.exception("ColBERT failed", exc_info=e)
                 raise Exception(ERROR_MESSAGES.DEFAULT(e))
         else:
             import sentence_transformers
@@ -142,8 +140,8 @@ def get_rf(
                     device=DEVICE_TYPE,
                     trust_remote_code=config.RAG_RERANKING_MODEL_TRUST_REMOTE_CODE,
                 )
-            except:
-                log.error("CrossEncoder error")
+            except Exception as e:
+                log.exception("CrossEncoder error", exc_info=e)
                 raise Exception(ERROR_MESSAGES.DEFAULT("CrossEncoder error"))
     return rf
 
@@ -233,7 +231,9 @@ async def update_embedding_config(
     request: Request, form_data: EmbeddingModelUpdateForm, user=Depends(get_admin_user)
 ):
     log.info(
-        f"Updating embedding model: {request.app.state.config.RAG_EMBEDDING_MODEL} to {form_data.embedding_model}"
+        "Updating embedding model",
+        from_model=request.app.state.config.RAG_EMBEDDING_MODEL,
+        to_model=form_data.embedding_model,
     )
     try:
         request.app.state.config.RAG_EMBEDDING_ENGINE = form_data.embedding_engine
@@ -297,7 +297,7 @@ async def update_embedding_config(
             },
         }
     except Exception as e:
-        log.exception(f"Problem updating embedding model: {e}")
+        log.exception("Problem updating embedding model", exc_info=e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=ERROR_MESSAGES.DEFAULT(e),
@@ -313,7 +313,9 @@ async def update_reranking_config(
     request: Request, form_data: RerankingModelUpdateForm, user=Depends(get_admin_user)
 ):
     log.info(
-        f"Updating reranking model: {request.app.state.config.RAG_RERANKING_MODEL} to {form_data.reranking_model}"
+        "Updating reranking model",
+        from_model=request.app.state.config.RAG_RERANKING_MODEL,
+        to_model=form_data.reranking_model,
     )
     try:
         request.app.state.config.RAG_RERANKING_MODEL = form_data.reranking_model
@@ -324,7 +326,7 @@ async def update_reranking_config(
                 True,
             )
         except Exception as e:
-            log.error(f"Error loading reranking model: {e}")
+            log.exception("Error loading reranking model", exc_info=e)
             request.app.state.config.ENABLE_RAG_HYBRID_SEARCH = False
 
         return {
@@ -332,7 +334,7 @@ async def update_reranking_config(
             "reranking_model": request.app.state.config.RAG_RERANKING_MODEL,
         }
     except Exception as e:
-        log.exception(f"Problem updating reranking model: {e}")
+        log.exception("Problem updating reranking model", exc_info=e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=ERROR_MESSAGES.DEFAULT(e),
@@ -473,7 +475,7 @@ async def update_rag_config(
         request.app.state.config.RAG_FILE_MAX_COUNT = form_data.file.max_count
 
     if form_data.content_extraction is not None:
-        log.info(f"Updating text settings: {form_data.content_extraction}")
+        log.info("Updating text settings", new_settings=form_data.content_extraction)
         request.app.state.config.CONTENT_EXTRACTION_ENGINE = (
             form_data.content_extraction.engine
         )
@@ -677,7 +679,9 @@ def save_docs_to_vector_db(
         return ", ".join(docs_info)
 
     log.info(
-        f"save_docs_to_vector_db: document {_get_docs_info(docs)} {collection_name}"
+        "save_docs_to_vector_db",
+        document=_get_docs_info(docs),
+        collection=collection_name,
     )
 
     # Check if entries with the same hash (metadata.hash) already exist
@@ -690,7 +694,7 @@ def save_docs_to_vector_db(
         if result is not None:
             existing_doc_ids = result.ids[0]
             if existing_doc_ids:
-                log.info(f"Document with hash {metadata['hash']} already exists")
+                log.info("Document with hash already exists", hash=metadata["hash"])
                 raise ValueError(ERROR_MESSAGES.DUPLICATE_CONTENT)
 
     if split:
@@ -702,7 +706,8 @@ def save_docs_to_vector_db(
             )
         elif request.app.state.config.TEXT_SPLITTER == "token":
             log.info(
-                f"Using token text splitter: {request.app.state.config.TIKTOKEN_ENCODING_NAME}"
+                "Using token text splitter",
+                name=request.app.state.config.TIKTOKEN_ENCODING_NAME,
             )
 
             tiktoken.get_encoding(str(request.app.state.config.TIKTOKEN_ENCODING_NAME))
@@ -744,18 +749,19 @@ def save_docs_to_vector_db(
 
     try:
         if VECTOR_DB_CLIENT.has_collection(collection_name=collection_name):
-            log.info(f"collection {collection_name} already exists")
+            log.info("collection already exists", collection=collection_name)
 
             if overwrite:
                 VECTOR_DB_CLIENT.delete_collection(collection_name=collection_name)
-                log.info(f"deleting existing collection {collection_name}")
+                log.info("deleting existing collection", collection=collection_name)
             elif add is False:
                 log.info(
-                    f"collection {collection_name} already exists, overwrite is False and add is False"
+                    "collection already exists, overwrite is False and add is False",
+                    collection=collection_name,
                 )
                 return True
 
-        log.info(f"adding to collection {collection_name}")
+        log.info("adding to collection", collection=collection_name)
         embedding_function = get_embedding_function(
             request.app.state.config.RAG_EMBEDDING_ENGINE,
             request.app.state.config.RAG_EMBEDDING_MODEL,
@@ -794,7 +800,7 @@ def save_docs_to_vector_db(
 
         return True
     except Exception as e:
-        log.exception(e)
+        log.exception("Error updating collection", exc_info=e)
         raise e
 
 
@@ -912,7 +918,7 @@ def process_file(
                 ]
             text_content = " ".join([doc.page_content for doc in docs])
 
-        log.debug(f"text_content: {text_content}")
+        log.debug("process_file", text_content=text_content)
         Files.update_file_data_by_id(
             file.id,
             {"content": text_content},
@@ -951,7 +957,7 @@ def process_file(
         except Exception as e:
             raise e
     except Exception as e:
-        log.exception(e)
+        log.exception("Exception encountered while processing file", exc_info=e)
         if "No pandoc was found" in str(e):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -987,7 +993,7 @@ def process_text(
         )
     ]
     text_content = form_data.content
-    log.debug(f"text_content: {text_content}")
+    log.debug("processing text", text_content=text_content)
 
     result = save_docs_to_vector_db(request, docs, collection_name)
     if result:
@@ -1020,7 +1026,7 @@ def process_youtube_video(
 
         docs = loader.load()
         content = " ".join([doc.page_content for doc in docs])
-        log.debug(f"text_content: {content}")
+        log.debug("processing YouTube video", content=content)
 
         save_docs_to_vector_db(request, docs, collection_name, overwrite=True)
 
@@ -1038,7 +1044,7 @@ def process_youtube_video(
             },
         }
     except Exception as e:
-        log.exception(e)
+        log.exception("Exception while processing YouTube video", exc_info=e)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ERROR_MESSAGES.DEFAULT(e),
@@ -1062,7 +1068,7 @@ def process_web(
         docs = loader.load()
         content = " ".join([doc.page_content for doc in docs])
 
-        log.debug(f"text_content: {content}")
+        log.debug("process website", content=content)
         save_docs_to_vector_db(request, docs, collection_name, overwrite=True)
 
         return {
@@ -1079,7 +1085,7 @@ def process_web(
             },
         }
     except Exception as e:
-        log.exception(e)
+        log.exception("Exception while processing website", exc_info=e)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ERROR_MESSAGES.DEFAULT(e),
@@ -1241,21 +1247,23 @@ def process_web_search(
     request: Request, form_data: SearchForm, user=Depends(get_verified_user)
 ):
     try:
-        logging.info(
-            f"trying to web search with {request.app.state.config.RAG_WEB_SEARCH_ENGINE, form_data.query}"
+        log.info(
+            "trying web search",
+            engine=request.app.state.config.RAG_WEB_SEARCH_ENGINE,
+            query=form_data.query,
         )
         web_results = search_web(
             request, request.app.state.config.RAG_WEB_SEARCH_ENGINE, form_data.query
         )
     except HTTPError as e:
-        log.error(f"Error during web search: {e.response.json()}")
+        log.error("Error during web search", http_response_json=e.response.json())
 
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ERROR_MESSAGES.WEB_SEARCH_ERROR(e),
         )
 
-    log.debug(f"web_results: {web_results}")
+    log.debug("web_results", web_results=web_results)
 
     try:
         collection_name = form_data.collection_name
@@ -1279,7 +1287,7 @@ def process_web_search(
             "filenames": urls,
         }
     except Exception as e:
-        log.exception(e)
+        log.exception("Exception while processing web search", exc_info=e)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ERROR_MESSAGES.DEFAULT(e),
@@ -1321,7 +1329,7 @@ def query_doc_handler(
                 k=form_data.k if form_data.k else request.app.state.config.RAG_TOP_K,
             )
     except Exception as e:
-        log.exception(e)
+        log.exception("query_doc_handler", exc_info=e)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ERROR_MESSAGES.DEFAULT(e),
@@ -1365,7 +1373,7 @@ def query_collection_handler(
             )
 
     except Exception as e:
-        log.exception(e)
+        log.exception("query_collection_handler", exc_info=e)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ERROR_MESSAGES.DEFAULT(e),
@@ -1399,7 +1407,7 @@ def delete_entries_from_collection(form_data: DeleteForm, user=Depends(get_admin
         else:
             return {"status": False}
     except Exception as e:
-        log.exception(e)
+        log.exception("delete_entries_from_collection", exc_info=e)
         return {"status": False}
 
 
@@ -1495,7 +1503,9 @@ def process_files_batch(
             results.append(BatchProcessFilesResult(file_id=file.id, status="prepared"))
 
         except Exception as e:
-            log.error(f"process_files_batch: Error processing file {file.id}: {str(e)}")
+            log.error(
+                "process_files_batch: Error processing file", id=file.id, exc_info=e
+            )
             errors.append(
                 BatchProcessFilesResult(file_id=file.id, status="failed", error=str(e))
             )
@@ -1519,7 +1529,7 @@ def process_files_batch(
 
         except Exception as e:
             log.error(
-                f"process_files_batch: Error saving documents to vector DB: {str(e)}"
+                "process_files_batch: Error saving documents to vector DB", exc_info=e
             )
             for result in results:
                 result.status = "failed"

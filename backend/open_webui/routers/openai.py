@@ -1,7 +1,7 @@
 import asyncio
 import hashlib
 import json
-import logging
+import structlog
 from pathlib import Path
 from typing import Literal, Optional, overload
 
@@ -40,8 +40,7 @@ from open_webui.utils.auth import get_admin_user, get_verified_user
 from open_webui.utils.access_control import has_access
 
 
-log = logging.getLogger(__name__)
-log.setLevel(SRC_LOG_LEVELS["OPENAI"])
+log = structlog.get_logger(__name__)
 
 
 ##########################################
@@ -61,7 +60,7 @@ async def send_get_request(url, key=None):
                 return await response.json()
     except Exception as e:
         # Handle connection error here
-        log.error(f"Connection error: {e}")
+        log.exception("Connection error", exc_info=e)
         return None
 
 
@@ -225,7 +224,7 @@ async def speech(request: Request, user=Depends(get_verified_user)):
             return FileResponse(file_path)
 
         except Exception as e:
-            log.exception(e)
+            log.exception("speech", exc_info=e)
 
             detail = None
             if r is not None:
@@ -320,7 +319,7 @@ async def get_all_models_responses(request: Request) -> list:
                 ):
                     model["id"] = f"{prefix_id}.{model['id']}"
 
-    log.debug(f"get_all_models:responses() {responses}")
+    log.debug("get_all_models_responses", responses=responses)
     return responses
 
 
@@ -339,7 +338,7 @@ async def get_filtered_models(models, user):
 
 @cached(ttl=3)
 async def get_all_models(request: Request) -> dict[str, list]:
-    log.info("get_all_models()")
+    log.debug("get_all_models()")
 
     if not request.app.state.config.ENABLE_OPENAI_API:
         return {"data": []}
@@ -354,7 +353,7 @@ async def get_all_models(request: Request) -> dict[str, list]:
         return None
 
     def merge_models_lists(model_lists):
-        log.debug(f"merge_models_lists {model_lists}")
+        log.debug("merge_models_lists", model_lists=model_lists)
         merged_list = []
 
         for idx, models in enumerate(model_lists):
@@ -388,7 +387,7 @@ async def get_all_models(request: Request) -> dict[str, list]:
         return merged_list
 
     models = {"data": merge_models_lists(map(extract_data, responses))}
-    log.debug(f"models: {models}")
+    log.debug("get_all_models", models=models)
 
     request.app.state.OPENAI_MODELS = {model["id"]: model for model in models["data"]}
     return models
@@ -465,12 +464,12 @@ async def get_models(
                     models = response_data
             except aiohttp.ClientError as e:
                 # ClientError covers all aiohttp requests issues
-                log.exception(f"Client error: {str(e)}")
+                log.exception("Client error", exc_info=e)
                 raise HTTPException(
                     status_code=500, detail="Open WebUI: Server Connection Error"
                 )
             except Exception as e:
-                log.exception(f"Unexpected error: {e}")
+                log.exception("Unexpected error", exc_info=e)
                 error_detail = f"Unexpected error: {str(e)}"
                 raise HTTPException(status_code=500, detail=error_detail)
 
@@ -516,12 +515,12 @@ async def verify_connection(
 
         except aiohttp.ClientError as e:
             # ClientError covers all aiohttp requests issues
-            log.exception(f"Client error: {str(e)}")
+            log.exception("Client error", exc_info=e)
             raise HTTPException(
                 status_code=500, detail="Open WebUI: Server Connection Error"
             )
         except Exception as e:
-            log.exception(f"Unexpected error: {e}")
+            log.exception("Unexpected error", exc_info=e)
             error_detail = f"Unexpected error: {str(e)}"
             raise HTTPException(status_code=500, detail=error_detail)
 
@@ -672,13 +671,13 @@ async def generate_chat_completion(
             try:
                 response = await r.json()
             except Exception as e:
-                log.error(e)
+                log.exception("generate_chat_completion", exc_info=e)
                 response = await r.text()
 
             r.raise_for_status()
             return response
     except Exception as e:
-        log.exception(e)
+        log.exception("generate_chat_completion", exc_info=e)
 
         detail = None
         if isinstance(response, dict):
@@ -753,7 +752,7 @@ async def proxy(path: str, request: Request, user=Depends(get_verified_user)):
             return response_data
 
     except Exception as e:
-        log.exception(e)
+        log.exception("proxy", exc_info=e)
 
         detail = None
         if r is not None:

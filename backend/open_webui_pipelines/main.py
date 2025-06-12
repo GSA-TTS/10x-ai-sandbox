@@ -28,19 +28,17 @@ import json
 import uuid
 import sys
 
+import structlog
+from open_webui.middleware.logs import structlog_context_middleware_factory
+from open_webui.utils.logs import setup_logging
 
 from config import API_KEY, PIPELINES_DIR
 
 if not os.path.exists(PIPELINES_DIR):
     os.makedirs(PIPELINES_DIR)
 
-
-import structlog
-from utils.logs import setup_logging
-
 setup_logging()
-
-logger = structlog.get_logger("pipelines")
+logger = structlog.get_logger("cohere_proxy")
 
 
 PIPELINES = {}
@@ -236,6 +234,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(structlog_context_middleware_factory("open_webui_pipelines.http"))
 
 
 @app.middleware("http")
