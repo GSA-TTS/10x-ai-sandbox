@@ -334,3 +334,7 @@ button.outline-gsa-blue:focus {
 .dark button.outline-gsa-blue:focus {
 	outline-color: var(--gsa-light-blue-hover);
 }
+
+.model-dropdown:focus {
+	outline: -webkit-focus-ring-color auto 1px;
+}

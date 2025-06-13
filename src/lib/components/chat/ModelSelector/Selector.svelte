@@ -61,6 +61,8 @@
 
 	let selectedModelIdx = 0;
 
+	let currentElement = 0;
+
 	const fuse = new Fuse(
 		items.map((item) => {
 			const _item = {
@@ -297,10 +299,10 @@
 				<h3 class="font-semibold my-1 text-sm">Available models</h3>
 				{#each filteredItems as item, index}
 					<button
-						class="flex w-full text-left font-medium line-clamp-1 select-none items-center rounded-button py-2 pl-3 pr-1.5 text-sm text-gray-700 dark:text-gray-100 outline-none transition-all duration-75 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg cursor-pointer data-[highlighted]:bg-muted {index ===
-						selectedModelIdx
-							? 'bg-gray-100 dark:bg-gray-800 group-hover:bg-transparent'
-							: ''}"
+						id={'model-' + index}
+						class="model-dropdown flex w-full text-left font-medium line-clamp-1 select-none items-center rounded-button py-2 pl-3 pr-1.5 text-sm text-gray-700 dark:text-gray-100 outline-none transition-all duration-75 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg cursor-pointer data-[highlighted]:bg-muted
+						{index === currentElement ? 'bg-gray-100 dark:bg-gray-800 group-hover:bg-transparent' : ''}
+						"
 						data-arrow-selected={index === selectedModelIdx}
 						on:click={() => {
 							value = item.value;
@@ -308,6 +310,16 @@
 							// SR announcement
 							document.getElementById('svelte-announcer').textContent = 'model selection changed';
 							show = false;
+						}}
+						on:keydown={(e) => {
+							if (e.code === 'ArrowDown') {
+								currentElement = (currentElement + 1) % filteredItems.length;
+							} else if (e.code === 'ArrowUp') {
+								currentElement = (currentElement - 1 + items.length) % items.length;
+							} else if (e.code === 'Tab' && showTemporaryChatControl) {
+								document.getElementById('temporary-chat-control')?.focus();
+							}
+							document.getElementById('model-' + currentElement)?.focus();
 						}}
 					>
 						<div class="flex flex-col">
@@ -503,6 +515,8 @@
 
 				<div class="flex items-center mx-2 my-2">
 					<button
+						id="temporary-chat-control"
+						tabindex="0"
 						class="flex justify-between w-full font-medium line-clamp-1 select-none items-center rounded-button py-2 px-3 text-sm text-gray-700 dark:text-gray-100 outline-none transition-all duration-75 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg cursor-pointer data-[highlighted]:bg-muted"
 						on:click={async () => {
 							temporaryChatEnabled.set(!$temporaryChatEnabled);
