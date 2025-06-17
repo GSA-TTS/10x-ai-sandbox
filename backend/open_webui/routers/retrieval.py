@@ -777,6 +777,7 @@ def save_docs_to_vector_db(
                 else request.app.state.config.RAG_OLLAMA_API_KEY
             ),
             request.app.state.config.RAG_EMBEDDING_BATCH_SIZE,
+            embed_type="search_document",
         )
 
         embeddings = embedding_function(
