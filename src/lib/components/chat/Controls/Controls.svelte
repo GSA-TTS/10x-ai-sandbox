@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, getContext } from 'svelte';
+	import { createEventDispatcher, getContext, onMount, tick } from 'svelte';
 	const dispatch = createEventDispatcher();
 	const i18n = getContext('i18n');
 
@@ -15,6 +15,20 @@
 	export let params = {};
 
 	let showValves = false;
+
+	// This code is to move the focus to the first focusable element when the component when it becomes visible.
+	export let visible = false;
+	let firstFocusable;
+
+	// React to visibility changes
+	$: if (visible) {
+		(async () => {
+			await tick();
+			if (firstFocusable) {
+				firstFocusable.focus();
+			}
+		})();
+	}
 </script>
 
 <div class=" dark:text-white">
@@ -25,6 +39,7 @@
 			on:click={() => {
 				dispatch('close');
 			}}
+			bind:this={firstFocusable}
 		>
 			<XMark className="size-3.5" />
 		</button>
