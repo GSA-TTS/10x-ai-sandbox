@@ -62,7 +62,9 @@
    - Initial install/setup (run whenever starting fresh)
 
    ```bash
-   pip install -r ./backend/requirements.txt && \
+   uv venv --seed && \
+   source .venv/bin/activate && \
+   uv sync && \
    cat z-root-public.pem >> $(python -c "import certifi; print(certifi.where())") && \
    npm install --verbose && \
    npx husky init && \

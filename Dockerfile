@@ -43,10 +43,10 @@ FROM jimmoffetgsa/gsai:jammy-builder-32325 AS builder
 ENV ENV=prod \
     HOME=/root
 
-COPY ./backend/requirements.txt ./requirements.txt
+COPY ./pyproject.toml ./uv.lock ./
 RUN uv pip uninstall --system setuptools && \
     uv pip install --upgrade --system setuptools==70.0.0
-RUN uv pip install --system -r requirements.txt --no-cache-dir
+RUN uv sync --system --no-cache
 
 RUN uv pip install --upgrade --system pillow==10.3.0
 RUN uv pip install --upgrade --system posthog==3.11.0

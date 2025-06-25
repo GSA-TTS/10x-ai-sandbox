@@ -13,7 +13,7 @@ dependencies = [
     "python-socketio==5.11.3",
     "python-jose==3.4.0",
     "passlib[bcrypt]==1.7.4",
-    "requests==2.32.3",
+    "requests==2.32.4",
     "aiohttp==3.11.8",
     "async-timeout",
     "aiocache",
@@ -33,7 +33,7 @@ dependencies = [
     "APScheduler==3.10.4",
     "openai",
     "anthropic",
-    "google-generativeai==0.7.2",
+    "google-generativeai==0.8.4",
     "tiktoken",
     "langchain==0.3.7",
     "langchain-community==0.3.7",
@@ -52,7 +52,7 @@ dependencies = [
     "pymdown-extensions==10.11.2",
     "docx2txt==0.8",
     "python-pptx==1.0.0",
-    "unstructured==0.15.9",
+    "unstructured==0.17.2",
     "nltk==3.9.1",
     "Markdown==3.7",
     "pypandoc==1.13",
@@ -85,6 +85,10 @@ dependencies = [
     "structlog>=25.4.0",
     "rich>=13.7.1",
     "ddtrace>=3.9.4",
+    "google-cloud-aiplatform==1.88.0",
+    "google-api-python-client>=2.142.0",
+    "google-auth-httplib2>=0.2.0",
+    "google-auth-oauthlib>=1.2.2",
 ]
 readme = "README.md"
 requires-python = ">= 3.11, < 3.13.0a1"

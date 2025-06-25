@@ -81,7 +81,7 @@ RUN apt-get update && \
 # ----------------------------------------------------
 # 2. Install Python dependencies in builder
 # ----------------------------------------------------
-COPY ./backend/requirements.txt ./requirements.txt
+COPY ./pyproject.toml ./uv.lock ./
 
 # EITHER: just pip install into the base environment
 # OR: create a virtualenv to copy into final
@@ -102,7 +102,7 @@ RUN if [ "$USE_CUDA" = "true" ]; then \
     --index-url https://download.pytorch.org/whl/cpu; \
     fi
 RUN pip install --no-cache-dir uv pip==23.3
-RUN uv pip install --system -r requirements.txt --no-cache-dir
+RUN uv sync --system --no-cache
 
 # ----------------------------------------------------
 # 3. (Optional) Pre-download / cache large models

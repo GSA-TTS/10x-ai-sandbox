@@ -53,8 +53,9 @@ RUN rm -rf workspace/package-lock.json workspace/node_modules
 COPY package.json ./
 RUN NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/z-root-public.crt npm install --verbose
 
-COPY backend/requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml uv.lock ./
+RUN pip install uv
+RUN uv sync --system --no-cache
 RUN echo $(pip show torch)
 
 COPY . .
