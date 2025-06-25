@@ -185,6 +185,7 @@
 							{models}
 							bind:chatFiles
 							bind:params
+							visible={showControls}
 						/>
 					{/if}
 				</div>
@@ -272,6 +273,7 @@
 								{models}
 								bind:chatFiles
 								bind:params
+								visible={showControls}
 							/>
 						{/if}
 					</div>

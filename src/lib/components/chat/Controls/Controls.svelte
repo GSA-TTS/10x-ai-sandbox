@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, getContext } from 'svelte';
+	import { createEventDispatcher, getContext, onMount, tick } from 'svelte';
 	const dispatch = createEventDispatcher();
 	const i18n = getContext('i18n');
 
@@ -15,6 +15,20 @@
 	export let params = {};
 
 	let showValves = false;
+
+	// This code is to move the focus to the first focusable element when the component when it becomes visible.
+	export let visible = false;
+	let firstFocusable;
+
+	// React to visibility changes
+	$: if (visible) {
+		(async () => {
+			await tick();
+			if (firstFocusable) {
+				firstFocusable.focus();
+			}
+		})();
+	}
 </script>
 
 <div class=" dark:text-white">
@@ -25,6 +39,7 @@
 			on:click={() => {
 				dispatch('close');
 			}}
+			bind:this={firstFocusable}
 		>
 			<XMark className="size-3.5" />
 		</button>
@@ -70,10 +85,10 @@
 		<hr class="my-2 border-gray-50 dark:border-gray-700/10" />
 
 		<Collapsible title={$i18n.t('System Prompt')} open={true} buttonClassName="w-full">
-			<div class="" slot="content">
+			<div class="mt-0.5" slot="content">
 				<textarea
 					bind:value={params.system}
-					class="w-full text-xs py-1.5 bg-transparent outline-none resize-none"
+					class="w-full rounded-lg py-2 px-4 text-sm dark:text-gray-300 dark:bg-gray-850 border border-gray-400 resize-none"
 					rows="4"
 					placeholder={$i18n.t('Enter system prompt')}
 				/>

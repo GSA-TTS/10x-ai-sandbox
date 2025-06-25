@@ -20,19 +20,32 @@
 
 	export let disabled = false;
 	export let hide = false;
+
+	let handleKeydown = (event) => {
+		// A11y: Ensure the button is accessible via keyboard
+		if (event.key === 'Enter' || event.key === ' ') {
+			if (!disabled) {
+				open = !open;
+			}
+			event.preventDefault();
+		}
+	};
 </script>
 
 <div class={className}>
 	{#if title !== null}
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div
+		<button
 			class="{buttonClassName} cursor-pointer"
 			on:pointerup={() => {
 				if (!disabled) {
 					open = !open;
 				}
 			}}
+			on:keydown={handleKeydown}
+			aria-expanded={open}
+			aria-label="Show {title}"
 		>
 			<div class=" w-full font-medium flex items-center justify-between gap-2">
 				<div class="">
@@ -47,17 +60,20 @@
 					{/if}
 				</div>
 			</div>
-		</div>
+		</button>
 	{:else}
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div
+		<button
 			class="{buttonClassName} cursor-pointer"
 			on:pointerup={() => {
 				if (!disabled) {
 					open = !open;
 				}
 			}}
+			on:keydown={handleKeydown}
+			aria-expanded={open}
+			aria-label="Show {title}"
 		>
 			<div>
 				<slot />
@@ -75,7 +91,7 @@
 					{/if}
 				{/if}
 			</div>
-		</div>
+		</button>
 	{/if}
 
 	{#if !grow}
