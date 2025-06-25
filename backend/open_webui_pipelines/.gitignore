@@ -21,6 +21,7 @@ pipelines/*
 !pipelines/bedrock_claude_opus4_pipeline.py
 !pipelines/bedrock_claude_sonnet4_pipeline.py
 !pipelines/bedrock_llama4_maverick_pipeline.py
+!pipelines/azure_xai_grok3_pipeline.py
 .DS_Store
 
 .venv

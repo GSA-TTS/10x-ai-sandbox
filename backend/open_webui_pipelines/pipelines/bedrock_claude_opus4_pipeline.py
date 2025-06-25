@@ -142,42 +142,22 @@ class Pipeline:
                         }
                         logger.info("pipe:ttft", ttft_log=ttft_log)
 
-        except self.bedrock_client.exceptions.AccessDeniedException as e:
-            logger.error("Access Denied Exception:", e)
-            yield generic_error_msg
-        except self.bedrock_client.exceptions.ResourceNotFoundException as e:
-            logger.error("Resource Not Found Exception:", e)
-            yield generic_error_msg
-        except self.bedrock_client.exceptions.ThrottlingException as e:
-            logger.error("Throttling Exception:", e)
-            yield rate_limit_error_msg
-        except self.bedrock_client.exceptions.ModelTimeoutException as e:
-            logger.error("Model Timeout Exception:", e)
-            yield generic_error_msg
-        except self.bedrock_client.exceptions.InternalServerException as e:
-            logger.error("Internal Server Exception:", e)
-            yield generic_error_msg
-        except self.bedrock_client.exceptions.ServiceUnavailableException as e:
-            logger.error("Service Unavailable Exception:", e)
-            yield generic_error_msg
-        except self.bedrock_client.exceptions.ModelStreamErrorException as e:
-            logger.error("Model Stream Error Exception:", e)
-            yield generic_error_msg
-        except self.bedrock_client.exceptions.ValidationException as e:
-            logger.error("Validation Exception:", e)
-            yield generic_error_msg
-        except self.bedrock_client.exceptions.ModelNotReadyException as e:
-            logger.error("Model Not Ready Exception:", e)
-            yield generic_error_msg
-        except self.bedrock_client.exceptions.ServiceQuotaExceededException as e:
-            logger.error(f"Service Quota Exceeded Exception: {e}")
-            yield rate_limit_error_msg
-        except self.bedrock_client.exceptions.ModelErrorException as e:
-            logger.error("Model Error Exception:", e)
-            yield generic_error_msg
-        except BotoCoreError as e:
-            logger.error(f"AWS BotoCoreError: {e}")
-            yield generic_error_msg
         except Exception as e:
-            logger.error(f"General Error: {e}")
-            yield generic_error_msg
+            exception_name = type(e).__name__
+            error_str = str(e).lower()
+            logger.error(error_str)
+
+            # Check for rate limiting patterns
+            is_rate_limit_exception = exception_name in [
+                "ThrottlingException",
+                "ServiceQuotaExceededException",
+            ]
+            has_rate_limit_keywords = any(
+                keyword in error_str
+                for keyword in ["throttl", "rate", "quota", "limit"]
+            )
+
+            if is_rate_limit_exception or has_rate_limit_keywords:
+                yield rate_limit_error_msg
+            else:
+                yield generic_error_msg
