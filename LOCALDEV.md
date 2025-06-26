@@ -77,6 +77,7 @@
    npm install --verbose && \
    npx husky init && \
    cp pre-commit .husky/pre-commit && \
+   npm run build
    ```
 
    - Build and run with hot reloading:
