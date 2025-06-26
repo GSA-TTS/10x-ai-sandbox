@@ -348,7 +348,7 @@
 
 {#if loaded}
 	<div class="w-full font-primary">
-		<div class=" mx-auto inset-x-0 bg-transparent flex justify-center">
+		<div class=" mx-auto inset-x-0 bg-transparent flex justify-center mt-2">
 			<div
 				class="flex flex-col px-3 {($settings?.widescreenMode ?? null)
 					? 'max-w-full'
@@ -431,7 +431,16 @@
 												<span class="relative inline-flex rounded-full size-2 bg-green-500" />
 											</span>
 										</div>
-										<div class=" translate-y-[0.5px]">{$i18n.t('Search the web')}</div>
+										<div class=" translate-y-[0.5px]">
+											Search the web (Chat may include any text in your current conversation in the
+											web search.
+											<a
+												href="https://insite.gsa.gov/services-and-offices/staff-offices/office-of-gsa-it/artificial-intelligence/gsas-aipowered-chat/chat-resources/chat-user-guide"
+												target="_blank"
+												rel="noopener noreferrer"
+												class="text-blue-800 dark:text-blue-400 underline">Learn more</a
+											>.)
+										</div>
 									</div>
 								</div>
 							{/if}
