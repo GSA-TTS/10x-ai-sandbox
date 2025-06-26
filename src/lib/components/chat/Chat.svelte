@@ -298,7 +298,10 @@
 				} else if (type === 'chat:completion') {
 					chatCompletionEventHandler(data, message, event.chat_id);
 				} else if (type === 'chat:title') {
-					chatTitle.set(data);
+					// set chat title based on chat id
+					if (event.chat_id === $chatId) {
+						chatTitle.set(data);
+					}
 					currentChatPage.set(1);
 					await chats.set(await getChatList($currentChatPage));
 				} else if (type === 'chat:tags') {

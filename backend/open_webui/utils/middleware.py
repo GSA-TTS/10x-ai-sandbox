@@ -73,6 +73,22 @@ from open_webui.constants import TASKS
 log = structlog.get_logger(__name__)
 
 
+def generate_fall_back_title(messages):
+    if not messages:
+        return "New Chat"
+    user_message = None
+    for message in messages:
+        if message.get("role") == "user":
+            user_message = message.get("content", "").strip()
+            break
+    if not user_message:
+        return "New Chat"
+
+    if len(user_message) > 30:
+        return user_message[:27] + "..."
+    return user_message
+
+
 async def chat_completion_filter_functions_handler(request, body, model, extra_params):
     skip_files = None
 
@@ -844,8 +860,12 @@ async def process_chat_response(
                                 )
                             ).strip()
 
+                            # if title using error message
+                            if "## Oops!" in title:
+                                title = generate_fall_back_title(messages)
+
                             if not title:
-                                title = messages[0].get("content", "New Chat")
+                                title = generate_fall_back_title(messages)
 
                             Chats.update_chat_title_by_id(metadata["chat_id"], title)
 
@@ -856,16 +876,11 @@ async def process_chat_response(
                                 }
                             )
                     elif len(messages) == 2:
-                        title = messages[0].get("content", "New Chat")
+                        title = generate_fall_back_title(messages)
 
                         Chats.update_chat_title_by_id(metadata["chat_id"], title)
 
-                        await event_emitter(
-                            {
-                                "type": "chat:title",
-                                "data": message.get("content", "New Chat"),
-                            }
-                        )
+                        await event_emitter({"type": "chat:title", "data": title})
 
                 if TASKS.TAGS_GENERATION in tasks and tasks[TASKS.TAGS_GENERATION]:
                     res = await generate_chat_tags(
