@@ -160,7 +160,8 @@
 						prompt = input.prompt;
 						files = input.files;
 						selectedToolIds = input.selectedToolIds;
-						webSearchEnabled = input.webSearchEnabled;
+						webSearchEnabled =
+							input.webSearchEnabled || $page.url.searchParams.get('web-search') === 'true';
 					} catch (e) {}
 				}
 
