@@ -22,10 +22,76 @@ from pydantic import BaseModel
 from open_webui.utils.auth import get_admin_user, get_verified_user
 from open_webui.utils.access_control import has_permission
 
+from fastapi.responses import RedirectResponse
+from urllib.parse import urlencode
+import uuid
+from fastapi import Form
+import time
+
 log = logging.getLogger(__name__)
 log.setLevel(SRC_LOG_LEVELS["MODELS"])
 
 router = APIRouter()
+
+
+@router.post("/new/external")
+async def create_new_chat_external(
+    user=Depends(get_verified_user),
+    message: str = Form(...),
+    model: str = Form(...),
+    web_search: bool = Form(False),
+):
+    """
+    This is a special endpoint to process form submissions from external
+    sources (e.g., the USAi Discover page) to initiate new chats.
+    """
+    try:
+        chat_id = str(uuid.uuid4())
+        user_message_id = str(uuid.uuid4())
+        timestamp = int(time.time() * 1000)
+
+        user_message = {
+            "id": user_message_id,
+            "parentId": None,
+            "childrenIds": [],
+            "role": "user",
+            "content": message,
+            "models": [model],
+            "timestamp": timestamp,
+        }
+
+        new_chat = {
+            "id": chat_id,
+            "models": [model],
+            "system": None,
+            "params": {},
+            "history": {
+                "currentId": user_message_id,
+                "messages": {user_message_id: user_message},
+            },
+            "messages": [user_message],
+        }
+
+        chat = Chats.insert_new_chat(user.id, ChatForm(chat=new_chat))
+
+        # Add a special query parameter to the redirect to indicate to the
+        # front end that it should kick off the conversation.
+        params = {
+            "init": "true",
+        }
+
+        if web_search:
+            params["web-search"] = "true"
+
+        return RedirectResponse(
+            url=f"/c/{chat.id}?{urlencode(params)}", status_code=303
+        )
+    except Exception as e:
+        log.exception(e)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=ERROR_MESSAGES.DEFAULT()
+        )
+
 
 ############################
 # GetChatList

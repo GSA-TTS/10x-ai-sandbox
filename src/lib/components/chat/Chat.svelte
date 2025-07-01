@@ -138,7 +138,7 @@
 
 	const env = dev ? 'dev' : 'prod';
 
-	$: if (chatIdProp) {
+	$: if (chatIdProp && chatIdProp !== $chatId) {
 		(async () => {
 			// console.log(chatIdProp);
 
@@ -160,9 +160,26 @@
 						prompt = input.prompt;
 						files = input.files;
 						selectedToolIds = input.selectedToolIds;
-						webSearchEnabled =
-							input.webSearchEnabled || $page.url.searchParams.get('web-search') === 'true';
+						webSearchEnabled = input.webSearchEnabled;
 					} catch (e) {}
+				}
+
+				if ($page.url.searchParams.get('init') === 'true') {
+					webSearchEnabled = $page.url.searchParams.get('web-search') === 'true';
+
+					const userMessage = Object.values(history.messages).find(
+						(m) => m.role === 'user' && m.parentId === null
+					);
+					if (userMessage) {
+						await tick(); // Ensure history is updated before sending prompt
+						sendPrompt(userMessage.content, userMessage.id);
+					}
+
+					// Clean up the URL
+					const url = new URL(window.location.href);
+					url.searchParams.delete('init');
+					url.searchParams.delete('web-search');
+					window.history.replaceState({}, document.title, url.toString());
 				}
 
 				window.setTimeout(() => scrollToBottom(), 0);
@@ -1468,6 +1485,11 @@
 					let responseMessageId =
 						responseMessageIds[`${modelId}-${modelIdx ? modelIdx : _modelIdx}`];
 					let responseMessage = history.messages[responseMessageId];
+
+					if (!responseMessage) {
+						console.error('Response message not found for model', modelId);
+						return;
+					}
 
 					let userContext = null;
 					if ($settings?.memory ?? false) {
