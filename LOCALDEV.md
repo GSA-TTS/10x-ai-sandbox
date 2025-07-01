@@ -1,6 +1,16 @@
 # GSA Quickstart
 
-1. **Ensure Python 3.11 is installed**:
+1. **Set up your system to recognize the Zscaler root CA**
+
+   - Node/NPM will fail to connect out of the internal network if it hasn't been configured to recognize the Zscaler root public certificate. Copy `z-root-public.pem` somewhere like your `Documents` folder, since it'll come in handy for other apps as well. Then add this to your `.zshrc` file:
+
+   ```bash
+   export NODE_EXTRA_CA_CERTS="$HOME/Documents/z-root-public.pem"
+   ```
+
+   Close and reopen your terminal app so that the new environment variable takes effect.
+
+2. **Ensure Python 3.11 is installed**:
 
    - You can check your Python3.11.x version by running:
 
@@ -14,7 +24,7 @@
    brew install python@3.11
    ```
 
-2. **Create the virtual environment (or however you prefer)**:
+3. **Create the virtual environment (or however you prefer)**:
 
    - Run:
 
@@ -23,7 +33,7 @@
    source ./venv/bin/activate
    ```
 
-3. **Install and use node 20.18.1**:
+4. **Install and use node 20.18.1**:
 
    - If you don't have nvm, you can install with `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash` and `source ~/.zshrc` (or `source ~/.bashrc` if you use bash):
 
@@ -32,7 +42,7 @@
    nvm use 20.18.1
    ```
 
-4. **Install gitleaks**:
+5. **Install gitleaks**:
 
    - Install with homebrew, then start a new terminal:
 
@@ -40,7 +50,7 @@
    brew install gitleaks
    ```
 
-5. **Install deps, build and run**:
+6. **Install deps, build and run**:
 
    - Set up pgvector postgres container:
 
@@ -67,6 +77,7 @@
    npm install --verbose && \
    npx husky init && \
    cp pre-commit .husky/pre-commit && \
+   npm run build
    ```
 
    - Build and run with hot reloading:
@@ -79,12 +90,12 @@
    - After the first install, you can just run `./dev.sh`. First app startup will take a minute even after it says `Uvicorn running on http://0.0.0.0:8080`, once you see the ascii art, all of the features should be available. You may see a 500 the first time and need to refresh. You can run a front end dev server that hot reloads via `npm run dev` but connecting it to the backend and getting auth redirects with live servers working is unresolved due to the frontend and back running on different ports. We probably need to mock auth locally.
    - ollama is not required for the app to run, but it is assumed, you can ignore the 500s if its not running. If you want to use it, you can install it with `brew install ollama`. You can then run `ollama serve` to start the server. You can then add a model to ollama with `ollama run mistral`.
 
-6. **Set up pipelines to access models via API**:
+7. **Set up pipelines to access models via API**:
 
    - Once you're in, you should see the four default models available in the chat. If not, check that the pipelines server is running on 9099 and in the UI click on your user in the lower left > Admin Panel > Settings > Connections > OpenAI API section. Set the API URL to [<http://localhost:9099](http://localhost:9099>) and the API key to 0p3n-w3bu! and hit refresh to see if it connects to the pipeline server.
    - After completing these steps, the models specified in the pipeline settings should be available in the drop down at the upper left when you create a new conversation.
 
-7. **Testing stateless deployment with docker swarm**:
+8. **Testing stateless deployment with docker swarm** (optional):
 
    - We can use docker swarm with the base docker-compose.yaml to spin up a cluster of replicas.
 
@@ -121,7 +132,7 @@
 
    - _NOTE_: a reasonable development cycle might look like pointing your IDE at the app volume (devcontainer style) and redeploying the stack after modifying the app volume. It might be a little tricky to share the volume properly, so that you can alternately bring up the single container and the swarm to test single or parallel behavior.
 
-8. **Install autogen for commit and pr messages**:
+9. **Install autogen for commit and pr messages** (optional):
 
    - Install the auto tool in your local bin:
 
