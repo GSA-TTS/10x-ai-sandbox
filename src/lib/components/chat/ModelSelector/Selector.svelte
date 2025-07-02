@@ -242,14 +242,24 @@
 		aria-controls="model-selector-menu"
 	>
 		<div
-			class="chat-model-selector flex w-full text-left px-0.5 outline-none bg-transparent truncate {triggerClassName} justify-between font-medium placeholder-gray-400 focus:outline-none"
+			class="chat-model-selector items-center flex w-full text-left px-0.5 outline-none bg-transparent truncate {triggerClassName} justify-between font-medium placeholder-gray-400 focus:outline-none"
 		>
 			{#if selectedModel}
 				{selectedModel.label}
 			{:else}
 				{placeholder}
 			{/if}
-			<ChevronDown className=" self-center ml-2 size-3" strokeWidth="2.5" />
+
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke-width="2.5"
+				stroke="currentColor"
+				class="size-4"
+			>
+				<path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+			</svg>
 		</div>
 	</DropdownMenu.Trigger>
 
