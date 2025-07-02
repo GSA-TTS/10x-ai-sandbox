@@ -173,6 +173,7 @@ RUN apt-get update && \
     python3.11 \
     python3-pip \
     ffmpeg && \
+    rm -rf /var/lib/apt/lists/* && \
     update-ca-certificates
 
 ## We re-declare our ARGs/ENVs as needed
