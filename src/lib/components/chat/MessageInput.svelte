@@ -557,7 +557,7 @@
 							}}
 						>
 							<div
-								class="flex-1 flex flex-col border border-gray-400 relative w-full rounded-3xl px-1 dark:text-gray-100"
+								class="chat-input-container flex-1 flex flex-col border relative w-full rounded-3xl px-1 dark:text-gray-100"
 								dir={$settings?.chatDirection ?? 'LTR'}
 							>
 								{#if files.length > 0}
@@ -682,7 +682,7 @@
 												}}
 											>
 												<button
-													class="bg-transparent hover:bg-white/80 text-gray-800 dark:text-white dark:hover:bg-gray-800 transition rounded-full p-2 outline-none focus:outline-none"
+													class="chat-input-upload-btn dark:text-white dark:hover:bg-gray-800 transition rounded-full p-2 outline-none focus:outline-none"
 													type="button"
 													aria-label="More"
 												>
@@ -1204,8 +1204,8 @@
 														<button
 															id="send-message-button"
 															class="{prompt !== ''
-																? 'bg-gsa-blue text-white dark:bg-white dark:text-black outline-none '
-																: 'text-white bg-gray-200 dark:text-gray-900 dark:bg-gray-700 disabled'} transition rounded-full p-1.5 self-center"
+																? 'chat-send-msg-btn dark:bg-white dark:text-black outline-none '
+																: 'bg-steel-100 text-black dark:text-gray-900 dark:bg-gray-700 disabled'} transition rounded-full p-1.5 self-center"
 															type="submit"
 															disabled={prompt === ''}
 														>

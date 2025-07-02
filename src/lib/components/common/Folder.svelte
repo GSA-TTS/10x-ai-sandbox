@@ -127,10 +127,10 @@
 		>
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div
-				class="w-full group rounded-md relative flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-600 dark:text-gray-500 transition"
+				class="sidebar-text-link w-full group rounded-md relative flex items-center justify-between dark:hover:bg-gray-900 dark:text-gray-500 transition"
 			>
 				<button class="w-full py-1.5 pl-2 flex items-center gap-1.5 text-xs font-medium">
-					<div class="text-gray-600 dark:text-gray-500">
+					<div class="sidebar-text dark:text-gray-500">
 						{#if open}
 							<ChevronDown className=" size-3" strokeWidth="2.5" />
 						{:else}

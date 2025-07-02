@@ -2005,7 +2005,6 @@
 								/>
 							</div>
 						</div>
-
 						<div class=" pb-[2rem]">
 							<MessageInput
 								{history}
@@ -2087,7 +2086,7 @@
 					{/if}
 					{#if $config?.features?.enable_disclaimer}
 						<div
-							class="absolute bottom-1.5 text-xs text-gray-600 dark:text-gray-500 text-center line-clamp-1 right-14 left-3"
+							class="chat-input-helper-text absolute bottom-1.5 text-xs dark:text-gray-500 text-center line-clamp-1 right-14 left-3"
 						>
 							{$i18n.t('GSA Chat can make mistakes. Review all responses for accuracy.')}
 						</div>

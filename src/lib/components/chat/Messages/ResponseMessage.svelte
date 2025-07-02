@@ -497,7 +497,7 @@
 
 				{#if message.timestamp}
 					<span
-						class=" self-center invisible group-hover:visible text-gray-400 text-xs font-medium uppercase ml-0.5 -mt-0.5"
+						class="chat-message-time self-center invisible group-hover:visible text-xs font-medium uppercase ml-0.5 -mt-0.5"
 					>
 						{dayjs(message.timestamp).format($i18n.t('h:mm a'))}
 					</span>
@@ -661,7 +661,7 @@
 							</div>
 						{:else}
 							<div
-								class="w-full flex flex-col relative"
+								class="chat-text w-full flex flex-col relative"
 								id="response-content-container"
 								tabindex="0"
 							>

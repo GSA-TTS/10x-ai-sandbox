@@ -137,7 +137,10 @@
 					</div>
 				{/if}
 
-				<h1 class="text-xl lg:text-3xl sm:text-2xl line-clamp-1" in:fade={{ duration: 100 }}>
+				<h1
+					class="chat-input-welcome-msg text-xl lg:text-3xl sm:text-2xl line-clamp-1"
+					in:fade={{ duration: 100 }}
+				>
 					{$i18n.t('How can I help you today?')}
 				</h1>
 			</div>

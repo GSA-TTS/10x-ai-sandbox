@@ -1,0 +1,55 @@
+/* Chat input container and messages */
+#chat-input p[data-placeholder]::before,
+#chat-input p[data-placeholder]::after {
+	color: var(--ai-color-neutral-500);
+}
+.chat-input-container {
+	border-color: var(--ai-color-steel-400);
+}
+.chat-input-placeholder {
+	color: var(--ai-color-neutral-500);
+}
+.chat-input-helper-text,
+.chat-message-time {
+	color: var(--ai-color-steel-800);
+}
+.chat-input-welcome-msg {
+	color: var(--ai-color-steel-900);
+}
+.chat-input-upload-btn,
+.chat-message-user {
+	background-color: var(--ai-color-steel-100);
+	color: var(--ai-color-black);
+}
+.chat-input-upload-btn:hover,
+.sidebar-text-link:hover,
+.sidebar-text-link:active {
+	background-color: var(--ai-color-steel-200);
+}
+.chat-name-text,
+.chat-text,
+.chat-model-selector,
+#chat-input p {
+	color: var(--ai-color-black);
+}
+.chat-send-msg-btn {
+	background-color: var(--ai-color-black);
+	color: var(--ai-color-white);
+}
+.chat-send-msg-btn:hover {
+	background-color: var(--ai-color-neutral-900);
+}
+
+/* Sidebar */
+.sidebar-container {
+	background-color: var(--ai-color-steel-100);
+}
+.sidebar-text,
+.sidebar-text-link,
+.sidebar-main-label {
+	color: var(--ai-color-steel-900);
+}
+
+.sidebar-new-chat-title {
+	color: var(--ai-color-steel-800);
+}
