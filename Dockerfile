@@ -30,7 +30,7 @@ RUN npm run build
 ##############################################################################
 ###               2) PYTHON DEPENDENCIES BUILDER STAGE                     ###
 ##############################################################################
-FROM ubuntu:22.04 AS builder
+FROM ubuntu:24.04 AS builder
 
 # ---------------------- Build Args ----------------------
 ARG USE_CUDA=false
@@ -157,7 +157,7 @@ RUN uv pip uninstall --system ecdsa
 # ##############################################################################
 # ###               3) FINAL RUNTIME IMAGE                                   ###
 # ##############################################################################
-FROM ubuntu:22.04 AS final
+FROM ubuntu:24.04 AS final
 
 COPY z-root-public.crt /usr/local/share/ca-certificates/z-root-public.crt
 RUN apt-get update && \
