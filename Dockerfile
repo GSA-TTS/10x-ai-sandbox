@@ -30,7 +30,7 @@ RUN npm run build
 ##############################################################################
 ###               2) PYTHON DEPENDENCIES BUILDER STAGE                     ###
 ##############################################################################
-FROM ubuntu:24.04 AS builder
+FROM python:3.11-slim AS builder
 
 # ---------------------- Build Args ----------------------
 ARG USE_CUDA=false
@@ -94,8 +94,6 @@ RUN apt-get update && \
     netcat-openbsd \
     curl \
     jq \
-    python3.11 \
-    python3-pip \
     ffmpeg \
     libsm6 \
     libxext6 \
@@ -104,11 +102,6 @@ RUN apt-get update && \
     ca-certificates && \
     rm -rf /var/lib/apt/lists/* && \
     update-ca-certificates
-
-RUN python3 --version
-RUN python3.11 --version
-
-RUN ln -sf /usr/bin/python3.11 /usr/bin/python
 
 
 # ----------------------------------------------------
@@ -122,24 +115,13 @@ RUN ln -sf /usr/bin/python3.11 /usr/bin/python
 #     RUN python -m venv /venv
 #     ENV PATH="/venv/bin:$PATH"
 
-RUN pip install --upgrade pip==23.3
 RUN pip install --no-cache-dir uv
 
 ENV ENV=prod \
     HOME=/root
 
 COPY ./backend/requirements.txt ./requirements.txt
-RUN uv pip uninstall --system setuptools && \
-    uv pip install --upgrade --system setuptools==70.0.0
 RUN uv pip install --system -r requirements.txt --no-cache-dir
-
-RUN uv pip install --upgrade --system pillow==10.3.0
-RUN uv pip install --upgrade --system posthog==3.11.0
-RUN uv pip install --upgrade --system starlette==0.40.0
-RUN uv pip uninstall --system flask
-RUN uv pip uninstall --system Jinja2
-RUN uv pip uninstall --system python-jose
-RUN uv pip uninstall --system ecdsa
 
 # ----------------------------------------------------
 # (Optional) Pre-download / cache large models
@@ -157,7 +139,7 @@ RUN uv pip uninstall --system ecdsa
 # ##############################################################################
 # ###               3) FINAL RUNTIME IMAGE                                   ###
 # ##############################################################################
-FROM ubuntu:24.04 AS final
+FROM python:3.11-slim AS final
 
 COPY z-root-public.crt /usr/local/share/ca-certificates/z-root-public.crt
 RUN apt-get update && \
@@ -170,8 +152,6 @@ RUN apt-get update && \
     net-tools \
     procps \
     vim \
-    python3.11 \
-    python3-pip \
     ffmpeg && \
     rm -rf /var/lib/apt/lists/* && \
     update-ca-certificates
@@ -217,11 +197,10 @@ RUN if [ $UID -ne 0 ]; then \
 ARG UID=0
 ARG GID=0
 
-COPY --from=builder /usr/local/lib/python3.11/dist-packages \
-    /usr/local/lib/python3.11/dist-packages
+COPY --from=builder /usr/local/lib/python3.11/site-packages \
+    /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 # COPY --from=builder /app/backend/data/cache/whisper/models /app/backend/data/cache/whisper/models
-RUN ln -sf /usr/bin/python3.11 /usr/bin/python
 
 # # Copy any caches or model downloads you want at runtime
 # COPY --from=builder /root/.cache /root/.cache
