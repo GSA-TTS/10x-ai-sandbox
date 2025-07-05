@@ -5,11 +5,11 @@
 
 <svg
 	xmlns="http://www.w3.org/2000/svg"
-	fill="none"
 	viewBox="0 0 24 24"
+	fill="none"
 	stroke-width={strokeWidth}
 	stroke="currentColor"
 	class={className}
 >
-	<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+	<path d="M4.5 10.5L12 3M12 3L19.5 10.5M12 3V21" stroke-linecap="round" stroke-linejoin="round" />
 </svg>

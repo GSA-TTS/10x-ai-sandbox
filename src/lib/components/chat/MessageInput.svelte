@@ -45,6 +45,8 @@
 	import { generateAutoCompletion } from '$lib/apis';
 	import { error, text } from '@sveltejs/kit';
 	import Image from '../common/Image.svelte';
+	import Plus from '$lib/components/icons/Plus.svelte';
+	import ArrowUp from '../icons/ArrowUp.svelte';
 
 	const i18n = getContext('i18n');
 
@@ -686,20 +688,8 @@
 													type="button"
 													aria-label="More"
 												>
-													<svg
-														xmlns="http://www.w3.org/2000/svg"
-														fill="none"
-														viewBox="0 0 24 24"
-														stroke-width="1.5"
-														stroke="currentColor"
-														class="size-6"
-													>
-														<path
-															stroke-linecap="round"
-															stroke-linejoin="round"
-															d="M12 4.5v15m7.5-7.5h-15"
-														/>
-													</svg>
+													<!-- Plus icon -->
+													<Plus className="size-6 text-black" />
 												</button>
 											</InputMenu>
 										{/if}
@@ -1213,20 +1203,8 @@
 															type="submit"
 															disabled={prompt === ''}
 														>
-															<svg
-																xmlns="http://www.w3.org/2000/svg"
-																fill="none"
-																viewBox="0 0 24 24"
-																stroke-width="1.5"
-																stroke="currentColor"
-																class="size-6"
-															>
-																<path
-																	stroke-linecap="round"
-																	stroke-linejoin="round"
-																	d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
-																/>
-															</svg>
+															<!-- Arrow up icon -->
+															<ArrowUp />
 														</button>
 													</Tooltip>
 												</div>

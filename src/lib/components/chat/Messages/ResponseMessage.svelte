@@ -33,6 +33,13 @@
 	import Error from './Error.svelte';
 	import Citations from './Citations.svelte';
 	import CodeExecutions from './CodeExecutions.svelte';
+	import Edit from '$lib/components/icons/Edit.svelte';
+	import Copy from '$lib/components/icons/Copy.svelte';
+	import ThumbUp from '$lib/components/icons/ThumbUp.svelte';
+	import ThumbDown from '$lib/components/icons/ThumbDown.svelte';
+	import Speaker from '$lib/components/icons/Speaker.svelte';
+	import SpeakerMute from '$lib/components/icons/SpeakerMute.svelte';
+	import PlayCircle from '$lib/components/icons/PlayCircle.svelte';
 
 	import type { Writable } from 'svelte/store';
 	import type { i18n as i18nType } from 'i18next';
@@ -40,6 +47,7 @@
 	import { createNewFeedback, getFeedbackById, updateFeedbackById } from '$lib/apis/evaluations';
 	import { getChatById } from '$lib/apis/chats';
 	import { generateTags } from '$lib/apis';
+	import ArrowPath from '$lib/components/icons/ArrowPath.svelte';
 
 	interface MessageType {
 		id: string;
@@ -806,21 +814,8 @@
 													editMessageHandler();
 												}}
 											>
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													fill="none"
-													viewBox="0 0 24 24"
-													stroke-width="2.3"
-													stroke="currentColor"
-													class="w-4 h-4"
-													aria-hidden="true"
-												>
-													<path
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
-													/>
-												</svg>
+												<!-- Edit icon -->
+												<Edit className="size-[23px] text-steel-800" />
 											</button>
 										</Tooltip>
 									{/if}
@@ -836,20 +831,8 @@
 											copyToClipboard(message.content);
 										}}
 									>
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											fill="none"
-											viewBox="0 0 24 24"
-											stroke-width="1.5"
-											stroke="currentColor"
-											class="size-6 text-steel-800"
-										>
-											<path
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												d="M16.5 8.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v8.25A2.25 2.25 0 0 0 6 16.5h2.25m8.25-8.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-7.5A2.25 2.25 0 0 1 8.25 18v-1.5m8.25-8.25h-6a2.25 2.25 0 0 0-2.25 2.25v6"
-											/>
-										</svg>
+										<!-- Copy icon -->
+										<Copy />
 									</button>
 								</Tooltip>
 
@@ -985,21 +968,8 @@
 													}, 0);
 												}}
 											>
-												<svg
-													stroke="currentColor"
-													fill="none"
-													stroke-width="2.3"
-													viewBox="0 0 24 24"
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													class="w-4 h-4"
-													xmlns="http://www.w3.org/2000/svg"
-													aria-hidden="true"
-												>
-													<path
-														d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"
-													/>
-												</svg>
+												<!-- Thumb up icon -->
+												<ThumbUp className="size-[18px] text-steel-800" strokeWidth="1.75" />
 											</button>
 										</Tooltip>
 
@@ -1023,21 +993,8 @@
 													}, 0);
 												}}
 											>
-												<svg
-													stroke="currentColor"
-													fill="none"
-													stroke-width="2.3"
-													viewBox="0 0 24 24"
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													class="w-4 h-4"
-													xmlns="http://www.w3.org/2000/svg"
-													aria-hidden="true"
-												>
-													<path
-														d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"
-													/>
-												</svg>
+												<!-- Thumb down icon -->
+												<ThumbDown className="size-[18px] text-steel-800" />
 											</button>
 										</Tooltip>
 									{/if}
@@ -1056,70 +1013,12 @@
 											}}
 										>
 											{#if loadingSpeech}
-												<svg
-													class=" w-4 h-4"
-													fill="currentColor"
-													viewBox="0 0 24 24"
-													xmlns="http://www.w3.org/2000/svg"
-													aria-hidden="true"
-												>
-													<style>
-														.spinner_S1WN {
-															animation: spinner_MGfb 0.8s linear infinite;
-															animation-delay: -0.8s;
-														}
-
-														.spinner_Km9P {
-															animation-delay: -0.65s;
-														}
-
-														.spinner_JApP {
-															animation-delay: -0.5s;
-														}
-
-														@keyframes spinner_MGfb {
-															93.75%,
-															100% {
-																opacity: 0.2;
-															}
-														}
-													</style>
-													<circle class="spinner_S1WN" cx="4" cy="12" r="3" />
-													<circle class="spinner_S1WN spinner_Km9P" cx="12" cy="12" r="3" />
-													<circle class="spinner_S1WN spinner_JApP" cx="20" cy="12" r="3" />
-												</svg>
+												<!-- Read aloud speaker icon -->
+												<Speaker className="size-5 text-steel-800" strokeWidth="1.75" />
 											{:else if speaking}
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													fill="none"
-													viewBox="0 0 24 24"
-													stroke-width="2.3"
-													stroke="currentColor"
-													class="w-4 h-4"
-													aria-hidden="true"
-												>
-													<path
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z"
-													/>
-												</svg>
+												<SpeakerMute className="size-5 text-steel-800" strokeWidth="1.75" />
 											{:else}
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													fill="none"
-													viewBox="0 0 24 24"
-													stroke-width="2.3"
-													stroke="currentColor"
-													class="w-4 h-4"
-													aria-hidden="true"
-												>
-													<path
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"
-													/>
-												</svg>
+												<Speaker className="size-5 text-steel-800" strokeWidth="1.75" />
 											{/if}
 										</button>
 									</Tooltip>
@@ -1137,26 +1036,8 @@
 													continueResponse();
 												}}
 											>
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													fill="none"
-													viewBox="0 0 24 24"
-													stroke-width="2.3"
-													stroke="currentColor"
-													class="w-4 h-4"
-													aria-hidden="true"
-												>
-													<path
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-													/>
-													<path
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														d="M15.91 11.672a.375.375 0 0 1 0 .656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112Z"
-													/>
-												</svg>
+												<!-- Play circle icon -->
+												<PlayCircle className="size-5 text-steel-800" strokeWidth="1.75" />
 											</button>
 										</Tooltip>
 									{/if}
@@ -1185,21 +1066,8 @@
 												});
 											}}
 										>
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke-width="2.3"
-												stroke="currentColor"
-												class="w-4 h-4"
-												aria-hidden="true"
-											>
-												<path
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-												/>
-											</svg>
+											<!-- Regenerate arrow path icon -->
+											<ArrowPath className="size-5 text-steel-800" strokeWidth="1.75" />
 										</button>
 									</Tooltip>
 
